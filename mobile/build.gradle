@@ -1,0 +1,89 @@
+apply plugin: 'android-sdk-manager'
+apply plugin: 'com.android.application'
+apply plugin: 'hugo'
+apply plugin: 'com.neenbedankt.android-apt'
+
+configurations {
+    vngrsCompile
+}
+
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def versionBuild = 0
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.0"
+
+    defaultConfig {
+        applicationId "com.vngrs.android.pomodoro"
+        minSdkVersion 16
+        targetSdkVersion 22
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}" + ((versionPatch != 0) ? ".${versionPatch}" : "")
+        buildConfigField "String", "GIT_SHA", "\"${gitSha()}\""
+        buildConfigField "String", "BUILD_TIME", "\"${buildTime()}\""
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("../distribution/debug.keystore")
+        }
+
+        release {
+            storeFile file("../distribution/release.keystore")
+            storePassword "XXX"
+            keyAlias "XXX"
+            keyPassword "XXX"
+        }
+    }
+
+    productFlavors {
+        standalone {
+            applicationId "com.vngrs.android.pomodoro.standalone"
+        }
+        vngrs {
+            applicationId "com.vngrs.android.pomodoro.internal"
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug
+            versionNameSuffix "-debug"
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    wearApp project(':wear')
+
+    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:support-annotations:22.0.0'
+
+    compile 'com.google.android.gms:play-services:6.5.87'
+
+    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
+    apt 'com.google.dagger:dagger-compiler:2.0-SNAPSHOT'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    compile 'net.danlew:android.joda:2.7.1'
+
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.jakewharton.timber:timber:2.7.1'
+
+    vngrsCompile 'com.squareup.okhttp:okhttp:2.2.0'
+    vngrsCompile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
+    vngrsCompile 'com.squareup.okio:okio:1.2.0'
+    vngrsCompile 'com.squareup.retrofit:retrofit:1.9.0'
+}

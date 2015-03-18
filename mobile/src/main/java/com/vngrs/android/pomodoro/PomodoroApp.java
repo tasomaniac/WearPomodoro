@@ -1,0 +1,43 @@
+package com.vngrs.android.pomodoro;
+
+import android.app.Application;
+import android.content.Context;
+
+import hugo.weaving.DebugLog;
+import timber.log.Timber;
+
+/**
+ * Created by Said Tahsin Dane on 17/03/15.
+ */
+public class PomodoroApp extends Application {
+    private PomodoroGraph component;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            // TODO Crashlytics.start(this);
+            // TODO Timber.plant(new CrashlyticsTree());
+        }
+
+        buildComponentAndInject();
+    }
+
+
+    @DebugLog // Extracted for debugging.
+    public void buildComponentAndInject() {
+        component = PomodoroComponent.Initializer.init(this);
+        component.inject(this);
+    }
+
+    public PomodoroGraph component() {
+        return component;
+    }
+
+    public static PomodoroApp get(Context context) {
+        return (PomodoroApp) context.getApplicationContext();
+    }
+}

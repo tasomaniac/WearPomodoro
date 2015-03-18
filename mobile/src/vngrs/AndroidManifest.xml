@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <application>
+    <activity android:name="com.vngrs.android.pomodoro.ui.SettingsActivity"
+      android:label="@string/settings"
+      android:parentActivityName="com.vngrs.android.pomodoro.MainActivity">
+      <meta-data android:name="android.support.PARENT_ACTIVITY"
+        android:value="com.vngrs.android.pomodoro.MainActivity" />
+    </activity>
+  </application>
+
+</manifest>
