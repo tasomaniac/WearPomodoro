@@ -1,5 +1,7 @@
 package com.vngrs.android.pomodoro.interfaces;
 
+import com.vngrs.android.pomodoro.model.ActivityType;
+
 /**
  * Pomodor interface.
  *
@@ -7,9 +9,9 @@ package com.vngrs.android.pomodoro.interfaces;
  */
 public interface Pomodoro {
 
-    void getStatusAll();
-    void getStatus();
-    void stop();
-    void doBreak();
-    void start();
+//    ArrayList<Status> getStatusAll();
+//    Status getStatus();
+    ActivityType stop();
+//    void takeBreak();
+    void start(ActivityType type);
 }

@@ -13,7 +13,8 @@ import dagger.Provides;
  */
 @Module
 public final class StandaloneUiModule {
-    @Provides @Singleton AppContainer provideAppContainer() {
-        return AppContainer.DEFAULT;
+    @Provides @Singleton
+    BaseUi provideAppContainer() {
+        return BaseUi.DEFAULT;
     }
 }

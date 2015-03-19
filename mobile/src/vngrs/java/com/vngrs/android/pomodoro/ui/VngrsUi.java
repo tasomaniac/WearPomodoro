@@ -10,10 +10,12 @@ import com.vngrs.android.pomodoro.R;
 import javax.inject.Singleton;
 
 /**
+ * VNGRS UI.
+ *
  * Created by Said Tahsin Dane on 17/03/15.
  */
 @Singleton
-public class VngrsAppContainer implements AppContainer {
+public class VngrsUi implements BaseUi {
 
     @Override
     public boolean onCreateOptionsMenu(Activity activity, Menu menu) {

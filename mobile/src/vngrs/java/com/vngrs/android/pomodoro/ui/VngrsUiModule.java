@@ -6,11 +6,14 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
+ * VNGRS UI Module that provides WNGRS UI.
+ *
  * Created by Said Tahsin Dane on 18/03/15.
  */
 @Module
 public class VngrsUiModule {
-    @Provides @Singleton AppContainer provideAppContainer() {
-        return new VngrsAppContainer();
+    @Provides @Singleton
+    BaseUi provideAppContainer() {
+        return new VngrsUi();
     }
 }

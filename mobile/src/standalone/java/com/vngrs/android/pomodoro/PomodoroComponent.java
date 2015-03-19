@@ -17,7 +17,7 @@ public interface PomodoroComponent extends PomodoroGraph {
      * An initializer that creates the graph from an application.
      */
     final static class Initializer {
-        static PomodoroComponent init(PomodoroApp app) {
+        static PomodoroComponent init(App app) {
             return Dagger_PomodoroComponent.builder()
                     .pomodoroAppModule(new PomodoroAppModule(app))
                     .build();

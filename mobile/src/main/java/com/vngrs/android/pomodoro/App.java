@@ -9,7 +9,7 @@ import timber.log.Timber;
 /**
  * Created by Said Tahsin Dane on 17/03/15.
  */
-public class PomodoroApp extends Application {
+public class App extends Application {
     private PomodoroGraph component;
 
     @Override
@@ -37,7 +37,7 @@ public class PomodoroApp extends Application {
         return component;
     }
 
-    public static PomodoroApp get(Context context) {
-        return (PomodoroApp) context.getApplicationContext();
+    public static App get(Context context) {
+        return (App) context.getApplicationContext();
     }
 }

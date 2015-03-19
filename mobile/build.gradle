@@ -32,10 +32,10 @@ android {
         }
 
         release {
-            storeFile file("../distribution/release.keystore")
-            storePassword "XXX"
-            keyAlias "XXX"
-            keyPassword "XXX"
+            storeFile file("../distribution/debug.keystore")
+            storePassword "android"
+            keyAlias "android"
+            keyPassword "android"
         }
     }
 
@@ -65,7 +65,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    wearApp project(':wear')
+//    wearApp project(':wear')
 
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
