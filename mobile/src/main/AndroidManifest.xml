@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vngrs.android.pomodoro" >
+  package="com.vngrs.android.pomodoro">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <application
-        android:name=".App"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+  <application
+    android:name=".App"
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.MainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+    <activity android:name=".ui.MainActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
 
-        <receiver
-            android:name=".receivers.PomodoroReceiver"
-            android:enabled="true"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.vngrs.android.pomodoro.action.START" />
-                <action android:name="com.vngrs.android.pomodoro.action.STOP" />
-                <action android:name="com.vngrs.android.pomodoro.action.PAUSE" />
-                <action android:name="com.vngrs.android.pomodoro.action.RESUME" />
-                <action android:name="com.vngrs.android.pomodoro.action.RESET" />
-                <action android:name="com.vngrs.android.pomodoro.action.UPDATE" />
-                <action android:name="com.vngrs.android.pomodoro.action.ALARM" />
-            </intent-filter>
-        </receiver>
+    <receiver
+      android:name=".receivers.PomodoroReceiver"
+      android:enabled="true"
+      android:exported="false">
+      <intent-filter
+        android:priority="100">
+        <action android:name="com.vngrs.android.pomodoro.action.START" />
+        <action android:name="com.vngrs.android.pomodoro.action.STOP" />
+        <action android:name="com.vngrs.android.pomodoro.action.PAUSE" />
+        <action android:name="com.vngrs.android.pomodoro.action.RESUME" />
+        <action android:name="com.vngrs.android.pomodoro.action.RESET" />
+        <action android:name="com.vngrs.android.pomodoro.action.UPDATE" />
+        <action android:name="com.vngrs.android.pomodoro.action.ALARM" />
+      </intent-filter>
+    </receiver>
 
-        <service android:name=".service.DataLayerListenerService">
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>
-        </service>
-    </application>
+    <service android:name=".service.DataLayerListenerService">
+      <intent-filter>
+        <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+      </intent-filter>
+    </service>
+  </application>
 
 </manifest>

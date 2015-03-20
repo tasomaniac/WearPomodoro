@@ -7,7 +7,4 @@
 
   <string name="hello_world">Hello world!</string>
   <string name="action_settings">Settings</string>
-  <string name="cd_start_stop_button">Start/Stop Button</string>
-  <string name="cd_start_pomodoro">Start Pomodoro</string>
-  <string name="cd_stop_pomodoro">Stop Pomodoro</string>
 </resources>

@@ -9,23 +9,19 @@ import com.vngrs.android.pomodoro.R;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.Utils;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import hugo.weaving.DebugLog;
 
 public class PomodoroNotificationActivity extends Activity {
 
-    public static final int MINUTE_MILLIS = 60000;
-    public static final int SECOND_MILLIS = 1000;
     private Handler handler = null;
 
-//    private ImageView pomodoroStartStopButton;
-    private TextView pomodoroTime;
-    private TextView pomodoroDescription;
+    @InjectView(R.id.pomodoro_time) TextView mTime;
+    @InjectView(R.id.pomodoro_description) TextView mDescription;
+//    @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
 
     @Inject PomodoroMaster pomodoroMaster;
 
@@ -42,35 +38,22 @@ public class PomodoroNotificationActivity extends Activity {
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_pomodoro_notification);
         App.get(this).component().inject(this);
+        ButterKnife.inject(this);
 
         handler = new Handler();
-
-        pomodoroTime = (TextView) findViewById(R.id.pomodoro_time);
-        pomodoroDescription = (TextView) findViewById(R.id.pomodoro_description);
-//        pomodoroStartStopButton = (ImageView) findViewById(R.id.pomodoro_start_stop_button);
-
-//        findViewById(R.id.content).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (pomodoroMaster.isOngoing()) {
-//                    sendBroadcast(BaseNotificationReceiver.STOP_INTENT);
-//                } else {
-//                    sendBroadcast(BaseNotificationReceiver.START_INTENT);
-//                }
-//            }
-//        });
 
         updateWithoutTimer();
     }
 
-    @DebugLog
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        pomodoroTime = null;
-        pomodoroDescription = null;
-        handler = null;
-    }
+//    @OnClick(R.id.content)
+//    public void onNotificationClicked() {
+//
+//        if (pomodoroMaster.isOngoing()) {
+//            sendBroadcast(BaseNotificationReceiver.STOP_INTENT);
+//        } else {
+//            sendBroadcast(BaseNotificationReceiver.START_INTENT);
+//        }
+//    }
 
     @DebugLog
     @Override
@@ -88,7 +71,7 @@ public class PomodoroNotificationActivity extends Activity {
 
     private void nextTimer() {
         handler.removeCallbacks(updateRunnable);
-        handler.postDelayed(updateRunnable, SECOND_MILLIS);
+        handler.postDelayed(updateRunnable, Utils.SECOND_MILLIS);
     }
 
     private void update() {
@@ -102,15 +85,12 @@ public class PomodoroNotificationActivity extends Activity {
             return;
         }
 
-        if (pomodoroTime != null) {
-            final long remaining = pomodoroMaster.getNextPomodoro().getMillis() - DateTime.now().getMillis();
-            final DateTimeFormatter fmt = remaining >= MINUTE_MILLIS
-                    ? DateTimeFormat.forPattern("mm:ss") : DateTimeFormat.forPattern("ss");
-            pomodoroTime.setText(fmt.print(remaining));
+        if (mTime != null) {
+            mTime.setText(Utils.getRemainingTime(pomodoroMaster, /* shorten */ true));
         }
 
-        if (pomodoroDescription != null) {
-            pomodoroDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
+        if (mDescription != null) {
+            mDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
         }
 
 //        if (pomodoroStartStopButton != null) {
@@ -122,4 +102,5 @@ public class PomodoroNotificationActivity extends Activity {
 //                    : getString(R.string.cd_stop_pomodoro));
 //        }
     }
+
 }

@@ -26,4 +26,8 @@
     <item quantity="one">1 min</item>
     <item quantity="other">%d mins</item>
   </plurals>
+
+  <string name="cd_start_stop_button">Start/Stop Button</string>
+  <string name="cd_start_pomodoro">Start Pomodoro</string>
+  <string name="cd_stop_pomodoro">Stop Pomodoro</string>
 </resources>

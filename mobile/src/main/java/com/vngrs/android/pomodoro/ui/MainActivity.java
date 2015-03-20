@@ -1,13 +1,19 @@
 package com.vngrs.android.pomodoro.ui;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -23,11 +29,15 @@ import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
 import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
 import com.vngrs.android.pomodoro.shared.Constants;
-import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
+import com.vngrs.android.pomodoro.shared.PomodoroMaster;
+import com.vngrs.android.pomodoro.shared.Utils;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
 
@@ -42,13 +52,68 @@ public class MainActivity extends ActionBarActivity implements
 
     @Inject BaseUi baseUi;
     @Inject GoogleApiClient mGoogleApiClient;
-    @Inject EnumPreference<ActivityType> activityTypeStorage;
+    @Inject PomodoroMaster pomodoroMaster;
+
+    @InjectView(R.id.pomodoro_time) TextView mTime;
+    @InjectView(R.id.pomodoro_description) TextView mDescription;
+    @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
+
+    private Handler handler = null;
+
+    private Runnable updateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            update();
+        }
+    };
+
+    private BroadcastReceiver pomodoroReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+
+            if (intent != null) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (intent.getAction()) {
+                            case BaseNotificationReceiver.ACTION_STOP:
+                            case BaseNotificationReceiver.ACTION_RESET:
+                            case BaseNotificationReceiver.ACTION_FINISH_ALARM:
+                                handler.removeCallbacks(updateRunnable);
+                                updateWithoutTimer();
+                                break;
+                            case BaseNotificationReceiver.ACTION_START:
+                                update();
+                                break;
+                            default:
+                                updateWithoutTimer();
+                                break;
+                        }
+                    }
+                }, 100);
+            }
+        }
+    };
+
+    private static final IntentFilter FILTER_START =
+            new IntentFilter(BaseNotificationReceiver.ACTION_START);
+    private static final IntentFilter FILTER_STOP =
+            new IntentFilter(BaseNotificationReceiver.ACTION_STOP);
+    private static final IntentFilter FILTER_RESET =
+            new IntentFilter(BaseNotificationReceiver.ACTION_RESET);
+    private static final IntentFilter FILTER_UPDATE =
+            new IntentFilter(BaseNotificationReceiver.ACTION_UPDATE);
+    private static final IntentFilter FILTER_FINISH_ALARM =
+            new IntentFilter(BaseNotificationReceiver.ACTION_FINISH_ALARM);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         App.get(this).component().inject(this);
+        ButterKnife.inject(this);
+
+        handler = new Handler();
 
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
@@ -61,7 +126,44 @@ public class MainActivity extends ActionBarActivity implements
     protected void onResume() {
         super.onResume();
 
+        update();
         sendBroadcast(BaseNotificationReceiver.UPDATE_INTENT);
+
+        registerReceiver(pomodoroReceiver, FILTER_START);
+        registerReceiver(pomodoroReceiver, FILTER_STOP);
+        registerReceiver(pomodoroReceiver, FILTER_RESET);
+        registerReceiver(pomodoroReceiver, FILTER_UPDATE);
+        registerReceiver(pomodoroReceiver, FILTER_FINISH_ALARM);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(updateRunnable);
+        unregisterReceiver(pomodoroReceiver);
+    }
+
+    private void nextTimer() {
+        handler.removeCallbacks(updateRunnable);
+        handler.postDelayed(updateRunnable, Utils.SECOND_MILLIS);
+    }
+
+    private void update() {
+        updateWithoutTimer();
+        nextTimer();
+    }
+
+    public void updateWithoutTimer() {
+
+        if (pomodoroMaster.isOngoing()) {
+            mStartStopButton.setImageResource(R.drawable.ic_action_stop_wear);
+            mTime.setText(Utils.getRemainingTime(pomodoroMaster, /* shorten */ false));
+            mDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
+        } else {
+            mStartStopButton.setImageResource(R.drawable.ic_action_start_wear);
+            mTime.setText("00:00");
+            mDescription.setText(Utils.getActivityTypeMessage(this, pomodoroMaster));
+        }
     }
 
     @Override
@@ -78,6 +180,21 @@ public class MainActivity extends ActionBarActivity implements
         Wearable.DataApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
         super.onStop();
+    }
+
+    @OnClick(R.id.pomodoro_start_stop_button)
+    public void start() {
+
+        if (pomodoroMaster.isOngoing()) {
+            sendOrderedBroadcast(BaseNotificationReceiver.STOP_INTENT, null);
+        } else {
+            sendOrderedBroadcast(
+                    BaseNotificationReceiver.START_INTENT
+                            .putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE,
+                                    ActivityType.POMODORO.value()),
+                    null);
+        }
+        update();
     }
 
     @Override
@@ -165,6 +282,4 @@ public class MainActivity extends ActionBarActivity implements
             }
         }
     }
-
-
 }

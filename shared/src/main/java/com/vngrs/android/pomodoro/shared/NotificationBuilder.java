@@ -38,6 +38,7 @@ public class NotificationBuilder {
                 .setPriority(Notification.PRIORITY_MAX)
                 .setOngoing(pomodoroMaster.isOngoing())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setLocalOnly(true)
 //                .setStyle(new NotificationCompat.BigTextStyle())
                 .setColor(getNotificationColor());
     }
@@ -85,7 +86,6 @@ public class NotificationBuilder {
         NotificationCompat.Builder builder = buildBaseNotification()
                 .setContentTitle(title)
                 .setContentText(message)
-                .setLocalOnly(true)
                 .addAction(action)
                 .addAction(buildResetAction(context, R.drawable.ic_action_reset_wear))
                 .extend(extender);
@@ -128,7 +128,7 @@ public class NotificationBuilder {
         final Intent startActionIntent = BaseNotificationReceiver.START_INTENT;
         startActionIntent.putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE, activityType.value());
         final PendingIntent startActionPendingIntent =
-                    PendingIntent.getBroadcast(context, ID_START, startActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.getBroadcast(context, ID_START, startActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         return new NotificationCompat.Action.Builder(actionIcon,
                 context.getString(R.string.start), startActionPendingIntent).build();
     }
@@ -167,21 +167,7 @@ public class NotificationBuilder {
         if (pomodoroMaster.isOngoing()) {
             return null;
         } else {
-            final int pomodorosDone = pomodoroMaster.getPomodorosDone();
-            switch (pomodoroMaster.getActivityType()) {
-                case LONG_BREAK:
-                    return context.getString(R.string.message_break_long);
-                case POMODORO:
-                    return context.getString(R.string.message_pomodoro_no, (pomodorosDone + 1));
-                case SHORT_BREAK:
-                    return context.getString(R.string.message_break_short);
-                case NONE:
-                    return pomodorosDone == 0
-                            ? context.getString(R.string.message_none_first)
-                            : context.getString(R.string.message_none, pomodorosDone);
-                default:
-                    throw new IllegalStateException("unsupported activityType " + pomodoroMaster.getActivityType());
-            }
+            return Utils.getActivityTypeMessage(context, pomodoroMaster);
         }
     }
 

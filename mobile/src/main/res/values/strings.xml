@@ -1,5 +1,7 @@
 <resources>
-  <string name="app_name">Pomodoro</string>
-  <string name="hello_world">Hello world!</string>
+    <string name="app_name">Pomodoro</string>
 
+    <string name="activity_type_label">Acitivty Type : </string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
 </resources>

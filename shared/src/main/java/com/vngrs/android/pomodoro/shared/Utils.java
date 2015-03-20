@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.util.TypedValue;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Utility class containing various operations.
@@ -18,6 +20,9 @@ public class Utils {
     private Utils() {
     }
 
+    public static final int MINUTE_MILLIS = 60000;
+    public static final int SECOND_MILLIS = 1000;
+
     /**
      * Converts the time difference to the human readable minutes.
      *
@@ -25,7 +30,9 @@ public class Utils {
      * @param diffTime Time difference.
      * @return Human readable minute representation.
      */
-    public static String convertDiffToPrettyMinutesLeft(Context context, DateTime diffTime) {
+    @NonNull
+    public static String convertDiffToPrettyMinutesLeft(@NonNull Context context,
+                                                        @NonNull DateTime diffTime) {
         int minutes = diffTime.getMinuteOfHour();
         if (minutes == 0) {
             return context.getString(R.string.time_left_less_than_minute);
@@ -62,11 +69,21 @@ public class Utils {
      * @param dp  original dp value.
      * @return px value.
      */
-    public static int dpToPx(Resources res, int dp) {
+    public static int dpToPx(@NonNull Resources res, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
     }
 
-    public static String getActivityTitle(@NonNull Context context, PomodoroMaster pomodoroMaster, boolean shorten) {
+    @NonNull
+    public static String getRemainingTime(@NonNull PomodoroMaster pomodoroMaster, boolean shorten) {
+        final long remaining = pomodoroMaster.getNextPomodoro().getMillis() - DateTime.now().getMillis();
+        final DateTimeFormatter fmt = shorten && remaining < MINUTE_MILLIS
+                ? DateTimeFormat.forPattern("ss") : DateTimeFormat.forPattern("mm:ss");
+        return fmt.print(remaining);
+    }
+
+    @NonNull
+    public static String getActivityTitle(@NonNull Context context,
+                                          @NonNull PomodoroMaster pomodoroMaster, boolean shorten) {
         switch (pomodoroMaster.getActivityType()) {
             case LONG_BREAK:
                 return shorten
@@ -80,6 +97,26 @@ public class Utils {
                 return shorten
                         ? context.getString(R.string.title_short_break)
                         : context.getString(R.string.title_break_short);
+            default:
+                return context.getString(R.string.title_none);
+        }
+    }
+
+    @NonNull
+    public static String getActivityTypeMessage(@NonNull Context context,
+                                                @NonNull PomodoroMaster pomodoroMaster) {
+        final int pomodorosDone = pomodoroMaster.getPomodorosDone();
+        switch (pomodoroMaster.getActivityType()) {
+            case LONG_BREAK:
+                return context.getString(R.string.message_break_long);
+            case POMODORO:
+                return context.getString(R.string.message_pomodoro_no, (pomodorosDone + 1));
+            case SHORT_BREAK:
+                return context.getString(R.string.message_break_short);
+            case NONE:
+                return pomodorosDone == 0
+                        ? context.getString(R.string.message_none_first)
+                        : context.getString(R.string.message_none, pomodorosDone);
             default:
                 throw new IllegalStateException("unsupported activityType " + pomodoroMaster.getActivityType());
         }
