@@ -3,6 +3,7 @@ package com.vngrs.android.pomodoro.service;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 
 import com.vngrs.android.pomodoro.App;
@@ -22,11 +23,17 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
     private static final int NOTIFICATION_ID = 1;
 
     @Inject PomodoroMaster pomodoroMaster;
+    private final IBinder binder = new LocalBinder();
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return binder;
+    }
+
+    public class LocalBinder extends Binder {
+        public PomodoroService getService() {
+            return PomodoroService.this;
+        }
     }
 
     @Override
