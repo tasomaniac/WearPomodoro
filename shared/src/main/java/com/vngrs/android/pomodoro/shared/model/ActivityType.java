@@ -1,6 +1,6 @@
-package com.vngrs.android.pomodoro.model;
+package com.vngrs.android.pomodoro.shared.model;
 
-import com.vngrs.android.pomodoro.Constants;
+import com.vngrs.android.pomodoro.shared.Constants;
 
 public enum ActivityType {
 

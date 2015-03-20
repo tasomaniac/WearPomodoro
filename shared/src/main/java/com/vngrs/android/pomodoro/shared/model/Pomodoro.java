@@ -1,6 +1,6 @@
-package com.vngrs.android.pomodoro.interfaces;
+package com.vngrs.android.pomodoro.shared.model;
 
-import com.vngrs.android.pomodoro.model.ActivityType;
+import com.vngrs.android.pomodoro.shared.model.ActivityType;
 
 /**
  * Pomodor interface.

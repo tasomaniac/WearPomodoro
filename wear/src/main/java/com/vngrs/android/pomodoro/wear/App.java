@@ -1,18 +1,18 @@
-package com.vngrs.android.pomodoro;
+package com.vngrs.android.pomodoro.wear;
 
 import android.app.Application;
 import android.content.Context;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 /**
- * Created by Said Tahsin Dane on 17/03/15.
+ * Created by taso on 20/03/15.
  */
 public class App extends Application {
-    private PomodoroGraph component;
+
+    private PomodoroComponent component;
 
     @Override
     public void onCreate() {
@@ -30,14 +30,12 @@ public class App extends Application {
         buildComponentAndInject();
     }
 
-
-    @DebugLog // Extracted for debugging.
     public void buildComponentAndInject() {
         component = PomodoroComponent.Initializer.init(this);
         component.inject(this);
     }
 
-    public PomodoroGraph component() {
+    public PomodoroComponent component() {
         return component;
     }
 

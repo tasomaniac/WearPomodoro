@@ -1,4 +1,4 @@
-package com.vngrs.android.pomodoro;
+package com.vngrs.android.pomodoro.wear;
 
 import android.app.Activity;
 import android.content.Intent;

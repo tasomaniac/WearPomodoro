@@ -1,4 +1,4 @@
-package com.vngrs.android.pomodoro.data.prefs;
+package com.vngrs.android.pomodoro.shared.data.prefs;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;

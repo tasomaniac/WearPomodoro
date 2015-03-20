@@ -1,14 +1,14 @@
-package com.vngrs.android.pomodoro;
+package com.vngrs.android.pomodoro.shared;
 
 import android.content.SharedPreferences;
 
-import com.vngrs.android.pomodoro.data.DataModule;
-import com.vngrs.android.pomodoro.data.prefs.LastPomodoroTimeStamp;
-import com.vngrs.android.pomodoro.data.prefs.NextPomodoroTimeStamp;
-import com.vngrs.android.pomodoro.data.prefs.DateTimePreference;
-import com.vngrs.android.pomodoro.data.prefs.EnumPreference;
-import com.vngrs.android.pomodoro.data.prefs.IntPreference;
-import com.vngrs.android.pomodoro.model.ActivityType;
+import com.vngrs.android.pomodoro.shared.data.DataModule;
+import com.vngrs.android.pomodoro.shared.data.prefs.DateTimePreference;
+import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
+import com.vngrs.android.pomodoro.shared.data.prefs.IntPreference;
+import com.vngrs.android.pomodoro.shared.data.prefs.LastPomodoro;
+import com.vngrs.android.pomodoro.shared.data.prefs.NextPomodoro;
+import com.vngrs.android.pomodoro.shared.model.ActivityType;
 
 import javax.inject.Singleton;
 
@@ -18,10 +18,7 @@ import dagger.Provides;
 /**
  * Created by Said Tahsin Dane on 18/03/15.
  */
-@Module(
-        complete = false,
-        includes = { DataModule.class }
-)
+@Module(includes = DataModule.class)
 public class PomodoroModule {
 
     @Provides @Singleton
@@ -29,12 +26,12 @@ public class PomodoroModule {
         return new EnumPreference<>(preferences, ActivityType.class, "activity_type", ActivityType.NONE);
     }
 
-    @Provides @Singleton @NextPomodoroTimeStamp
+    @Provides @Singleton @NextPomodoro
     DateTimePreference provideNextPomodoro(SharedPreferences preferences) {
         return new DateTimePreference(preferences, "next_pomodoro");
     }
 
-    @Provides @Singleton @LastPomodoroTimeStamp
+    @Provides @Singleton @LastPomodoro
     DateTimePreference provideLastPomodoroTimeStamp(SharedPreferences preferences) {
         return new DateTimePreference(preferences, "last_pomodoro");
     }

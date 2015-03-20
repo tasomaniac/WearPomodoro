@@ -1,4 +1,4 @@
-package com.vngrs.android.pomodoro;
+package com.vngrs.android.pomodoro.shared;
 
 public class Constants {
     public static final int POMODORO_LENGTH_MS = 25 * 60 * 1000;

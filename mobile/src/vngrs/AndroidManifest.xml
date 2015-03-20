@@ -3,9 +3,9 @@
   <application>
     <activity android:name="com.vngrs.android.pomodoro.ui.SettingsActivity"
       android:label="@string/settings"
-      android:parentActivityName="com.vngrs.android.pomodoro.MainActivity">
+      android:parentActivityName="com.vngrs.android.pomodoro.ui.MainActivity">
       <meta-data android:name="android.support.PARENT_ACTIVITY"
-        android:value="com.vngrs.android.pomodoro.MainActivity" />
+        android:value="com.vngrs.android.pomodoro.ui.MainActivity" />
     </activity>
   </application>
 

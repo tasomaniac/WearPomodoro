@@ -1,4 +1,4 @@
-package com.vngrs.android.pomodoro.data;
+package com.vngrs.android.pomodoro.shared.data;
 
 import android.app.Application;
 import android.content.SharedPreferences;
