@@ -1,5 +1,6 @@
 package com.vngrs.android.pomodoro;
 
+import com.vngrs.android.pomodoro.shared.PomodoroModule;
 import com.vngrs.android.pomodoro.ui.StandaloneUiModule;
 
 import javax.inject.Singleton;
