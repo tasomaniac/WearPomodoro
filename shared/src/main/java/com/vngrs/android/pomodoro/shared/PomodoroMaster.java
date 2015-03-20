@@ -3,7 +3,6 @@ package com.vngrs.android.pomodoro.shared;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.vngrs.android.pomodoro.shared.data.prefs.DateTimePreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
@@ -39,7 +39,7 @@ public class PomodoroMaster {
                               int pomodorosDone, boolean screenOn);
     }
 
-    private final NotificationManager notificationManager;
+    private final NotificationManagerCompat notificationManager;
     private final AlarmManager alarmManager;
     private final PowerManager powerManager;
 
@@ -52,7 +52,7 @@ public class PomodoroMaster {
 
     private PomodoroMasterListener mListener;
 
-    @Inject public PomodoroMaster(NotificationManager notificationManager,
+    @Inject public PomodoroMaster(NotificationManagerCompat notificationManager,
                                   AlarmManager alarmManager,
                                   PowerManager powerManager,
                                   @NextPomodoro DateTimePreference nextPomodoroStorage,

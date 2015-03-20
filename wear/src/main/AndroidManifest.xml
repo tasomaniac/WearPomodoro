@@ -25,7 +25,16 @@
       android:name=".PomodoroNotificationReceiver"
       android:exported="true">
       <intent-filter>
-        <action android:name="com.vngrs.android.pomodoro.SHOW_NOTIFICATION" />
+        <action android:name="com.vngrs.android.pomodoro.action.START" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="com.vngrs.android.pomodoro.action.STOP" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="com.vngrs.android.pomodoro.action.ALARM" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="com.vngrs.android.pomodoro.action.ALARM_TICK" />
       </intent-filter>
     </receiver>
   </application>

@@ -26,6 +26,9 @@
             <intent-filter>
                 <action android:name="${applicationId}.action.ALARM" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="${applicationId}.action.ALARM_TICK" />
+            </intent-filter>
         </receiver>
         <!--<receiver-->
             <!--android:name=".receivers.PomodoroAlarmTickReceiver"-->
@@ -47,9 +50,6 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="${applicationId}.action.STOP" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="${applicationId}.action.ALARM_TICK" />
             </intent-filter>
         </service>
     </application>

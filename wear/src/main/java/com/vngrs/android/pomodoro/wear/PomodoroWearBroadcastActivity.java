@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.vngrs.android.pomodoro.shared.PomodoroMaster;
+
 
 /**
  * Example shell activity which simply broadcasts to our receiver and exits.
@@ -14,8 +16,7 @@ public class PomodoroWearBroadcastActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         Intent i = new Intent();
-        i.setAction("com.vngrs.android.pomodoro.SHOW_NOTIFICATION");
-        i.putExtra(PomodoroNotificationReceiver.CONTENT_KEY, getString(R.string.title));
+        i.setAction(PomodoroMaster.ACTION_START);
         sendBroadcast(i);
         finish();
     }

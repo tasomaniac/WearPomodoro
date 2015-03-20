@@ -2,9 +2,9 @@ package com.vngrs.android.pomodoro.wear;
 
 import android.app.AlarmManager;
 import android.app.Application;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.os.PowerManager;
+import android.support.v4.app.NotificationManagerCompat;
 
 import javax.inject.Singleton;
 
@@ -28,8 +28,8 @@ final class AppModule {
         return app;
     }
 
-    @Provides @Singleton NotificationManager provideNotificationManager() {
-        return (NotificationManager) app.getSystemService(Context.NOTIFICATION_SERVICE);
+    @Provides @Singleton NotificationManagerCompat provideNotificationManager() {
+        return NotificationManagerCompat.from(app);
     }
 
     @Provides @Singleton AlarmManager provideAlarmManager() {
