@@ -200,14 +200,12 @@ public class PomodoroMaster {
     }
 
     @NonNull
-    public static Notification createNotificationBuilderForActivityType(@NonNull Context context,
+    public static NotificationCompat.Builder createNotificationBuilderForActivityType(@NonNull Context context,
                                                                         @NonNull Intent contentIntent,
                                                                         @NonNull ActivityType activityType,
                                                                         int pomodorsDone,
                                                                         @NonNull DateTime whenMs,
                                                                         boolean isScreenOn) {
-        NotificationCompat.Action stopAction = createStopAction(context);
-
 //        NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender()
 //                .
 //                .addAction(stopAction);
@@ -222,11 +220,10 @@ public class PomodoroMaster {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setOnlyAlertOnce(true)
-//                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setOngoing(activityType != ActivityType.NONE)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .addAction(stopAction)
                 .setWhen(whenMs.getMillis())
                 .setContentIntent(contentPendingIntent)
                 .setContentTitle(titleForActivityType(context, activityType, pomodorsDone))
@@ -234,13 +231,13 @@ public class PomodoroMaster {
 //                .setContentInfo(minutesLeft)
                 .setTicker(minutesLeft);
 
-        return builder.build();
+        return builder;
     }
 
-    public static NotificationCompat.Action createStartAction(@NonNull Context context) {
+    public static NotificationCompat.Action createStartAction(@NonNull Context context, @DrawableRes int actionIcon) {
         PendingIntent startActionPendingIntent = createPendingIntentStart(context);
 
-        return new NotificationCompat.Action.Builder(R.drawable.ic_action_start,
+        return new NotificationCompat.Action.Builder(actionIcon,
                 context.getString(R.string.start), startActionPendingIntent).build();
     }
 
@@ -249,10 +246,10 @@ public class PomodoroMaster {
         return PendingIntent.getService(context, 0, startActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
-    public static NotificationCompat.Action createStopAction(@NonNull Context context) {
+    public static NotificationCompat.Action createStopAction(@NonNull Context context, @DrawableRes int actionIcon) {
         PendingIntent stopActionPendingIntent = createPendingIntentStop(context);
 
-        return new NotificationCompat.Action.Builder(R.drawable.ic_action_stop,
+        return new NotificationCompat.Action.Builder(actionIcon,
                 context.getString(R.string.stop), stopActionPendingIntent).build();
     }
 

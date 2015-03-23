@@ -82,7 +82,9 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
                             activityType,
                             pomodorosDone,
                             nextPomodoro,
-                            screenOn);
+                            screenOn)
+                            .addAction(PomodoroMaster.createStopAction(this, R.drawable.ic_action_stop))
+                            .build();
             startForeground(NOTIFICATION_ID, notification);
         } else {
             Timber.d("ignore notify for activityType " + ActivityType.NONE);

@@ -65,7 +65,10 @@ public class PomodoroNotificationReceiver extends BroadcastReceiver implements P
                             activityType,
                             pomodorosDone,
                             nextPomodoro,
-                            screenOn);
+                            screenOn)
+                            .setLocalOnly(true)
+                            .addAction(PomodoroMaster.createStopAction(context, R.drawable.ic_action_stop))
+                            .build();
             notificationManager.notify(NOTIFICATION_ID, notification);
         } else {
             Timber.d("ignore notify for activityType " + ActivityType.NONE);
