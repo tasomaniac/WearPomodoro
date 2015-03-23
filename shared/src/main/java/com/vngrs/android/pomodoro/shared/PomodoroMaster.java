@@ -24,10 +24,14 @@ import com.vngrs.android.pomodoro.shared.model.ActivityType;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import hugo.weaving.DebugLog;
 
 /**
  * Created by Said Tahsin Dane on 20/03/15.
  */
+@Singleton
 public class PomodoroMaster {
 
     public static final String EXTRA_ACTIVITY_TYPE = "com.vngrs.android.pomodoro.extra.ACTIVITY_TYPE";
@@ -39,7 +43,7 @@ public class PomodoroMaster {
 
     public interface PomodoroMasterListener {
         void syncNotification(ActivityType activityType, DateTime nextPomodoro,
-                              int pomodorosDone, boolean screenOn);
+                              int pomodorosDone, boolean screenOn, boolean isOngoing);
     }
 
     private final NotificationManagerCompat notificationManager;
@@ -54,6 +58,8 @@ public class PomodoroMaster {
     private final Application app;
 
     private PomodoroMasterListener mListener;
+
+    private boolean isOngoing;
 
     @Inject public PomodoroMaster(NotificationManagerCompat notificationManager,
                                   AlarmManager alarmManager,
@@ -77,10 +83,7 @@ public class PomodoroMaster {
         this.mListener = mListener;
     }
 
-    public void handleStop() {
-
-    }
-
+    @DebugLog
     public void handleStart(final ActivityType nextActivityType) {
         DateTime now = DateTime.now();
         DateTime nextPomodoro = now.plus(nextActivityType.getLengthInMillis());
@@ -89,12 +92,14 @@ public class PomodoroMaster {
 
         scheduleAlarms(nextPomodoro);
 
+        isOngoing = true;
         if (mListener != null) {
             mListener.syncNotification(nextActivityType, nextPomodoro,
-                    pomodorosDoneStorage.get(), isScreenOn());
+                    pomodorosDoneStorage.get(), isScreenOn(), isOngoing);
         }
     }
 
+    @DebugLog
     public void handleAlarm() {
         ActivityType justStoppedActivityType = stop();
         final ActivityType nextActivityType;
@@ -107,11 +112,19 @@ public class PomodoroMaster {
         } else {
             nextActivityType = ActivityType.POMODORO;
         }
+
+        isOngoing = false;
+        if (mListener != null) {
+            mListener.syncNotification(nextActivityType, null,
+                    pomodorosDoneStorage.get(), isScreenOn(), isOngoing);
+        }
     }
 
+    @DebugLog
     public void handleAlarmTick() {
         syncNotification();
     }
+
     /**
      * Check and reset pomodoro count if we are in the next day.
      */
@@ -130,7 +143,7 @@ public class PomodoroMaster {
     public void syncNotification() {
         if (mListener != null) {
             mListener.syncNotification(activityTypeStorage.get(), nextPomodoroStorage.get(),
-                    pomodorosDoneStorage.get(), isScreenOn());
+                    pomodorosDoneStorage.get(), isScreenOn(), isOngoing);
         }
     }
 
@@ -156,7 +169,7 @@ public class PomodoroMaster {
         }
         PendingIntent pendingAlarmTickIntent = createPendingIntentTickAlarmBroadcast(app);
         DateTime now = DateTime.now();
-        int oneMinuteMs = 40 * 1000;
+        int oneMinuteMs = 20 * 1000;
         int fiveSecondsMs = 5 * 1000;
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, now.getMillis() + fiveSecondsMs, oneMinuteMs, pendingAlarmTickIntent);
     }
@@ -198,18 +211,13 @@ public class PomodoroMaster {
 
     @NonNull
     public static NotificationCompat.Builder createNotificationBuilderForActivityType(@NonNull Context context,
-                                                                        @NonNull Intent contentIntent,
-                                                                        @NonNull ActivityType activityType,
-                                                                        int pomodorsDone,
-                                                                        @NonNull DateTime whenMs,
-                                                                        boolean isScreenOn) {
-//        NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender()
-//                .
-//                .addAction(stopAction);
-//                .setBackground(BitmapFactory.decodeResource(context.getResources(), backgroundResourceForActivityType(activityType)));
-
-        final String minutesLeft =
-                convertDiffToPrettyMinutesLeft(context, whenMs.getMillis() - System.currentTimeMillis());
+                                                                                      @NonNull Intent contentIntent,
+                                                                                      @NonNull ActivityType activityType,
+                                                                                      int pomodorsDone,
+                                                                                      @Nullable DateTime whenMs,
+                                                                                      boolean isScreenOn,
+                                                                                      boolean isOngoing) {
+        final String message = messageForActivityType(context, activityType, pomodorsDone, whenMs, isOngoing);
         final PendingIntent contentPendingIntent =
                 PendingIntent.getActivity(context, 0, contentIntent, 0);
 
@@ -218,33 +226,37 @@ public class PomodoroMaster {
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setOngoing(activityType != ActivityType.NONE)
+                .setPriority(isOngoing ? Notification.PRIORITY_HIGH : Notification.PRIORITY_DEFAULT)
+                .setOngoing(isOngoing && activityType != ActivityType.NONE)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setWhen(whenMs.getMillis())
+                .setWhen(whenMs != null ? whenMs.getMillis() : System.currentTimeMillis())
                 .setContentIntent(contentPendingIntent)
-                .setContentTitle(titleForActivityType(context, activityType, pomodorsDone))
-                .setContentText(minutesLeft)
-//                .setContentInfo(minutesLeft)
-                .setTicker(minutesLeft);
+                .setContentTitle(titleForActivityType(context, activityType, pomodorsDone, isOngoing))
+                .setContentText(message)
+                .setTicker(message);
 
         return builder;
     }
 
-    public static NotificationCompat.Action createStartAction(@NonNull Context context, @DrawableRes int actionIcon) {
-        PendingIntent startActionPendingIntent = createPendingIntentStart(context);
-
+    public static NotificationCompat.Action createStartAction(@NonNull Context context,
+                                                              @DrawableRes int actionIcon,
+                                                              @NonNull ActivityType activityType) {
+        final Intent startActionIntent = new Intent(ACTION_START);
+        startActionIntent.putExtra(EXTRA_ACTIVITY_TYPE, activityType.value());
+        final PendingIntent startActionPendingIntent;
+        if (context.getPackageManager().resolveService(startActionIntent, 0) != null) {
+            startActionPendingIntent =
+                    PendingIntent.getService(context, 0, startActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        } else {
+            startActionPendingIntent =
+                    PendingIntent.getBroadcast(context, 0, startActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
         return new NotificationCompat.Action.Builder(actionIcon,
                 context.getString(R.string.start), startActionPendingIntent).build();
     }
 
-    public static PendingIntent createPendingIntentStart(@NonNull Context context) {
-        Intent startActionIntent = new Intent(ACTION_START);
-        return PendingIntent.getService(context, 0, startActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-    }
-
     public static NotificationCompat.Action createStopAction(@NonNull Context context, @DrawableRes int actionIcon) {
-        Intent stopActionIntent = new Intent(ACTION_STOP);
+        final Intent stopActionIntent = new Intent(ACTION_STOP);
         final PendingIntent stopActionPendingIntent;
         if (context.getPackageManager().resolveService(stopActionIntent, 0) != null) {
             stopActionPendingIntent =
@@ -281,16 +293,42 @@ public class PomodoroMaster {
 
     public static String titleForActivityType(@NonNull Context context,
                                               @NonNull ActivityType activityType,
-                                              int pomodorosDone) {
-        switch (activityType) {
-            case LONG_BREAK:
-                return context.getString(R.string.title_break_long);
-            case POMODORO:
-                return context.getString(R.string.title_pomodoro_no, (pomodorosDone + 1));
-            case SHORT_BREAK:
-                return context.getString(R.string.title_break_short);
-            default:
-                throw new IllegalStateException("unsupported activityType " + activityType);
+                                              int pomodorosDone,
+                                              boolean isOngoing) {
+        if (isOngoing) {
+            switch (activityType) {
+                case LONG_BREAK:
+                    return context.getString(R.string.title_break_long);
+                case POMODORO:
+                    return context.getString(R.string.title_pomodoro_no, (pomodorosDone + 1));
+                case SHORT_BREAK:
+                    return context.getString(R.string.title_break_short);
+                default:
+                    throw new IllegalStateException("unsupported activityType " + activityType);
+            }
+        } else {
+            return context.getString(R.string.title_finished);
+        }
+    }
+
+    public static String messageForActivityType(@NonNull Context context,
+                                                @NonNull ActivityType activityType,
+                                                int pomodorosDone,
+                                                DateTime whenMs,
+                                                boolean isOngoing) {
+        if (isOngoing) {
+            return convertDiffToPrettyMinutesLeft(context, whenMs.getMillis() - System.currentTimeMillis());
+        } else {
+            switch (activityType) {
+                case LONG_BREAK:
+                    return context.getString(R.string.message_break_long);
+                case POMODORO:
+                    return context.getString(R.string.message_pomodoro_no, (pomodorosDone + 1));
+                case SHORT_BREAK:
+                    return context.getString(R.string.message_break_short);
+                default:
+                    throw new IllegalStateException("unsupported activityType " + activityType);
+            }
         }
     }
 

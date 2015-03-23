@@ -5,9 +5,16 @@
   <string name="take_break">Break</string>
   <string name="stop">Stop</string>
   <string name="time_left_less_than_minute"><![CDATA[< 1 minute]]></string>
+
   <string name="title_break_long">Long Break</string>
   <string name="title_pomodoro_no">Pomodoro #%d</string>
   <string name="title_break_short">Short Break</string>
+
+  <string name="title_finished">Finished</string>
+
+  <string name="message_break_long">Now take a long break. You deserved it.</string>
+  <string name="message_pomodoro_no">Congrats! You\'ve finished your Pomodoro. Now start #%d</string>
+  <string name="message_break_short">Now take a short break.</string>
 
   <plurals name="time_left_minutes">
     <item quantity="one">1 minute</item>

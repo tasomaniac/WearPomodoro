@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
@@ -48,12 +49,10 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
                     stopSelf();
                     break;
                 case PomodoroMaster.ACTION_ALARM:
-                    //TODO change the notification with a message and start button.
                     pomodoroMaster.handleAlarm();
                     PomodoroAlarmReceiver.completeWakefulIntent(intent);
                     break;
                 case PomodoroMaster.ACTION_ALARM_TICK:
-                    //TODO change the notification with a message and start button.
                     pomodoroMaster.handleAlarmTick();
                     PomodoroAlarmTickReceiver.completeWakefulIntent(intent);
                     break;
@@ -85,16 +84,24 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
     public void syncNotification(ActivityType activityType,
                                  DateTime nextPomodoro,
                                  int pomodorosDone,
-                                 boolean screenOn) {
+                                 boolean screenOn,
+                                 boolean isOngoing) {
         if (activityType != ActivityType.NONE) {
+            final NotificationCompat.Action action;
+            if (isOngoing) {
+                action = PomodoroMaster.createStopAction(this, R.drawable.ic_action_stop);
+            } else {
+                action = PomodoroMaster.createStartAction(this, R.drawable.ic_action_start, activityType);
+            }
             final Notification notification =
                     PomodoroMaster.createNotificationBuilderForActivityType(this,
                             new Intent(this, MainActivity.class),
                             activityType,
                             pomodorosDone,
                             nextPomodoro,
-                            screenOn)
-                            .addAction(PomodoroMaster.createStopAction(this, R.drawable.ic_action_stop))
+                            screenOn,
+                            isOngoing)
+                            .addAction(action)
                             .build();
             startForeground(NOTIFICATION_ID, notification);
         } else {
