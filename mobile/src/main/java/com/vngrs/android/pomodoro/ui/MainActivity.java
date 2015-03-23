@@ -27,9 +27,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         App.get(this).component().inject(this);
 
-//        if (activityTypeStorage.get() == ActivityType.NONE) {
-            startService(new Intent(PomodoroMaster.ACTION_START, null, this, PomodoroService.class));
-//        }
+        final Intent intent = new Intent(PomodoroMaster.ACTION_START, null, this, PomodoroService.class);
+        intent.putExtra(PomodoroMaster.EXTRA_ACTIVITY_TYPE, ActivityType.POMODORO.value());
+        startService(intent);
     }
 
     @Override

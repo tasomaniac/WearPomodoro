@@ -45,8 +45,15 @@ public class PomodoroNotificationReceiver extends BroadcastReceiver implements P
                     //TODO change the notification with a message and start button.
 //                    ActivityType stoppingForType = activityTypeStorage.get();
                     break;
+                case PomodoroMaster.ACTION_ALARM_TICK:
+                    pomodoroMaster.handleAlarmTick();
+                    break;
                 case PomodoroMaster.ACTION_START:
-                    pomodoroMaster.handleStart();
+                    final ActivityType activityType =
+                            ActivityType.fromValue(intent.getIntExtra(PomodoroMaster.EXTRA_ACTIVITY_TYPE, 0));
+                    if (activityType != ActivityType.NONE) {
+                        pomodoroMaster.handleStart(activityType);
+                    }
                     break;
                 default:
                     break;

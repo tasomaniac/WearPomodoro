@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
+import com.vngrs.android.pomodoro.shared.model.ActivityType;
 
 
 /**
@@ -17,6 +18,7 @@ public class PomodoroWearBroadcastActivity extends Activity {
 
         Intent i = new Intent();
         i.setAction(PomodoroMaster.ACTION_START);
+        i.putExtra(PomodoroMaster.EXTRA_ACTIVITY_TYPE, ActivityType.POMODORO.value());
         sendBroadcast(i);
         finish();
     }

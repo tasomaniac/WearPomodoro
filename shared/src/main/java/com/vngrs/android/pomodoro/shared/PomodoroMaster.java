@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -25,9 +26,11 @@ import org.joda.time.DateTime;
 import javax.inject.Inject;
 
 /**
- * Created by taso on 20/03/15.
+ * Created by Said Tahsin Dane on 20/03/15.
  */
 public class PomodoroMaster {
+
+    public static final String EXTRA_ACTIVITY_TYPE = "com.vngrs.android.pomodoro.extra.ACTIVITY_TYPE";
 
     public static final String ACTION_ALARM = "com.vngrs.android.pomodoro.action.ALARM";
     public static final String ACTION_ALARM_TICK = "com.vngrs.android.pomodoro.action.ALARM_TICK";
@@ -78,7 +81,21 @@ public class PomodoroMaster {
 
     }
 
-    public void handleStart() {
+    public void handleStart(final ActivityType nextActivityType) {
+        DateTime now = DateTime.now();
+        DateTime nextPomodoro = now.plus(nextActivityType.getLengthInMillis());
+        nextPomodoroStorage.set(nextPomodoro);
+        activityTypeStorage.set(nextActivityType);
+
+        scheduleAlarms(nextPomodoro);
+
+        if (mListener != null) {
+            mListener.syncNotification(nextActivityType, nextPomodoro,
+                    pomodorosDoneStorage.get(), isScreenOn());
+        }
+    }
+
+    public void handleAlarm() {
         ActivityType justStoppedActivityType = stop();
         final ActivityType nextActivityType;
         if (justStoppedActivityType.isPomodoro()) {
@@ -90,15 +107,10 @@ public class PomodoroMaster {
         } else {
             nextActivityType = ActivityType.POMODORO;
         }
-        start(nextActivityType);
-    }
-
-    public void handleAlarm() {
-
     }
 
     public void handleAlarmTick() {
-
+        syncNotification();
     }
     /**
      * Check and reset pomodoro count if we are in the next day.
@@ -108,20 +120,6 @@ public class PomodoroMaster {
         DateTime last = lastPomodoroStorage.get();
         if (!isTheSamePomodoroDay(last, now)) {
             pomodorosDoneStorage.set(0);
-        }
-    }
-
-    public void start(final ActivityType activityType) {
-        DateTime now = DateTime.now();
-        DateTime nextPomodoro = now.plus(activityType.getLengthInMillis());
-        nextPomodoroStorage.set(nextPomodoro);
-        activityTypeStorage.set(activityType);
-
-        scheduleAlarms(nextPomodoro);
-
-        if (mListener != null) {
-            mListener.syncNotification(activityType, nextPomodoro,
-                    pomodorosDoneStorage.get(), isScreenOn());
         }
     }
 
@@ -156,19 +154,18 @@ public class PomodoroMaster {
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, whenMs.getMillis(), pendingAlarmIntent);
         }
-//        PendingIntent pendingAlarmTickIntent = createPendingIntentTickAlarmBroadcast(this);
-//        DateTime now = DateTime.now();
-//        int oneMinuteMs = 20 * 1000;
-//        int fiveSecondsMs = 20 * 1000;
-//        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, now.getMillis() + fiveSecondsMs, oneMinuteMs, pendingAlarmTickIntent);
-        //TODO Handler ile tick leri yap.
+        PendingIntent pendingAlarmTickIntent = createPendingIntentTickAlarmBroadcast(app);
+        DateTime now = DateTime.now();
+        int oneMinuteMs = 40 * 1000;
+        int fiveSecondsMs = 5 * 1000;
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, now.getMillis() + fiveSecondsMs, oneMinuteMs, pendingAlarmTickIntent);
     }
 
     private void unscheduleAlarms() {
         PendingIntent pendingAlarmIntent = createPendingIntentAlarm(app);
         alarmManager.cancel(pendingAlarmIntent);
-//        PendingIntent pendingAlarmTickIntent = createPendingIntentTickAlarmBroadcast(this);
-//        alarmManager.cancel(pendingAlarmTickIntent);
+        PendingIntent pendingAlarmTickIntent = createPendingIntentTickAlarmBroadcast(app);
+        alarmManager.cancel(pendingAlarmTickIntent);
     }
 
 //    private void startDisplayService() {
@@ -247,15 +244,17 @@ public class PomodoroMaster {
     }
 
     public static NotificationCompat.Action createStopAction(@NonNull Context context, @DrawableRes int actionIcon) {
-        PendingIntent stopActionPendingIntent = createPendingIntentStop(context);
-
+        Intent stopActionIntent = new Intent(ACTION_STOP);
+        final PendingIntent stopActionPendingIntent;
+        if (context.getPackageManager().resolveService(stopActionIntent, 0) != null) {
+            stopActionPendingIntent =
+                    PendingIntent.getService(context, 0, stopActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        } else {
+            stopActionPendingIntent =
+                    PendingIntent.getBroadcast(context, 0, stopActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
         return new NotificationCompat.Action.Builder(actionIcon,
                 context.getString(R.string.stop), stopActionPendingIntent).build();
-    }
-
-    public static PendingIntent createPendingIntentStop(@NonNull Context context) {
-        Intent stopActionIntent = new Intent(ACTION_STOP);
-        return PendingIntent.getService(context, 0, stopActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     public static PendingIntent createPendingIntentAlarm(@NonNull Context context) {

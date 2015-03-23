@@ -4,19 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import com.vngrs.android.pomodoro.BuildConfig;
+import com.vngrs.android.pomodoro.service.PomodoroService;
 
 import hugo.weaving.DebugLog;
 
 public class PomodoroAlarmTickReceiver extends WakefulBroadcastReceiver {
 
-    public static final String ACTION = BuildConfig.APPLICATION_ID + ".action.ALARM_TICK";
-
     @DebugLog
     @Override
     public void onReceive(Context context, Intent intent) {
-//        App.get(context).component().inject(this);
-//        pomodoroMaster.syncNotification();
+        final Intent service = new Intent(context, PomodoroService.class);
+        service.setAction(intent.getAction());
+        startWakefulService(context, service);
     }
 
 }

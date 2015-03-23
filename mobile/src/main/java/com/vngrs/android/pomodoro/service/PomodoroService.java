@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import com.vngrs.android.pomodoro.App;
+import com.vngrs.android.pomodoro.R;
 import com.vngrs.android.pomodoro.receivers.PomodoroAlarmReceiver;
+import com.vngrs.android.pomodoro.receivers.PomodoroAlarmTickReceiver;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
 import com.vngrs.android.pomodoro.ui.MainActivity;
@@ -47,11 +49,20 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
                     break;
                 case PomodoroMaster.ACTION_ALARM:
                     //TODO change the notification with a message and start button.
-//                    ActivityType stoppingForType = activityTypeStorage.get();
+                    pomodoroMaster.handleAlarm();
                     PomodoroAlarmReceiver.completeWakefulIntent(intent);
                     break;
+                case PomodoroMaster.ACTION_ALARM_TICK:
+                    //TODO change the notification with a message and start button.
+                    pomodoroMaster.handleAlarmTick();
+                    PomodoroAlarmTickReceiver.completeWakefulIntent(intent);
+                    break;
                 case PomodoroMaster.ACTION_START:
-                    pomodoroMaster.handleStart();
+                    final ActivityType activityType =
+                        ActivityType.fromValue(intent.getIntExtra(PomodoroMaster.EXTRA_ACTIVITY_TYPE, 0));
+                    if (activityType != ActivityType.NONE) {
+                        pomodoroMaster.handleStart(activityType);
+                    }
                     break;
                 default:
                     break;
