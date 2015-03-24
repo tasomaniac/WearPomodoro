@@ -1,6 +1,5 @@
 package com.vngrs.android.pomodoro.wear;
 
-import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +21,10 @@ public class PomodoroNotificationReceiver extends BroadcastReceiver implements P
     private static final int NOTIFICATION_ID = 1;
     private Context context;
 
-    @Inject NotificationManagerCompat notificationManager;
-    @Inject PomodoroMaster pomodoroMaster;
+    @Inject
+    NotificationManagerCompat notificationManager;
+    @Inject
+    PomodoroMaster pomodoroMaster;
 
     public PomodoroNotificationReceiver() {
     }
@@ -76,18 +77,43 @@ public class PomodoroNotificationReceiver extends BroadcastReceiver implements P
             } else {
                 action = PomodoroMaster.createStartAction(context, R.drawable.ic_action_start, activityType);
             }
-            final Notification notification =
-                    PomodoroMaster.createNotificationBuilderForActivityType(context,
-                            new Intent(),
-                            activityType,
-                            pomodorosDone,
-                            nextPomodoro,
-                            screenOn,
-                            isOngoing)
-                            .setLocalOnly(true)
-                            .addAction(action)
-                            .build();
-            notificationManager.notify(NOTIFICATION_ID, notification);
+            NotificationCompat.Builder builder = PomodoroMaster.createNotificationBuilderForActivityType(context,
+                    action.actionIntent,
+                    activityType,
+                    pomodorosDone,
+                    nextPomodoro,
+                    screenOn,
+                    isOngoing)
+                    .setLocalOnly(true)
+                    .setContentText(null)
+                    .addAction(action)
+                    .extend(new NotificationCompat.WearableExtender()
+                            .setHintHideIcon(true)
+//                            .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_MEDIUM)
+//                            .setContentAction(0)
+                            .setContentIcon(isOngoing
+                                    ? R.drawable.ic_action_stop_grey
+                                    : R.drawable.ic_action_start_grey));
+//            final Intent displayIntent = new Intent(context, PomodoroNotificationActivity.class);
+//            displayIntent.putExtra(PomodoroNotificationActivity.EXTRA_ACTION_PENDING_INTENT, action.actionIntent);
+//            displayIntent.putExtra(PomodoroNotificationActivity.EXTRA_IS_ONGOING, isOngoing);
+//            final PendingIntent displayPendingIntent = PendingIntent.getActivity(context,
+//                    0, displayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//            NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+//                    .setSmallIcon(R.mipmap.ic_launcher)
+////                    .setDefaults(Notification.DEFAULT_ALL)
+////                    .setCategory(NotificationCompat.CATEGORY_ALARM)
+////                    .setPriority(isOngoing ? Notification.PRIORITY_HIGH : Notification.PRIORITY_DEFAULT)
+//                    .setOngoing(isOngoing)
+////                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+////                    .setLocalOnly(true)
+//                    .addAction(action)
+//                    .extend(new NotificationCompat.WearableExtender()
+//                            .setHintHideIcon(true)
+//                            .setDisplayIntent(displayPendingIntent)
+//                            .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_MEDIUM));
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
         } else {
             Timber.d("ignore notify for activityType " + ActivityType.NONE);
         }

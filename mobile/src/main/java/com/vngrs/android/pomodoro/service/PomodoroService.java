@@ -1,6 +1,7 @@
 package com.vngrs.android.pomodoro.service;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -93,9 +94,10 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
             } else {
                 action = PomodoroMaster.createStartAction(this, R.drawable.ic_action_start, activityType);
             }
+            final Intent contentIntent = new Intent(this, MainActivity.class);
             final Notification notification =
                     PomodoroMaster.createNotificationBuilderForActivityType(this,
-                            new Intent(this, MainActivity.class),
+                            PendingIntent.getActivity(this, 0, contentIntent, 0),
                             activityType,
                             pomodorosDone,
                             nextPomodoro,

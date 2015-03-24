@@ -211,15 +211,14 @@ public class PomodoroMaster {
 
     @NonNull
     public static NotificationCompat.Builder createNotificationBuilderForActivityType(@NonNull Context context,
-                                                                                      @NonNull Intent contentIntent,
+                                                                                      @NonNull PendingIntent contentIntent,
                                                                                       @NonNull ActivityType activityType,
                                                                                       int pomodorsDone,
                                                                                       @Nullable DateTime whenMs,
                                                                                       boolean isScreenOn,
                                                                                       boolean isOngoing) {
-        final String message = messageForActivityType(context, activityType, pomodorsDone, whenMs, isOngoing);
-        final PendingIntent contentPendingIntent =
-                PendingIntent.getActivity(context, 0, contentIntent, 0);
+        final String title = messageForActivityType(context, activityType, pomodorsDone, whenMs, isOngoing);
+        final String message = titleForActivityType(context, activityType, pomodorsDone, isOngoing);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -230,10 +229,9 @@ public class PomodoroMaster {
                 .setOngoing(isOngoing && activityType != ActivityType.NONE)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setWhen(whenMs != null ? whenMs.getMillis() : System.currentTimeMillis())
-                .setContentIntent(contentPendingIntent)
-                .setContentTitle(titleForActivityType(context, activityType, pomodorsDone, isOngoing))
-                .setContentText(message)
-                .setTicker(message);
+                .setContentIntent(contentIntent)
+                .setContentTitle(title)
+                .setContentText(message);
 
         return builder;
     }

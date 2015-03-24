@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.vngrs.android.pomodoro.wear">
+    package="com.vngrs.android.pomodoro.wear" >
 
-  <uses-feature android:name="android.hardware.type.watch" />
+    <uses-feature android:name="android.hardware.type.watch" />
 
-  <application
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:name=".App"
-    android:theme="@android:style/Theme.DeviceDefault">
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.DeviceDefault.Light" >
+        <activity
+            android:name=".PomodoroWearBroadcastActivity"
+            android:label="@string/start_working" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-    <activity
-      android:name=".PomodoroWearBroadcastActivity"
-      android:label="@string/start_working">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
+        <receiver
+            android:name=".PomodoroNotificationReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.vngrs.android.pomodoro.action.START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.vngrs.android.pomodoro.action.STOP" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.vngrs.android.pomodoro.action.ALARM" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.vngrs.android.pomodoro.action.ALARM_TICK" />
+            </intent-filter>
+        </receiver>
 
-    <receiver
-      android:name=".PomodoroNotificationReceiver"
-      android:exported="true">
-      <intent-filter>
-        <action android:name="com.vngrs.android.pomodoro.action.START" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="com.vngrs.android.pomodoro.action.STOP" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="com.vngrs.android.pomodoro.action.ALARM" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="com.vngrs.android.pomodoro.action.ALARM_TICK" />
-      </intent-filter>
-    </receiver>
-  </application>
+
+        <activity android:name=".PomodoroNotificationActivity"
+          android:exported="true"
+          android:allowEmbedded="true"
+          android:taskAffinity=""
+          android:theme="@android:style/Theme.DeviceDefault.Light" />
+    </application>
 
 </manifest>

@@ -28,6 +28,7 @@ dependencies {
     compile 'com.android.support:support-annotations:22.0.0'
 
     compile 'net.danlew:android.joda:2.7.1'
+    compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.jakewharton.timber:timber:2.7.1'
 
     compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
