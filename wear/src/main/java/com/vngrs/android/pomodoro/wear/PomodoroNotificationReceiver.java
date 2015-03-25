@@ -22,10 +22,8 @@ public class PomodoroNotificationReceiver extends BroadcastReceiver implements P
     private static final int NOTIFICATION_ID = 1;
     private Context context;
 
-    @Inject
-    NotificationManagerCompat notificationManager;
-    @Inject
-    PomodoroMaster pomodoroMaster;
+    @Inject NotificationManagerCompat notificationManager;
+    @Inject PomodoroMaster pomodoroMaster;
 
     public PomodoroNotificationReceiver() {
     }

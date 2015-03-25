@@ -15,6 +15,7 @@ public interface PomodoroComponent {
 
     void inject(App app);
     void inject(PomodoroNotificationReceiver receiver);
+    void inject(OngoingNotificationListenerService service);
 
     /**
      * An initializer that creates the graph from an application.

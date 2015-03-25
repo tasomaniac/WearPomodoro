@@ -4,13 +4,22 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
 import com.vngrs.android.pomodoro.receivers.PomodoroAlarmReceiver;
 import com.vngrs.android.pomodoro.receivers.PomodoroAlarmTickReceiver;
+import com.vngrs.android.pomodoro.shared.Constants;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
 import com.vngrs.android.pomodoro.ui.MainActivity;
@@ -21,11 +30,14 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-public class PomodoroService extends Service implements PomodoroMaster.PomodoroMasterListener {
+public class PomodoroService extends Service implements PomodoroMaster.PomodoroMasterListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int NOTIFICATION_ID = 1;
 
     @Inject PomodoroMaster pomodoroMaster;
+
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -37,10 +49,25 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
     public void onCreate() {
         super.onCreate();
         App.get(this).component().inject(this);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
+
         pomodoroMaster.setPomodoroMasterListener(this);
         pomodoroMaster.check();
 
@@ -79,6 +106,9 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
         super.onDestroy();
         stopForeground(true);
         pomodoroMaster.stop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -109,5 +139,41 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
         } else {
             Timber.d("ignore notify for activityType " + ActivityType.NONE);
         }
+    }
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        if (mGoogleApiClient.isConnected()) {
+            PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(Constants.PATH_NOTIFICATION);
+
+            // Add data to the request
+            putDataMapRequest.getDataMap().putString(Constants.KEY_TITLE, "hello world!");
+
+//                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+//                Asset asset = createAssetFromBitmap(icon);
+//                putDataMapRequest.getDataMap().putAsset(Constants.KEY_IMAGE, asset);
+
+            PutDataRequest request = putDataMapRequest.asPutDataRequest();
+
+            Wearable.DataApi.putDataItem(mGoogleApiClient, request)
+                    .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+                        @Override
+                        public void onResult(DataApi.DataItemResult dataItemResult) {
+                            Timber.d("putDataItem status: " + dataItemResult.getStatus().toString());
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Timber.e("Failed to connect to Google Api Client with error code "
+                + connectionResult.getErrorCode());
     }
 }
