@@ -210,25 +210,31 @@ public class PomodoroMaster {
     }
 
     @NonNull
-    public static NotificationCompat.Builder createNotificationBuilderForActivityType(@NonNull Context context,
-                                                                                      @NonNull PendingIntent contentIntent,
-                                                                                      @NonNull ActivityType activityType,
-                                                                                      int pomodorsDone,
-                                                                                      @Nullable DateTime whenMs,
-                                                                                      boolean isScreenOn,
-                                                                                      boolean isOngoing) {
-        final String title = messageForActivityType(context, activityType, pomodorsDone, whenMs, isOngoing);
-        final String message = titleForActivityType(context, activityType, pomodorsDone, isOngoing);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+    public static NotificationCompat.Builder createBaseNotification(@NonNull Context context,
+                                                                    boolean isOngoing) {
+        return new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(isOngoing ? Notification.PRIORITY_HIGH : Notification.PRIORITY_DEFAULT)
-                .setOngoing(isOngoing && activityType != ActivityType.NONE)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setWhen(whenMs != null ? whenMs.getMillis() : System.currentTimeMillis())
+                .setOngoing(isOngoing)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+    }
+
+    @NonNull
+    public static NotificationCompat.Builder createNotificationBuilderForActivityType(@NonNull Context context,
+                                                                                      @NonNull PendingIntent contentIntent,
+                                                                                      @NonNull ActivityType activityType,
+                                                                                      int pomodorosDone,
+                                                                                      @Nullable DateTime nextPomodoro,
+                                                                                      boolean isScreenOn,
+                                                                                      boolean isOngoing) {
+        final String message = messageForActivityType(context, activityType, pomodorosDone, nextPomodoro, isOngoing);
+        final String title = titleForActivityType(context, activityType, pomodorosDone, nextPomodoro, isOngoing);
+
+        NotificationCompat.Builder builder = createBaseNotification(context, isOngoing)
+                .setWhen(nextPomodoro != null ? nextPomodoro.getMillis() : System.currentTimeMillis())
                 .setContentIntent(contentIntent)
                 .setContentTitle(title)
                 .setContentText(message);
@@ -292,7 +298,20 @@ public class PomodoroMaster {
     public static String titleForActivityType(@NonNull Context context,
                                               @NonNull ActivityType activityType,
                                               int pomodorosDone,
+                                              DateTime nextPomodoro,
                                               boolean isOngoing) {
+        if (isOngoing) {
+            return convertDiffToPrettyMinutesLeft(context, nextPomodoro.getMillis() - System.currentTimeMillis());
+        } else {
+            return context.getString(R.string.title_finished);
+        }
+    }
+
+    public static String messageForActivityType(@NonNull Context context,
+                                                @NonNull ActivityType activityType,
+                                                int pomodorosDone,
+                                                DateTime nextPomodoro,
+                                                boolean isOngoing) {
         if (isOngoing) {
             switch (activityType) {
                 case LONG_BREAK:
@@ -304,18 +323,6 @@ public class PomodoroMaster {
                 default:
                     throw new IllegalStateException("unsupported activityType " + activityType);
             }
-        } else {
-            return context.getString(R.string.title_finished);
-        }
-    }
-
-    public static String messageForActivityType(@NonNull Context context,
-                                                @NonNull ActivityType activityType,
-                                                int pomodorosDone,
-                                                DateTime whenMs,
-                                                boolean isOngoing) {
-        if (isOngoing) {
-            return convertDiffToPrettyMinutesLeft(context, whenMs.getMillis() - System.currentTimeMillis());
         } else {
             switch (activityType) {
                 case LONG_BREAK:
