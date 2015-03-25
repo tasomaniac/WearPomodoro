@@ -89,8 +89,7 @@ public class PomodoroNotificationReceiver extends BroadcastReceiver implements P
                     .addAction(action);
 
             Bitmap background = Bitmap.createBitmap(600, 600, Bitmap.Config.RGB_565);
-            background.eraseColor(context.getResources().getColor(
-                    isOngoing ? R.color.ongoing_red : R.color.finished_green));
+            background.eraseColor(PomodoroMaster.getNotificationColor(context, isOngoing));
 
             final NotificationCompat.WearableExtender extender = new NotificationCompat.WearableExtender()
                     .setBackground(background)

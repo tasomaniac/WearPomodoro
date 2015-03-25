@@ -209,9 +209,11 @@ public class PomodoroMaster {
         }
     }
 
+
     @NonNull
     public static NotificationCompat.Builder createBaseNotification(@NonNull Context context,
                                                                     boolean isOngoing) {
+
         return new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -219,7 +221,12 @@ public class PomodoroMaster {
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(isOngoing ? Notification.PRIORITY_HIGH : Notification.PRIORITY_DEFAULT)
                 .setOngoing(isOngoing)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setColor(getNotificationColor(context, isOngoing));
+    }
+
+    public static int getNotificationColor(@NonNull Context context, boolean isOngoing) {
+        return context.getResources().getColor(isOngoing ? R.color.ongoing_red : R.color.finished_green);
     }
 
     @NonNull
