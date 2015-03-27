@@ -99,12 +99,12 @@ public class PomodoroNotificationReceiver extends BroadcastReceiver implements P
 //                final PendingIntent displayPendingIntent = PendingIntent.getActivity(context,
 //                        0, displayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 //                extender
-//                        .addAction(action)
-//                        .addAction(action)
-//                        .setContentIcon(R.drawable.ic_action_stop_grey)
-//                        .setContentAction(0)
+////                        .addAction(action)
+////                        .addAction(action)
+////                        .setContentIcon(R.drawable.ic_action_stop_grey)
+////                        .setContentAction(0)
 //                        .setDisplayIntent(displayPendingIntent)
-//                        .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_XSMALL);
+//                        .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_MEDIUM);
             } else {
                 extender
 //                        .addAction(action)

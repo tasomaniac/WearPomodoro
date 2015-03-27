@@ -1,6 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-  android:layout_height="wrap_content"
+  android:layout_height="match_parent"
+  android:id="@+id/content"
+  android:paddingLeft="0dp"
+  android:paddingRight="0dp"
   tools:context="com.vngrs.android.pomodoro.wear.PomodoroNotificationActivity"
   tools:deviceIds="wear_round">
 
@@ -23,7 +26,7 @@
     android:paddingBottom="2dp"
     android:layout_toStartOf="@id/pomodoro_start_stop_button"
     style="@style/TextView.Medium.Light"
-    android:textColor="#a2a2a2"/>
+    android:textColor="@color/notification_primary"/>
 
   <TextView
     android:id="@+id/pomodoro_description"
@@ -34,6 +37,6 @@
     android:layout_below="@id/pomodoro_time"
     android:layout_toStartOf="@id/pomodoro_start_stop_button"
     style="@style/TextView.Small.Light"
-    android:textColor="#434343"/>
+    android:textColor="@color/notification_secondary"/>
 
 </RelativeLayout>

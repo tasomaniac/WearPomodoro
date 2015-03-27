@@ -48,10 +48,12 @@
         </service>
 
         <activity android:name=".PomodoroNotificationActivity"
-          android:exported="true"
           android:allowEmbedded="true"
-          android:taskAffinity=""
-          android:theme="@style/Theme.Pomodoro" />
+          android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

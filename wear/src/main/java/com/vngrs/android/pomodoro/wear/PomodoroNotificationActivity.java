@@ -3,10 +3,12 @@ package com.vngrs.android.pomodoro.wear;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.InjectView;
+import timber.log.Timber;
 
 public class PomodoroNotificationActivity extends Activity {
 
@@ -48,5 +50,16 @@ public class PomodoroNotificationActivity extends Activity {
         pomodoroStartStopButton.setContentDescription(isOngoing
                 ? getString(R.string.cd_start_pomodoro)
                 : getString(R.string.cd_stop_pomodoro));
+
+        findViewById(R.id.content).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    actionPendingIntent.send();
+                } catch (PendingIntent.CanceledException e) {
+                    Timber.e(e, "PendingIntent Canceled exception.");
+                }
+            }
+        });
     }
 }

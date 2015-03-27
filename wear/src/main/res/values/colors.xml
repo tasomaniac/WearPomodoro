@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="notification_primary">#a2a3a3</color>
+  <color name="notification_secondary">#434343</color>
+</resources>
