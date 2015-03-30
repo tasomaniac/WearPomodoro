@@ -76,11 +76,11 @@ public class PomodoroService extends Service implements PomodoroMaster.PomodoroM
                 case PomodoroMaster.ACTION_STOP:
                     stopSelf();
                     break;
-                case PomodoroMaster.ACTION_ALARM:
+                case PomodoroMaster.ACTION_FINISH_ALARM:
                     pomodoroMaster.handleAlarm();
                     PomodoroAlarmReceiver.completeWakefulIntent(intent);
                     break;
-                case PomodoroMaster.ACTION_ALARM_TICK:
+                case PomodoroMaster.ACTION_UPDATE:
                     pomodoroMaster.handleAlarmTick();
                     PomodoroAlarmTickReceiver.completeWakefulIntent(intent);
                     break;

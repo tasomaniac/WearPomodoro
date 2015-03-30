@@ -42,10 +42,10 @@ public class PomodoroNotificationReceiver extends BroadcastReceiver implements P
                     notificationManager.cancel(NOTIFICATION_ID);
                     pomodoroMaster.stop();
                     break;
-                case PomodoroMaster.ACTION_ALARM:
+                case PomodoroMaster.ACTION_FINISH_ALARM:
                     pomodoroMaster.handleAlarm();
                     break;
-                case PomodoroMaster.ACTION_ALARM_TICK:
+                case PomodoroMaster.ACTION_UPDATE:
                     pomodoroMaster.handleAlarmTick();
                     break;
                 case PomodoroMaster.ACTION_START:

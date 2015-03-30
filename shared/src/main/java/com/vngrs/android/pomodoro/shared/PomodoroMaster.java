@@ -36,10 +36,23 @@ public class PomodoroMaster {
 
     public static final String EXTRA_ACTIVITY_TYPE = "com.vngrs.android.pomodoro.extra.ACTIVITY_TYPE";
 
-    public static final String ACTION_ALARM = "com.vngrs.android.pomodoro.action.ALARM";
-    public static final String ACTION_ALARM_TICK = "com.vngrs.android.pomodoro.action.ALARM_TICK";
     public static final String ACTION_START = "com.vngrs.android.pomodoro.action.START";
     public static final String ACTION_STOP = "com.vngrs.android.pomodoro.action.STOP";
+//    public static final String ACTION_PAUSE = "com.vngrs.android.pomodoro.action.PAUSE";
+//    public static final String ACTION_RESUME = "com.vngrs.android.pomodoro.action.RESUME";
+    public static final String ACTION_RESET = "com.vngrs.android.pomodoro.action.RESET";
+    public static final String ACTION_UPDATE = "com.vngrs.android.pomodoro.action.UPDATE";
+    public static final String ACTION_FINISH_ALARM = "com.vngrs.android.pomodoro.action.ALARM";
+
+    public static final Intent START_INTENT = new Intent(ACTION_START);
+    public static final Intent STOP_INTENT = new Intent(ACTION_STOP);
+//    public static final Intent PAUSE_INTENT = new Intent(ACTION_PAUSE);
+//    public static final Intent RESUME_INTENT = new Intent(ACTION_RESUME);
+    public static final Intent RESET_INTENT = new Intent(ACTION_RESET);
+    public static final Intent UPDATE_INTENT = new Intent(ACTION_UPDATE);
+    public static final Intent FINISH_ALARM = new Intent(ACTION_FINISH_ALARM);
+
+
 
     public interface PomodoroMasterListener {
         void syncNotification(ActivityType activityType, DateTime nextPomodoro,
@@ -281,13 +294,11 @@ public class PomodoroMaster {
     }
 
     public static PendingIntent createPendingIntentAlarm(@NonNull Context context) {
-        Intent intent = new Intent(ACTION_ALARM);
-        return PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent.getBroadcast(context, 1, FINISH_ALARM, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     public static PendingIntent createPendingIntentTickAlarmBroadcast(Context context) {
-        Intent intent = new Intent(ACTION_ALARM_TICK);
-        return PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent.getBroadcast(context, 2, UPDATE_INTENT, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
 //    public static int backgroundResourceForActivityType(ActivityType activityType) {
