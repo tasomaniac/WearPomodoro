@@ -50,9 +50,10 @@ public class PomodoroMaster {
 //    public static final Intent RESUME_INTENT = new Intent(ACTION_RESUME);
     public static final Intent RESET_INTENT = new Intent(ACTION_RESET);
     public static final Intent UPDATE_INTENT = new Intent(ACTION_UPDATE);
-    public static final Intent FINISH_ALARM = new Intent(ACTION_FINISH_ALARM);
+    public static final Intent FINISH_ALARM_INTENT = new Intent(ACTION_FINISH_ALARM);
 
-
+    private static final int REQUEST_UPDATE = 1;
+    private static final int REQUEST_FINISH = 2;
 
     public interface PomodoroMasterListener {
         void syncNotification(ActivityType activityType, DateTime nextPomodoro,
@@ -103,7 +104,8 @@ public class PomodoroMaster {
         nextPomodoroStorage.set(nextPomodoro);
         activityTypeStorage.set(nextActivityType);
 
-        scheduleAlarms(nextPomodoro);
+        setAlarm(app, REQUEST_FINISH, FINISH_ALARM_INTENT, nextPomodoro.getMillis());
+        setRepeatingAlarm(app, REQUEST_UPDATE, UPDATE_INTENT);
 
         isOngoing = true;
         if (mListener != null) {
@@ -168,30 +170,11 @@ public class PomodoroMaster {
             lastPomodoroStorage.set(DateTime.now());
         }
         activityTypeStorage.set(ActivityType.NONE);
-        unscheduleAlarms();
+
+        cancelAlarm(app, REQUEST_FINISH, FINISH_ALARM_INTENT);
+        cancelAlarm(app, REQUEST_UPDATE, UPDATE_INTENT);
+
         return stoppingForType;
-    }
-
-    private void scheduleAlarms(DateTime whenMs) {
-
-        PendingIntent pendingAlarmIntent = createPendingIntentAlarm(app);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, whenMs.getMillis(), pendingAlarmIntent);
-        } else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, whenMs.getMillis(), pendingAlarmIntent);
-        }
-        PendingIntent pendingAlarmTickIntent = createPendingIntentTickAlarmBroadcast(app);
-        DateTime now = DateTime.now();
-        int oneMinuteMs = 20 * 1000;
-        int fiveSecondsMs = 5 * 1000;
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, now.getMillis() + fiveSecondsMs, oneMinuteMs, pendingAlarmTickIntent);
-    }
-
-    private void unscheduleAlarms() {
-        PendingIntent pendingAlarmIntent = createPendingIntentAlarm(app);
-        alarmManager.cancel(pendingAlarmIntent);
-        PendingIntent pendingAlarmTickIntent = createPendingIntentTickAlarmBroadcast(app);
-        alarmManager.cancel(pendingAlarmTickIntent);
     }
 
 //    private void startDisplayService() {
@@ -201,6 +184,33 @@ public class PomodoroMaster {
 //    private void stopDisplayService() {
 //        stopService(new Intent(this, PomodoroNotificationService.class));
 //    }
+
+    private void setRepeatingAlarm(Context context, int requestCode, Intent intent) {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, pendingIntent);
+    }
+
+    private boolean isAlarmSet(Context context, int requestCode, Intent intent) {
+        return PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_NO_CREATE) != null;
+    }
+
+    private void setAlarm(Context context, int requestCode, Intent intent, long time) {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        }
+    }
+
+    private void cancelAlarm(Context context, int requestCode, Intent intent) {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_NO_CREATE);
+        if (pendingIntent != null) {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+        }
+    }
 
     @SuppressWarnings("deprecation")
     private boolean isScreenOn() {
@@ -291,14 +301,6 @@ public class PomodoroMaster {
         }
         return new NotificationCompat.Action.Builder(actionIcon,
                 context.getString(R.string.stop), stopActionPendingIntent).build();
-    }
-
-    public static PendingIntent createPendingIntentAlarm(@NonNull Context context) {
-        return PendingIntent.getBroadcast(context, 1, FINISH_ALARM, PendingIntent.FLAG_CANCEL_CURRENT);
-    }
-
-    public static PendingIntent createPendingIntentTickAlarmBroadcast(Context context) {
-        return PendingIntent.getBroadcast(context, 2, UPDATE_INTENT, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
 //    public static int backgroundResourceForActivityType(ActivityType activityType) {
