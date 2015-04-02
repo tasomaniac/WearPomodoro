@@ -24,7 +24,7 @@
         </activity>
 
         <receiver
-            android:name=".receivers.PomodoroAlarmReceiver"
+            android:name=".receivers.PomodoroReceiver"
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
@@ -38,11 +38,6 @@
             </intent-filter>
         </receiver>
         <!--<receiver-->
-            <!--android:name=".receivers.PomodoroAlarmTickReceiver"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="false" >-->
-        <!--</receiver>-->
-        <!--<receiver-->
             <!--android:name=".receivers.PomodoroControlReceiver"-->
             <!--android:enabled="true"-->
             <!--android:exported="false" >-->
@@ -52,12 +47,6 @@
             android:name=".service.PomodoroService"
             android:enabled="true"
             android:exported="false" >
-            <intent-filter>
-                <action android:name="${applicationId}.action.START" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="${applicationId}.action.STOP" />
-            </intent-filter>
         </service>
     </application>
 

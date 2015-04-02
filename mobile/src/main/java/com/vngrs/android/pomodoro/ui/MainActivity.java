@@ -8,10 +8,10 @@ import android.view.MenuItem;
 
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
-import com.vngrs.android.pomodoro.shared.PomodoroMaster;
+import com.vngrs.android.pomodoro.service.PomodoroService;
+import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
 import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
-import com.vngrs.android.pomodoro.service.PomodoroService;
 
 import javax.inject.Inject;
 
@@ -27,9 +27,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         App.get(this).component().inject(this);
 
-        final Intent intent = new Intent(PomodoroMaster.ACTION_START, null, this, PomodoroService.class);
-        intent.putExtra(PomodoroMaster.EXTRA_ACTIVITY_TYPE, ActivityType.POMODORO.value());
+        final Intent intent = new Intent(this, PomodoroService.class);
         startService(intent);
+
+        sendBroadcast(
+                BaseNotificationReceiver.START_INTENT
+                    .putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE,
+                            ActivityType.POMODORO.value())
+        );
     }
 
     @Override

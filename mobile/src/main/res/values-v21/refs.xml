@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <item name="ic_action_start" type="drawable">@drawable/ic_action_start_grey</item>
-  <item name="ic_action_stop" type="drawable">@drawable/ic_action_stop_grey</item>
-</resources>

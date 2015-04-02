@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="ic_action_start_phone" type="drawable">@drawable/ic_action_start_white</item>
+  <item name="ic_action_stop_phone" type="drawable">@drawable/ic_action_stop_white</item>
+</resources>
