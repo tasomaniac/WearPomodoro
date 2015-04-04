@@ -83,17 +83,16 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
         }
     }
 
-    private ActivityType stop(Context context) {
+    private void stop(Context context) {
         notificationManager.cancel(NOTIFICATION_ID);
+        pomodoroMaster.stop();
 
         cancelAlarm(context, REQUEST_FINISH, FINISH_ALARM_INTENT);
         cancelAlarm(context, REQUEST_UPDATE, UPDATE_INTENT);
-
-        return pomodoroMaster.stop();
     }
 
     private void finishAlarm(Context context) {
-        ActivityType justStoppedActivityType = stop(context);
+        ActivityType justStoppedActivityType = pomodoroMaster.stop();
         final ActivityType nextActivityType;
         if (justStoppedActivityType.isPomodoro()) {
             if ((pomodoroMaster.getPomodorosDone() + 1) % Constants.POMODORO_NUMBER_FOR_LONG_BREAK == 0) {
@@ -105,6 +104,9 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
             nextActivityType = ActivityType.POMODORO;
         }
         pomodoroMaster.setActivityType(nextActivityType);
+
+        cancelAlarm(context, REQUEST_FINISH, FINISH_ALARM_INTENT);
+        cancelAlarm(context, REQUEST_UPDATE, UPDATE_INTENT);
     }
 
 

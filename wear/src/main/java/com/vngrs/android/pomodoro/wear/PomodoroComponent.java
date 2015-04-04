@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 /**
+ * Dagger 2 Component containing parts of the application.
+ *
  * Created by Said Tahsin Dane on 17/03/15.
  */
 @Singleton
@@ -16,11 +18,12 @@ public interface PomodoroComponent {
     void inject(App app);
     void inject(PomodoroNotificationReceiver receiver);
     void inject(OngoingNotificationListenerService service);
+    void inject(PomodoroNotificationActivity activity);
 
     /**
      * An initializer that creates the graph from an application.
      */
-    final static class Initializer {
+    final class Initializer {
         static PomodoroComponent init(App app) {
             return Dagger_PomodoroComponent.builder()
                     .appModule(new AppModule(app))

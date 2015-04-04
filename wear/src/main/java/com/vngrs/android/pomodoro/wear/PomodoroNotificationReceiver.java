@@ -8,9 +8,6 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
 import com.vngrs.android.pomodoro.shared.NotificationBuilder;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
-import com.vngrs.android.pomodoro.shared.model.ActivityType;
-
-import timber.log.Timber;
 
 public class PomodoroNotificationReceiver extends BaseNotificationReceiver {
 
@@ -26,13 +23,13 @@ public class PomodoroNotificationReceiver extends BaseNotificationReceiver {
 
     public void updateNotification(Context context, PomodoroMaster pomodoroMaster) {
 
-        if (pomodoroMaster.getActivityType() != ActivityType.NONE) {
-            NotificationBuilder builder = new NotificationBuilder(context, pomodoroMaster);
-            Notification notification = builder.buildNotificationWear();
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(NOTIFICATION_ID, notification);
-        } else {
-            Timber.d("ignore notify for activityType " + ActivityType.NONE);
-        }
+        final Intent displayIntent = new Intent(context, PomodoroNotificationActivity.class);
+//            displayIntent.putExtra(PomodoroNotificationActivity.EXTRA_ACTION_PENDING_INTENT, action.actionIntent);
+//            displayIntent.putExtra(PomodoroNotificationActivity.EXTRA_IS_ONGOING, pm.isO);
+
+        NotificationBuilder builder = new NotificationBuilder(context, pomodoroMaster);
+        Notification notification = builder.buildNotificationWear(displayIntent);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 }

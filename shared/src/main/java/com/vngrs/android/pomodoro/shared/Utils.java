@@ -1,7 +1,10 @@
 package com.vngrs.android.pomodoro.shared;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.TypedValue;
 
 import org.joda.time.DateTime;
 
@@ -35,6 +38,31 @@ public class Utils {
             return sameDay && isBothAfter6am;
         } else {
             return false;
+        }
+    }
+
+
+    /**
+     * Converts dp value to px value.
+     *
+     * @param res Resources objects to get displayMetrics.
+     * @param dp original dp value.
+     * @return px value.
+     */
+    public static int dpToPx(Resources res, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
+    }
+
+    public static String getActivityTitle(@NonNull Context context, PomodoroMaster pomodoroMaster) {
+        switch (pomodoroMaster.getActivityType()) {
+            case LONG_BREAK:
+                return context.getString(R.string.title_break_long);
+            case POMODORO:
+                return context.getString(R.string.title_pomodoro_no, (pomodoroMaster.getPomodorosDone() + 1));
+            case SHORT_BREAK:
+                return context.getString(R.string.title_break_short);
+            default:
+                throw new IllegalStateException("unsupported activityType " + pomodoroMaster.getActivityType());
         }
     }
 }

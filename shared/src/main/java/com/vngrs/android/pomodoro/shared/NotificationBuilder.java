@@ -17,9 +17,9 @@ public class NotificationBuilder {
     private static final int ID_ACTIVITY = 1;
     private static final int ID_START = 2;
     private static final int ID_STOP = 3;
-    private static final int ID_PAUSE = 4;
-    private static final int ID_RESUME = 5;
-    private static final int ID_RESET = 6;
+//    private static final int ID_PAUSE = 4;
+//    private static final int ID_RESUME = 5;
+//    private static final int ID_RESET = 6;
 
     private final Context context;
     private final PomodoroMaster pomodoroMaster;
@@ -30,7 +30,7 @@ public class NotificationBuilder {
     }
 
     @NonNull
-    public NotificationCompat.Builder buildBaseNotification(@NonNull Context context) {
+    private NotificationCompat.Builder buildBaseNotification() {
 
         return new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -38,104 +38,82 @@ public class NotificationBuilder {
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(pomodoroMaster.isOngoing()
-                        ? Notification.PRIORITY_HIGH : Notification.PRIORITY_DEFAULT)
+                        ? Notification.PRIORITY_MAX : Notification.PRIORITY_DEFAULT)
                 .setOngoing(pomodoroMaster.isOngoing())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setColor(getNotificationColor(context));
+//                .setStyle(new NotificationCompat.BigTextStyle())
+                .setColor(getNotificationColor());
     }
 
-    public int getNotificationColor(@NonNull Context context) {
-        return context.getResources().getColor(pomodoroMaster.isOngoing()
+    private int getNotificationColor() {
+        return context.getResources().getColor(pomodoroMaster.isOngoing() && pomodoroMaster.getActivityType() == ActivityType.POMODORO
                 ? R.color.ongoing_red : R.color.finished_green);
     }
 
-    public Notification buildNotificationWear() {
+    private Bitmap getBackground() {
+        Bitmap background = Bitmap.createBitmap(600, 600, Bitmap.Config.RGB_565);
+        background.eraseColor(getNotificationColor());
+        return background;
+    }
+
+    public Notification buildNotificationWear(@NonNull Intent displayIntent) {
             final NotificationCompat.Action action;
         if (pomodoroMaster.isOngoing()) {
-            action = buildStopAction(context, R.drawable.ic_action_stop_white);
+            action = buildStopAction(context, R.drawable.ic_action_stop_wear);
         } else {
-            action = buildStartAction(context, R.drawable.ic_action_start_white, pomodoroMaster.getActivityType());
+            ActivityType activityType = pomodoroMaster.getActivityType();
+            if (activityType == ActivityType.NONE) {
+                activityType = ActivityType.POMODORO;
+            }
+            action = buildStartAction(context, R.drawable.ic_action_start_wear, activityType);
         }
 
         final String message = messageForActivityType(context);
         final String title = titleForActivityType(context);
 
-        NotificationCompat.Builder builder = buildBaseNotification(context)
+        final NotificationCompat.WearableExtender extender = new NotificationCompat.WearableExtender()
+                .setBackground(getBackground())
+                .setHintHideIcon(true);
+        if (pomodoroMaster.isOngoing()) {
+                final PendingIntent displayPendingIntent = PendingIntent.getActivity(context,
+                        ID_ACTIVITY, displayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                extender.setDisplayIntent(displayPendingIntent);
+//                        .setCustomContentHeight(Utils.dpToPx(context.getResources(), 64));
+//                        .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_SMALL);
+        } else {
+            extender.setContentIcon(R.drawable.ic_action_start_grey);
+        }
+
+        NotificationCompat.Builder builder = buildBaseNotification()
                 .setContentTitle(title)
                 .setContentText(message)
                 .setLocalOnly(true)
-                .addAction(action);
-
-        Bitmap background = Bitmap.createBitmap(600, 600, Bitmap.Config.RGB_565);
-        background.eraseColor(getNotificationColor(context));
-
-        final NotificationCompat.WearableExtender extender = new NotificationCompat.WearableExtender()
-                .setBackground(background)
-                .setHintHideIcon(true);
-        if (pomodoroMaster.isOngoing()) {
-//                final Intent displayIntent = new Intent(context, PomodoroNotificationActivity.class);
-//                displayIntent.putExtra(PomodoroNotificationActivity.EXTRA_ACTION_PENDING_INTENT, action.actionIntent);
-//                displayIntent.putExtra(PomodoroNotificationActivity.EXTRA_IS_ONGOING, isOngoing);
-//                final PendingIntent displayPendingIntent = PendingIntent.getActivity(context,
-//                        0, displayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                extender
-////                        .addAction(action)
-////                        .addAction(action)
-////                        .setContentIcon(R.drawable.ic_action_stop_grey)
-////                        .setContentAction(0)
-//                        .setDisplayIntent(displayPendingIntent)
-//                        .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_MEDIUM);
-        } else {
-            extender
-//                        .addAction(action)
-//                        .addAction(action)
-                    .setContentIcon(R.drawable.ic_action_start_grey);
-//                        .setContentAction(0);
-        }
-        builder.extend(extender);
-
-//        Intent activityIntent = new Intent(context, MatchTimerNotificationActivity.class);
-//        PendingIntent activityPendingIntent = PendingIntent.getActivity(context, ID_ACTIVITY, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-//        NotificationCompat.WearableExtender extender = new NotificationCompat.WearableExtender();
-//        extender.setBackground(BitmapFactory.decodeResource(context.getResources(), R.drawable.bkg_football));
-//        extender.setDisplayIntent(activityPendingIntent);
-//        boolean ongoing = true;
-//        if (pomodoroMaster.isPaused()) {
-//            buildPausedActions(extender);
-//        } else if (pomodoroMaster.isRunning()) {
-//            buildRunningActions(extender);
-//        } else {
-//            buildStoppedActions(extender);
-//            ongoing = false;
-//        }
-//        builder.setContentTitle(buildNotificationTitle(pomodoroMaster))
-//                .setSmallIcon(R.drawable.ic_football)
-//                .setStyle(new NotificationCompat.BigTextStyle())
-//                .setOngoing(ongoing);
-//        builder.setPriority(Notification.PRIORITY_MAX);
-//        builder.extend(extender);
+                .addAction(action)
+                .extend(extender);
 
         return builder.build();
     }
 
 
     @NonNull
-    public Notification buildNotificationPhone(@NonNull Context context,
-                                                             @NonNull PendingIntent contentIntent) {
+    public Notification buildNotificationPhone(@NonNull PendingIntent contentIntent) {
 
         final NotificationCompat.Action action;
         if (pomodoroMaster.isOngoing()) {
             action = buildStopAction(context, R.drawable.ic_action_stop_phone);
         } else {
-            action = buildStartAction(context, R.drawable.ic_action_start_phone, pomodoroMaster.getActivityType());
+            ActivityType activityType = pomodoroMaster.getActivityType();
+            if (activityType == ActivityType.NONE) {
+                activityType = ActivityType.POMODORO;
+            }
+            action = buildStartAction(context, R.drawable.ic_action_start_phone, activityType);
         }
 
         final String message = messageForActivityType(context);
         final String title = titleForActivityType(context);
 
         final DateTime nextPomodoro = pomodoroMaster.getNextPomodoro();
-        NotificationCompat.Builder builder = buildBaseNotification(context)
+        NotificationCompat.Builder builder = buildBaseNotification()
                 .setWhen(nextPomodoro != null ? nextPomodoro.getMillis() : System.currentTimeMillis())
                 .setContentIntent(contentIntent)
                 .setContentTitle(title)
@@ -178,32 +156,33 @@ public class NotificationBuilder {
 
     public String titleForActivityType(@NonNull Context context) {
         if (pomodoroMaster.isOngoing()) {
-            return Utils.convertDiffToPrettyMinutesLeft(context, pomodoroMaster.getNextPomodoro().getMillis() - System.currentTimeMillis());
+            return Utils.convertDiffToPrettyMinutesLeft(context, pomodoroMaster.getNextPomodoro().getMillis() - System.currentTimeMillis())
+                    + " " + Utils.getActivityTitle(context, pomodoroMaster);
         } else {
-            return context.getString(R.string.title_finished);
+            if (pomodoroMaster.getActivityType() == ActivityType.NONE) {
+                return context.getString(R.string.title_none);
+            } else {
+                return context.getString(R.string.title_finished);
+            }
         }
     }
 
     public String messageForActivityType(@NonNull Context context) {
         if (pomodoroMaster.isOngoing()) {
-            switch (pomodoroMaster.getActivityType()) {
-                case LONG_BREAK:
-                    return context.getString(R.string.title_break_long);
-                case POMODORO:
-                    return context.getString(R.string.title_pomodoro_no, (pomodoroMaster.getPomodorosDone() + 1));
-                case SHORT_BREAK:
-                    return context.getString(R.string.title_break_short);
-                default:
-                    throw new IllegalStateException("unsupported activityType " + pomodoroMaster.getActivityType());
-            }
+            return null;
         } else {
+            final int pomodorosDone = pomodoroMaster.getPomodorosDone();
             switch (pomodoroMaster.getActivityType()) {
                 case LONG_BREAK:
                     return context.getString(R.string.message_break_long);
                 case POMODORO:
-                    return context.getString(R.string.message_pomodoro_no, (pomodoroMaster.getPomodorosDone() + 1));
+                    return context.getString(R.string.message_pomodoro_no, (pomodorosDone + 1));
                 case SHORT_BREAK:
                     return context.getString(R.string.message_break_short);
+                case NONE:
+                    return pomodorosDone == 0
+                            ? context.getString(R.string.message_none_first)
+                            : context.getString(R.string.message_none, pomodorosDone);
                 default:
                     throw new IllegalStateException("unsupported activityType " + pomodoroMaster.getActivityType());
             }
