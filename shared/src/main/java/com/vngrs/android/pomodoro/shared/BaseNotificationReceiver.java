@@ -46,7 +46,6 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
     @Inject NotificationManagerCompat notificationManager;
     @Inject AlarmManager alarmManager;
 
-
     @DebugLog
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -86,8 +85,14 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
         updateNotification(context, pomodoroMaster);
     }
 
-    public abstract void updateNotification(Context context,
-                                            PomodoroMaster pomodoroMaster);
+    /**
+     * Abstract update Notification function to be implemented slightly differently in
+     * Android Wear and Phones.
+     *
+     * @param context Context object.
+     * @param pomodoroMaster PomodoroMaster singletion object.
+     */
+    public abstract void updateNotification(Context context, PomodoroMaster pomodoroMaster);
 
     private void start(Context context, ActivityType activityType) {
         if (activityType != ActivityType.NONE

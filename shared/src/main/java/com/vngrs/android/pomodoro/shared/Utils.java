@@ -18,10 +18,15 @@ public class Utils {
     private Utils() {
     }
 
-    public static String convertDiffToPrettyMinutesLeft(Context context, long diffMs) {
-        diffMs = Math.max(0, diffMs);
-        int secondsTotal = (int) diffMs / 1000;
-        int minutes = secondsTotal / 60;
+    /**
+     * Converts the time difference to the human readable minutes.
+     *
+     * @param context Context object.
+     * @param diffTime Time difference.
+     * @return Human readable minute representation.
+     */
+    public static String convertDiffToPrettyMinutesLeft(Context context, DateTime diffTime) {
+        int minutes = diffTime.getMinuteOfHour();
         if (minutes == 0) {
             return context.getString(R.string.time_left_less_than_minute);
         } else {
@@ -29,6 +34,14 @@ public class Utils {
         }
     }
 
+    /**
+     * Checks if we the 2 dates are in the same day.
+     * After 6AM means that it is the next day.
+     *
+     * @param first the first date.
+     * @param second the second date.
+     * @return true if the dates are in the same day.
+     */
     public static boolean isTheSamePomodoroDay(@Nullable DateTime first,
                                                @Nullable DateTime second) {
         if (first != null && second != null) {

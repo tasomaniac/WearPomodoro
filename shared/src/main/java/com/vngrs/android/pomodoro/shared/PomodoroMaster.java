@@ -1,9 +1,7 @@
 package com.vngrs.android.pomodoro.shared;
 
-import android.app.AlarmManager;
 import android.app.Application;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationManagerCompat;
 
 import com.vngrs.android.pomodoro.shared.data.prefs.DateTimePreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
@@ -34,9 +32,7 @@ public class PomodoroMaster {
 
     private boolean isOngoing;
 
-    @Inject public PomodoroMaster(NotificationManagerCompat notificationManager,
-                                  AlarmManager alarmManager,
-                                  @NextPomodoro DateTimePreference nextPomodoroStorage,
+    @Inject public PomodoroMaster(@NextPomodoro DateTimePreference nextPomodoroStorage,
                                   @LastPomodoro DateTimePreference lastPomodoroStorage,
                                   IntPreference pomodorosDoneStorage,
                                   EnumPreference<ActivityType> activityTypeStorage,
@@ -48,6 +44,9 @@ public class PomodoroMaster {
         this.app = app;
     }
 
+    /**
+     * Starts a pomodoro session.
+     */
     @DebugLog
     public void start(final ActivityType nextActivityType) {
         DateTime now = DateTime.now();
@@ -69,11 +68,11 @@ public class PomodoroMaster {
         }
     }
 
-    public boolean isActive() {
-        return activityTypeStorage.get() != ActivityType.NONE;
-    }
-
-
+    /**
+     * Stop a pomodoro and set the type to NONE.
+     *
+     * @return Returns the Pomodoro that is just stopped.
+     */
     @NonNull
     public ActivityType stop() {
         ActivityType stoppingForType = activityTypeStorage.get();
@@ -115,6 +114,11 @@ public class PomodoroMaster {
         return activityTypeStorage.get();
     }
 
+    /**
+     * The state of the current pomodoro.
+     *
+     * @return true if the count down is active.
+     */
     public boolean isOngoing() {
         return isOngoing;
     }
