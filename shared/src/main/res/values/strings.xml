@@ -15,9 +15,9 @@
   <string name="title_finished">Finished</string>
 
   <string name="message_break_long">Now take a long break. You deserved it.</string>
-  <string name="message_pomodoro_no">Congrats! You\'ve finished your Pomodoro. Now start #%d</string>
+  <string name="message_pomodoro_no">Congrats! Now start pomodoro #%d</string>
   <string name="message_break_short">Now take a short break.</string>
-  <string name="message_none_first">Start your Pomodoro now!</string>
+  <string name="message_none_first">Start working now!</string>
   <string name="message_none">You did %d Pomodoro today.</string>
 
   <plurals name="time_left_minutes">

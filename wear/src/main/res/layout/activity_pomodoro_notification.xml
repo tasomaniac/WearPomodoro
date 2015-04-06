@@ -14,7 +14,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentStart="true"
-    android:layout_toStartOf="@+id/pomodoro_start_stop_button"
     style="@style/TextView.Large.Light"
     android:textColor="@color/notification_primary" />
 
@@ -27,19 +26,18 @@
     android:layout_below="@id/pomodoro_time"
     android:layout_alignParentStart="true"
     android:layout_alignStart="@id/pomodoro_time"
-    android:layout_toStartOf="@+id/pomodoro_start_stop_button"
     style="@style/TextView.Medium.Light"
     android:textColor="@color/notification_secondary" />
 
-  <ImageView
-    android:id="@+id/pomodoro_start_stop_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:src="@drawable/ic_action_stop_grey"
-    android:paddingStart="8dp"
-    android:layout_alignTop="@id/pomodoro_time"
-    android:layout_alignBottom="@id/pomodoro_description"
-    android:layout_alignParentEnd="true"
-    android:visibility="gone"
-    android:contentDescription="@string/cd_start_stop_button" />
+  <!--<ImageView-->
+    <!--android:id="@+id/pomodoro_start_stop_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--tools:src="@drawable/ic_action_stop_grey"-->
+    <!--android:paddingStart="8dp"-->
+    <!--android:layout_alignTop="@id/pomodoro_time"-->
+    <!--android:layout_alignBottom="@id/pomodoro_description"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:visibility="gone"-->
+    <!--android:contentDescription="@string/cd_start_stop_button" />-->
 </RelativeLayout>

@@ -15,6 +15,8 @@ import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
+import hugo.weaving.DebugLog;
+
 
 public abstract class BaseNotificationReceiver extends BroadcastReceiver {
 
@@ -45,6 +47,7 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
     @Inject AlarmManager alarmManager;
 
 
+    @DebugLog
     @Override
     public void onReceive(Context context, Intent intent) {
         pomodoroMaster.check();
@@ -67,11 +70,12 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
                     pomodoroMaster.setPomodorosDone(0);
                     break;
                 case ACTION_UPDATE:
-                    if (pomodoroMaster.isOngoing()) {
-                        DateTime startTime =
-                                new DateTime(intent.getLongExtra(EXTRA_START_TIME, DateTime.now().getMillis()));
-                        startTime = startTime.plus(1);
-                        UPDATE_INTENT.putExtra(EXTRA_START_TIME, startTime.getMillis());
+                    DateTime startTime =
+                            new DateTime(intent.getLongExtra(EXTRA_START_TIME, DateTime.now().getMillis()));
+                    startTime = startTime.plus(1);
+                    UPDATE_INTENT.putExtra(EXTRA_START_TIME, startTime.getMillis());
+                    if (pomodoroMaster.isOngoing()
+                            && !isAlarmSet(context, REQUEST_UPDATE, UPDATE_INTENT)) {
                         setAlarm(context, REQUEST_UPDATE, UPDATE_INTENT, startTime);
                     }
                     break;
@@ -86,7 +90,8 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
                                             PomodoroMaster pomodoroMaster);
 
     private void start(Context context, ActivityType activityType) {
-        if (activityType != ActivityType.NONE) {
+        if (activityType != ActivityType.NONE
+                && !pomodoroMaster.isOngoing()) {
             pomodoroMaster.start(activityType);
 
             setAlarm(context, REQUEST_FINISH, FINISH_ALARM_INTENT,

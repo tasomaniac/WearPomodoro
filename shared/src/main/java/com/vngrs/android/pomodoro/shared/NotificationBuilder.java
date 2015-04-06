@@ -36,7 +36,7 @@ public class NotificationBuilder {
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(pomodoroMaster.isOngoing()
-                        ? Notification.PRIORITY_MAX : Notification.PRIORITY_DEFAULT)
+                        ? Notification.PRIORITY_MAX : Notification.PRIORITY_HIGH)
                 .setOngoing(pomodoroMaster.isOngoing())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 //                .setStyle(new NotificationCompat.BigTextStyle())

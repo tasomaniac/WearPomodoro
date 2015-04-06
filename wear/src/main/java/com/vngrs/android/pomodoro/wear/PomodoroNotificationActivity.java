@@ -3,7 +3,6 @@ package com.vngrs.android.pomodoro.wear;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
@@ -23,7 +22,7 @@ public class PomodoroNotificationActivity extends Activity {
     public static final int SECOND_MILLIS = 1000;
     private Handler handler = null;
 
-    private ImageView pomodoroStartStopButton;
+//    private ImageView pomodoroStartStopButton;
     private TextView pomodoroTime;
     private TextView pomodoroDescription;
 
@@ -47,7 +46,7 @@ public class PomodoroNotificationActivity extends Activity {
 
         pomodoroTime = (TextView) findViewById(R.id.pomodoro_time);
         pomodoroDescription = (TextView) findViewById(R.id.pomodoro_description);
-        pomodoroStartStopButton = (ImageView) findViewById(R.id.pomodoro_start_stop_button);
+//        pomodoroStartStopButton = (ImageView) findViewById(R.id.pomodoro_start_stop_button);
 
 //        findViewById(R.id.content).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -64,12 +63,23 @@ public class PomodoroNotificationActivity extends Activity {
 
     }
 
+    @DebugLog
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        pomodoroTime = null;
+        pomodoroDescription = null;
+        handler = null;
+    }
+
+    @DebugLog
     @Override
     protected void onResume() {
         super.onResume();
         update();
     }
 
+    @DebugLog
     @Override
     protected void onPause() {
         handler.removeCallbacks(updateRunnable);
@@ -86,7 +96,6 @@ public class PomodoroNotificationActivity extends Activity {
         nextTimer();
     }
 
-    @DebugLog
     private void updateWithoutTimer() {
 
         if (!pomodoroMaster.isOngoing()) {
@@ -103,13 +112,13 @@ public class PomodoroNotificationActivity extends Activity {
             pomodoroDescription.setText(Utils.getActivityTitle(this, pomodoroMaster));
         }
 
-        if (pomodoroStartStopButton != null) {
-            pomodoroStartStopButton.setImageResource(pomodoroMaster.isOngoing()
-                    ? R.drawable.ic_action_stop_grey
-                    : R.drawable.ic_action_start_grey);
-            pomodoroStartStopButton.setContentDescription(pomodoroMaster.isOngoing()
-                    ? getString(R.string.cd_start_pomodoro)
-                    : getString(R.string.cd_stop_pomodoro));
-        }
+//        if (pomodoroStartStopButton != null) {
+//            pomodoroStartStopButton.setImageResource(pomodoroMaster.isOngoing()
+//                    ? R.drawable.ic_action_stop_grey
+//                    : R.drawable.ic_action_start_grey);
+//            pomodoroStartStopButton.setContentDescription(pomodoroMaster.isOngoing()
+//                    ? getString(R.string.cd_start_pomodoro)
+//                    : getString(R.string.cd_stop_pomodoro));
+//        }
     }
 }
