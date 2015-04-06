@@ -1,7 +1,6 @@
 package com.vngrs.android.pomodoro.wear;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
@@ -16,25 +15,17 @@ import org.joda.time.format.DateTimeFormatter;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
 import hugo.weaving.DebugLog;
 
 public class PomodoroNotificationActivity extends Activity {
-
-    public static final String EXTRA_ACTION_PENDING_INTENT = "com.vngrs.android.pomodoro.extra.ACTION_PENDING_INTENT";
 
     public static final int MINUTE_MILLIS = 60000;
     public static final int SECOND_MILLIS = 1000;
     private Handler handler = null;
 
-    @InjectView(R.id.pomodoro_start_stop_button)
-    ImageView pomodoroStartStopButton;
-    @InjectView(R.id.pomodoro_time)
-    TextView pomodoroTime;
-    @InjectView(R.id.pomodoro_description)
-    TextView pomodoroDescription;
-
-    private PendingIntent actionPendingIntent;
+    private ImageView pomodoroStartStopButton;
+    private TextView pomodoroTime;
+    private TextView pomodoroDescription;
 
     @Inject PomodoroMaster pomodoroMaster;
 
@@ -51,10 +42,6 @@ public class PomodoroNotificationActivity extends Activity {
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_pomodoro_notification);
         App.get(this).component().inject(this);
-
-        if (getIntent() != null) {
-            actionPendingIntent = getIntent().getParcelableExtra(EXTRA_ACTION_PENDING_INTENT);
-        }
 
         handler = new Handler();
 
@@ -76,7 +63,6 @@ public class PomodoroNotificationActivity extends Activity {
         updateWithoutTimer();
 
     }
-
 
     @Override
     protected void onResume() {
@@ -109,7 +95,8 @@ public class PomodoroNotificationActivity extends Activity {
 
         if (pomodoroTime != null) {
             final long remaining = pomodoroMaster.getNextPomodoro().getMillis() - DateTime.now().getMillis();
-            final DateTimeFormatter fmt = remaining >= MINUTE_MILLIS ? DateTimeFormat.forPattern("m:s") : DateTimeFormat.forPattern("s");
+            final DateTimeFormatter fmt = remaining >= MINUTE_MILLIS
+                    ? DateTimeFormat.forPattern("mm:ss") : DateTimeFormat.forPattern("ss");
             pomodoroTime.setText(fmt.print(remaining));
         }
         if (pomodoroDescription != null) {

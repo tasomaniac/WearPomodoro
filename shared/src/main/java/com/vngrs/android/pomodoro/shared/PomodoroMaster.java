@@ -99,6 +99,10 @@ public class PomodoroMaster {
         return lastPomodoroStorage.get();
     }
 
+    public void setPomodorosDone(int pomodorosDone) {
+        pomodorosDoneStorage.set(pomodorosDone);
+    }
+
     public int getPomodorosDone() {
         return pomodorosDoneStorage.get();
     }

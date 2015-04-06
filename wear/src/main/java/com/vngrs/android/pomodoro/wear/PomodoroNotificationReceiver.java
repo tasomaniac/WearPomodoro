@@ -24,8 +24,6 @@ public class PomodoroNotificationReceiver extends BaseNotificationReceiver {
     public void updateNotification(Context context, PomodoroMaster pomodoroMaster) {
 
         final Intent displayIntent = new Intent(context, PomodoroNotificationActivity.class);
-//            displayIntent.putExtra(PomodoroNotificationActivity.EXTRA_ACTION_PENDING_INTENT, action.actionIntent);
-//            displayIntent.putExtra(PomodoroNotificationActivity.EXTRA_IS_ONGOING, pm.isO);
 
         NotificationBuilder builder = new NotificationBuilder(context, pomodoroMaster);
         Notification notification = builder.buildNotificationWear(displayIntent);

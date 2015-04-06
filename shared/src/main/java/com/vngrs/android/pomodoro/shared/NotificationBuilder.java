@@ -17,9 +17,7 @@ public class NotificationBuilder {
     private static final int ID_ACTIVITY = 1;
     private static final int ID_START = 2;
     private static final int ID_STOP = 3;
-//    private static final int ID_PAUSE = 4;
-//    private static final int ID_RESUME = 5;
-//    private static final int ID_RESET = 6;
+    private static final int ID_RESET = 6;
 
     private final Context context;
     private final PomodoroMaster pomodoroMaster;
@@ -34,7 +32,7 @@ public class NotificationBuilder {
 
         return new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setDefaults(Notification.DEFAULT_ALL)
+                .setDefaults(pomodoroMaster.isOngoing() ? 0 : Notification.DEFAULT_ALL)
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(pomodoroMaster.isOngoing()
@@ -89,6 +87,7 @@ public class NotificationBuilder {
                 .setContentText(message)
                 .setLocalOnly(true)
                 .addAction(action)
+                .addAction(buildResetAction(context, R.drawable.ic_action_reset_wear))
                 .extend(extender);
 
         return builder.build();
@@ -142,17 +141,13 @@ public class NotificationBuilder {
                 context.getString(R.string.stop), stopActionPendingIntent).build();
     }
 
-//    public static int backgroundResourceForActivityType(ActivityType activityType) {
-//        switch (activityType) {
-//            case LONG_BREAK:
-//                return R.drawable.bg_long_break;
-//            case POMODORO:
-//                return R.drawable.bg_pomodoro;
-//            case SHORT_BREAK:
-//                return R.drawable.bg_short_break;
-//        }
-//        throw new IllegalStateException("unsupported activityType " + activityType);
-//    }
+    public static NotificationCompat.Action buildResetAction(@NonNull Context context, @DrawableRes int actionIcon) {
+        final Intent resetActionIntent = BaseNotificationReceiver.RESET_INTENT;
+        final PendingIntent resetActionPendingIntent =
+                PendingIntent.getBroadcast(context, ID_RESET, resetActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return new NotificationCompat.Action.Builder(actionIcon,
+                context.getString(R.string.reset), resetActionPendingIntent).build();
+    }
 
     public String titleForActivityType(@NonNull Context context) {
         if (pomodoroMaster.isOngoing()) {

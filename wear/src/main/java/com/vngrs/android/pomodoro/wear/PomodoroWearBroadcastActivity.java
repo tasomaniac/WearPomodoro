@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
-import com.vngrs.android.pomodoro.shared.model.ActivityType;
 
 
 /**
@@ -15,11 +14,7 @@ public class PomodoroWearBroadcastActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sendBroadcast(
-                BaseNotificationReceiver.START_INTENT
-                        .putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE,
-                                ActivityType.POMODORO.value())
-        );
+        sendBroadcast(BaseNotificationReceiver.UPDATE_INTENT);
         finish();
     }
 }

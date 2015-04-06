@@ -11,26 +11,25 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
 
+import org.joda.time.DateTime;
+
 import javax.inject.Inject;
 
 
 public abstract class BaseNotificationReceiver extends BroadcastReceiver {
 
     public static final String EXTRA_ACTIVITY_TYPE = "com.vngrs.android.pomodoro.extra.ACTIVITY_TYPE";
+    public static final String EXTRA_START_TIME = "com.vngrs.android.pomodoro.extra.START_TIME";
 
     public static final String ACTION_START = "com.vngrs.android.pomodoro.action.START";
     public static final String ACTION_STOP = "com.vngrs.android.pomodoro.action.STOP";
-    //    public static final String ACTION_PAUSE = "com.vngrs.android.pomodoro.action.PAUSE";
-//    public static final String ACTION_RESUME = "com.vngrs.android.pomodoro.action.RESUME";
-//    public static final String ACTION_RESET = "com.vngrs.android.pomodoro.action.RESET";
+    public static final String ACTION_RESET = "com.vngrs.android.pomodoro.action.RESET";
     public static final String ACTION_UPDATE = "com.vngrs.android.pomodoro.action.UPDATE";
     public static final String ACTION_FINISH_ALARM = "com.vngrs.android.pomodoro.action.ALARM";
 
     public static final Intent START_INTENT = new Intent(ACTION_START);
     public static final Intent STOP_INTENT = new Intent(ACTION_STOP);
-    //    public static final Intent PAUSE_INTENT = new Intent(ACTION_PAUSE);
-//    public static final Intent RESUME_INTENT = new Intent(ACTION_RESUME);
-//    public static final Intent RESET_INTENT = new Intent(ACTION_RESET);
+    public static final Intent RESET_INTENT = new Intent(ACTION_RESET);
     public static final Intent UPDATE_INTENT = new Intent(ACTION_UPDATE);
     public static final Intent FINISH_ALARM_INTENT = new Intent(ACTION_FINISH_ALARM);
 
@@ -63,6 +62,19 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
                             ActivityType.fromValue(intent.getIntExtra(EXTRA_ACTIVITY_TYPE, 0));
                     start(context, activityType);
                     break;
+                case ACTION_RESET:
+                    stop(context);
+                    pomodoroMaster.setPomodorosDone(0);
+                    break;
+                case ACTION_UPDATE:
+                    if (pomodoroMaster.isOngoing()) {
+                        DateTime startTime =
+                                new DateTime(intent.getLongExtra(EXTRA_START_TIME, DateTime.now().getMillis()));
+                        startTime = startTime.plus(1);
+                        UPDATE_INTENT.putExtra(EXTRA_START_TIME, startTime.getMillis());
+                        setAlarm(context, REQUEST_UPDATE, UPDATE_INTENT, startTime);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -78,21 +90,24 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
             pomodoroMaster.start(activityType);
 
             setAlarm(context, REQUEST_FINISH, FINISH_ALARM_INTENT,
-                    pomodoroMaster.getNextPomodoro().getMillis());
-            setRepeatingAlarm(context, REQUEST_UPDATE, UPDATE_INTENT);
+                    pomodoroMaster.getNextPomodoro());
+
+            final DateTime startTime = DateTime.now().plusMinutes(1);
+            UPDATE_INTENT.putExtra(EXTRA_START_TIME, startTime.getMillis());
+            setAlarm(context, REQUEST_UPDATE, UPDATE_INTENT, startTime);
         }
     }
 
-    private void stop(Context context) {
+    private ActivityType stop(Context context) {
         notificationManager.cancel(NOTIFICATION_ID);
-        pomodoroMaster.stop();
 
         cancelAlarm(context, REQUEST_FINISH, FINISH_ALARM_INTENT);
         cancelAlarm(context, REQUEST_UPDATE, UPDATE_INTENT);
+        return pomodoroMaster.stop();
     }
 
     private void finishAlarm(Context context) {
-        ActivityType justStoppedActivityType = pomodoroMaster.stop();
+        ActivityType justStoppedActivityType = stop(context);
         final ActivityType nextActivityType;
         if (justStoppedActivityType.isPomodoro()) {
             if ((pomodoroMaster.getPomodorosDone() + 1) % Constants.POMODORO_NUMBER_FOR_LONG_BREAK == 0) {
@@ -104,29 +119,19 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
             nextActivityType = ActivityType.POMODORO;
         }
         pomodoroMaster.setActivityType(nextActivityType);
-
-        cancelAlarm(context, REQUEST_FINISH, FINISH_ALARM_INTENT);
-        cancelAlarm(context, REQUEST_UPDATE, UPDATE_INTENT);
-    }
-
-
-    private void setRepeatingAlarm(Context context, int requestCode, Intent intent) {
-        PendingIntent pendingIntent =
-                PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, pendingIntent);
     }
 
     private boolean isAlarmSet(Context context, int requestCode, Intent intent) {
         return PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_NO_CREATE) != null;
     }
 
-    private void setAlarm(Context context, int requestCode, Intent intent, long time) {
+    private void setAlarm(Context context, int requestCode, Intent intent, DateTime time) {
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, time.getMillis(), pendingIntent);
         } else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, time.getMillis(), pendingIntent);
         }
     }
 
@@ -136,23 +141,6 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             alarmManager.cancel(pendingIntent);
             pendingIntent.cancel();
-        }
-    }
-
-//    private void startDisplayService() {
-//        startService(new Intent(this, PomodoroNotificationService.class));
-//    }
-//
-//    private void stopDisplayService() {
-//        stopService(new Intent(this, PomodoroNotificationService.class));
-//    }
-
-    @SuppressWarnings("deprecation")
-    private boolean isScreenOn() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-            return powerManager.isInteractive();
-        } else {
-            return powerManager.isScreenOn();
         }
     }
 }
