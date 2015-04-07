@@ -68,16 +68,6 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
                     stop(context);
                     pomodoroMaster.setPomodorosDone(0);
                     break;
-                case ACTION_UPDATE:
-                    DateTime startTime =
-                            new DateTime(intent.getLongExtra(EXTRA_START_TIME, DateTime.now().getMillis()));
-                    startTime = startTime.plus(1);
-                    UPDATE_INTENT.putExtra(EXTRA_START_TIME, startTime.getMillis());
-                    if (pomodoroMaster.isOngoing()
-                            && !isAlarmSet(context, REQUEST_UPDATE, UPDATE_INTENT)) {
-                        setAlarm(context, REQUEST_UPDATE, UPDATE_INTENT, startTime);
-                    }
-                    break;
                 default:
                     break;
             }
@@ -101,10 +91,7 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
 
             setAlarm(context, REQUEST_FINISH, FINISH_ALARM_INTENT,
                     pomodoroMaster.getNextPomodoro());
-
-            final DateTime startTime = DateTime.now().plusMinutes(1);
-            UPDATE_INTENT.putExtra(EXTRA_START_TIME, startTime.getMillis());
-            setAlarm(context, REQUEST_UPDATE, UPDATE_INTENT, startTime);
+            setRepeatingAlarm(context, REQUEST_UPDATE, UPDATE_INTENT);
         }
     }
 
@@ -129,6 +116,12 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
             nextActivityType = ActivityType.POMODORO;
         }
         pomodoroMaster.setActivityType(nextActivityType);
+    }
+
+    private void setRepeatingAlarm(Context context, int requestCode, Intent intent) {
+        PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, pendingIntent);
     }
 
     private boolean isAlarmSet(Context context, int requestCode, Intent intent) {
