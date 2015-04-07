@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.vngrs.android.pomodoro.wear">
+  package="com.vngrs.android.pomodoro">
 
   <uses-feature android:name="android.hardware.type.watch" />
 
   <application
-    android:name=".App"
+    android:name=".wear.App"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
@@ -16,7 +16,7 @@
       android:value="@integer/google_play_services_version" />'
 
     <activity
-      android:name=".PomodoroWearBroadcastActivity"
+      android:name=".wear.PomodoroWearBroadcastActivity"
       android:label="@string/start_working">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -26,14 +26,14 @@
     </activity>
 
     <activity
-      android:name=".PomodoroNotificationActivity"
+      android:name=".wear.PomodoroNotificationActivity"
       android:allowEmbedded="true"
       android:exported="true"
       android:taskAffinity=""
       android:theme="@android:style/Theme.DeviceDefault.Light" />
 
     <receiver
-      android:name=".PomodoroNotificationReceiver"
+      android:name=".wear.PomodoroNotificationReceiver"
       android:enabled="true"
       android:exported="false">
       <intent-filter>
@@ -47,7 +47,7 @@
       </intent-filter>
     </receiver>
 
-    <service android:name=".OngoingNotificationListenerService">
+    <service android:name=".wear.OngoingNotificationListenerService">
       <intent-filter>
         <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
       </intent-filter>

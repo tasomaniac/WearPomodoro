@@ -9,10 +9,6 @@ if (localPropertiesFile.exists()) {
     local_properties.load(localPropertiesFile.newDataInputStream())
 }
 
-configurations {
-    vngrsCompile
-}
-
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
 
@@ -22,6 +18,7 @@ def versionPatch = 0
 def versionBuild = 0
 
 android {
+    publishNonDefault true
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
@@ -52,7 +49,7 @@ android {
 
     productFlavors {
         standalone {
-            applicationId "com.vngrs.android.pomodoro.standalone"
+            applicationId "com.vngrs.android.pomodoro"
         }
         vngrs {
             applicationId "com.vngrs.android.pomodoro.internal"
@@ -67,17 +64,12 @@ android {
         }
 
         release {
-            minifyEnabled true
+            minifyEnabled false
             zipAlignEnabled true
             shrinkResources true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-        }
-
-        alpha.initWith(release)
-        alpha {
-            buildConfigField "Boolean", "ALPHA", "true"
         }
     }
 
@@ -97,7 +89,9 @@ dependencies {
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 
-    wearApp project(':wear')
+//    debugWearApp project(path: ':wear', configuration: 'debugApk')
+//    releaseWearApp project(path: ':wear', configuration: 'releaseApk')
+    wearApp files('../distribution/wear-release.apk')
 
     compile 'com.android.support:appcompat-v7:22.0.0'
 

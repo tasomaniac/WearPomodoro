@@ -15,7 +15,7 @@ import com.vngrs.android.pomodoro.ui.MainActivity;
 import timber.log.Timber;
 
 /**
- * Created by taso on 02/04/15.
+ * Created by Said Tahsin Dane on 02/04/15.
  */
 public class PomodoroReceiver extends BaseNotificationReceiver {
 
@@ -27,8 +27,8 @@ public class PomodoroReceiver extends BaseNotificationReceiver {
 
             final Intent contentIntent = new Intent(context, MainActivity.class);
 
-            Notification notification = builder.buildNotificationPhone(context,
-                    PendingIntent.getActivity(context, 0, contentIntent, 0));
+            Notification notification = builder
+                    .buildNotificationPhone(PendingIntent.getActivity(context, 0, contentIntent, 0));
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(NOTIFICATION_ID, notification);
         } else {

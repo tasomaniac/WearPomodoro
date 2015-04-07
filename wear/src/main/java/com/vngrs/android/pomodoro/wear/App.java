@@ -3,6 +3,8 @@ package com.vngrs.android.pomodoro.wear;
 import android.app.Application;
 import android.content.Context;
 
+import com.vngrs.android.pomodoro.BuildConfig;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import timber.log.Timber;
