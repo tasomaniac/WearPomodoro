@@ -20,6 +20,8 @@ import hugo.weaving.DebugLog;
 
 public abstract class BaseNotificationReceiver extends BroadcastReceiver {
 
+    public static final int MINUTE_MILLIS = 60000;
+
     public static final String EXTRA_ACTIVITY_TYPE = "com.vngrs.android.pomodoro.extra.ACTIVITY_TYPE";
     public static final String EXTRA_START_TIME = "com.vngrs.android.pomodoro.extra.START_TIME";
 
@@ -121,7 +123,8 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
     private void setRepeatingAlarm(Context context, int requestCode, Intent intent) {
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + MINUTE_MILLIS, MINUTE_MILLIS, pendingIntent);
     }
 
     private boolean isAlarmSet(Context context, int requestCode, Intent intent) {
