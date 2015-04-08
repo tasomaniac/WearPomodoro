@@ -25,7 +25,7 @@ public interface PomodoroComponent {
      */
     final class Initializer {
         static PomodoroComponent init(App app) {
-            return Dagger_PomodoroComponent.builder()
+            return DaggerPomodoroComponent.builder()
                     .appModule(new AppModule(app))
                     .build();
         }
