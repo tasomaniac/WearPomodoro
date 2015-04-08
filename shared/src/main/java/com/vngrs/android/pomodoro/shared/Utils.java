@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 
 /**
  * Utility class containing various operations.
- *
+ * <p/>
  * Created by Said Tahsin Dane on 31/03/15.
  */
 public class Utils {
@@ -21,7 +21,7 @@ public class Utils {
     /**
      * Converts the time difference to the human readable minutes.
      *
-     * @param context Context object.
+     * @param context  Context object.
      * @param diffTime Time difference.
      * @return Human readable minute representation.
      */
@@ -38,7 +38,7 @@ public class Utils {
      * Checks if we the 2 dates are in the same day.
      * After 6AM means that it is the next day.
      *
-     * @param first the first date.
+     * @param first  the first date.
      * @param second the second date.
      * @return true if the dates are in the same day.
      */
@@ -59,21 +59,27 @@ public class Utils {
      * Converts dp value to px value.
      *
      * @param res Resources objects to get displayMetrics.
-     * @param dp original dp value.
+     * @param dp  original dp value.
      * @return px value.
      */
     public static int dpToPx(Resources res, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
     }
 
-    public static String getActivityTitle(@NonNull Context context, PomodoroMaster pomodoroMaster) {
+    public static String getActivityTitle(@NonNull Context context, PomodoroMaster pomodoroMaster, boolean shorten) {
         switch (pomodoroMaster.getActivityType()) {
             case LONG_BREAK:
-                return context.getString(R.string.title_break_long);
+                return shorten
+                        ? context.getString(R.string.title_short_break)
+                        : context.getString(R.string.title_break_long);
             case POMODORO:
-                return context.getString(R.string.title_pomodoro_no, (pomodoroMaster.getPomodorosDone() + 1));
+                return shorten
+                        ? context.getString(R.string.title_short_pomodoro)
+                        : context.getString(R.string.title_pomodoro_no, (pomodoroMaster.getPomodorosDone() + 1));
             case SHORT_BREAK:
-                return context.getString(R.string.title_break_short);
+                return shorten
+                        ? context.getString(R.string.title_short_break)
+                        : context.getString(R.string.title_break_short);
             default:
                 throw new IllegalStateException("unsupported activityType " + pomodoroMaster.getActivityType());
         }

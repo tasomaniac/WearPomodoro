@@ -152,7 +152,7 @@ public class NotificationBuilder {
         if (pomodoroMaster.isOngoing()) {
             final String minutesLeft = Utils.convertDiffToPrettyMinutesLeft(context,
                     pomodoroMaster.getNextPomodoro().minus(DateTime.now().getMillis()));
-            return minutesLeft + " " + Utils.getActivityTitle(context, pomodoroMaster);
+            return minutesLeft + " | " + Utils.getActivityTitle(context, pomodoroMaster, /* shorten */ true);
         } else {
             if (pomodoroMaster.getActivityType() == ActivityType.NONE) {
                 return context.getString(R.string.title_none);

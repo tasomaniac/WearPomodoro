@@ -7,9 +7,12 @@
   <string name="reset">Reset</string>
 
   <string name="title_break_long">Long Break</string>
-  <string name="title_pomodoro_no">Pomodoro #%d</string>
+  <string name="title_pomodoro_no">Working on Pomodoro #%d</string>
   <string name="title_break_short">Short Break</string>
   <string name="title_none">Start</string>
+
+  <string name="title_short_pomodoro">Focus</string>
+  <string name="title_short_break">Break</string>
 
   <string name="title_finished">Finished</string>
 

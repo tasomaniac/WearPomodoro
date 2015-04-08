@@ -61,7 +61,6 @@ public class PomodoroNotificationActivity extends Activity {
 //        });
 
         updateWithoutTimer();
-
     }
 
     @DebugLog
@@ -109,8 +108,9 @@ public class PomodoroNotificationActivity extends Activity {
                     ? DateTimeFormat.forPattern("mm:ss") : DateTimeFormat.forPattern("ss");
             pomodoroTime.setText(fmt.print(remaining));
         }
+
         if (pomodoroDescription != null) {
-            pomodoroDescription.setText(Utils.getActivityTitle(this, pomodoroMaster));
+            pomodoroDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
         }
 
 //        if (pomodoroStartStopButton != null) {

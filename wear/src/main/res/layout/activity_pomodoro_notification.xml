@@ -21,12 +21,13 @@
     android:layout_marginTop="2dp"
     android:id="@+id/pomodoro_description"
     tools:text="Pomodoro #3"
+    android:maxLines="2"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_below="@id/pomodoro_time"
     android:layout_alignParentStart="true"
     android:layout_alignStart="@id/pomodoro_time"
-    style="@style/TextView.Medium.Light"
+    style="@style/TextView.Small.Light"
     android:textColor="@color/notification_secondary" />
 
   <!--<ImageView-->
