@@ -1,5 +1,6 @@
 package com.vngrs.android.pomodoro;
 
+import com.vngrs.android.pomodoro.DaggerPomodoroComponent;
 import com.vngrs.android.pomodoro.shared.PomodoroModule;
 import com.vngrs.android.pomodoro.ui.VngrsUiModule;
 
@@ -19,7 +20,7 @@ public interface PomodoroComponent extends PomodoroGraph {
      */
     final static class Initializer {
         static PomodoroGraph init(App app) {
-            return Dagger_PomodoroComponent.builder()
+            return DaggerPomodoroComponent.builder()
                     .appModule(new AppModule(app))
                     .build();
         }
