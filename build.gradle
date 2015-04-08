@@ -1,5 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+
 buildscript {
     repositories {
         jcenter()
@@ -10,6 +11,7 @@ buildscript {
         classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.8'
+        classpath 'com.github.triplet.gradle:play-publisher:1.0.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -25,9 +27,12 @@ allprojects {
 }
 
 ext {
+    isTravis = "true".equals(System.getenv("TRAVIS"))
+    preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
+
     versionMajor = 0
     versionMinor = 1
-    versionPatch = 1
+    versionPatch = 2
     versionBuild = 0
 
     compileSdkVersion = 22

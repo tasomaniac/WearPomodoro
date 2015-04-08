@@ -1,1 +1,1 @@
-include ':shared', ':mobile', ':wear'
+include ':shared', ':wear', ':mobile'

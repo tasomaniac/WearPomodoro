@@ -1,0 +1,20 @@
+language: android
+
+android:
+  components:
+    - android-22
+    - build-tools-22.0.0
+    - platform-tools
+    - extra-google-m2repository
+    - extra-android-m2repository
+
+    # Specify at least one system image,
+    # if you need to run emulator(s) during your tests
+    # - sys-img-x86-android-22
+
+script: "./gradlew clean build test -Dpre-dex=false"
+
+branches:
+  only:
+    - master
+    - develop

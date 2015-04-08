@@ -2,6 +2,7 @@ apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'play'
 
 Properties local_properties = new Properties()
 File localPropertiesFile = project.rootProject.file('local.properties')
@@ -59,7 +60,7 @@ android {
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled true
             zipAlignEnabled true
             shrinkResources true
             debuggable false
@@ -76,6 +77,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    dexOptions {
+        // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
+        preDexLibraries = rootProject.ext.preDexEnabled && !rootProject.ext.isTravis
+    }
+}
+
+play {
+    serviceAccountEmail = local_properties.play_service_account ?: ''
+    pk12File = file("../distribution/" + (local_properties.play_key_file ?: 'no-file.p12'))
+    track = 'alpha'
 }
 
 dependencies {
@@ -84,9 +96,10 @@ dependencies {
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 
+    wearApp project(':wear')
 //    debugWearApp project(path: ':wear', configuration: 'debugApk')
-//    releaseWearApp project(path: ':wear', configuration: 'releaseApk')
-    wearApp files('../distribution/wear-release.apk')
+//    earApp project(path: ':wear', configuration: 'releaseApk')
+//    wearApp files('../wear/build/outputs/apk/wear-release.apk')
 
     compile 'com.android.support:appcompat-v7:22.0.0'
 
