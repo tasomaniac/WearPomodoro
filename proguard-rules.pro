@@ -15,7 +15,10 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keepattributes *Annotation*
+
+# Crashlytics 1.+
+-keep class com.crashlytics.** { *; }
+-keepattributes SourceFile,LineNumberTable
 
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
@@ -25,8 +28,11 @@
 -dontwarn com.squareup.okhttp.**
 
 # OkHttp
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
--dontwarn okio.**
 
 #retrofit
 -keep class com.squareup.okhttp.** { *; }
@@ -41,6 +47,11 @@
     @retrofit.http.* <methods>;
 }
 
+# Okio
+-keep class sun.misc.Unsafe { *; }
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
 
 -keep class android.support.v4.app.** { *; }
 -keep interface android.support.v4.app.** { *; }
@@ -55,6 +66,23 @@
 -keep interface org.joda.time.** { *; }
 
 # ButterKnife
+-keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
--keepnames class * { @butterknife.InjectView *;}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
+
+#AppCompat
+-keep public class android.support.v7.widget.** { *; }
+-keep public class android.support.v7.internal.widget.** { *; }
+-keep public class android.support.v7.internal.view.menu.** { *; }
+
+-keep public class * extends android.support.v4.view.ActionProvider {
+    public <init>(android.content.Context);
+}
