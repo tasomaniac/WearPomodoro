@@ -1,5 +1,7 @@
 language: android
 
+sudo: false
+
 android:
   components:
     - android-22
@@ -12,7 +14,10 @@ android:
     # if you need to run emulator(s) during your tests
     # - sys-img-x86-android-22
 
-script: "./gradlew clean build test -Dpre-dex=false"
+before_script:
+    - GRADLE_OPTS="-Xms1g -Xmx3g -XX:MaxPermSize=3g"
+
+script: "./gradlew build test -Dpre-dex=false"
 
 branches:
   only:
