@@ -2,6 +2,8 @@ Pomodoro for Android Wear
 =========================
 
 [![Build Status](https://travis-ci.org/vngrs/PomoPomoAndroid.png?branch=develop)](https://travis-ci.org/vngrs/PomoPomoAndroid)
+[![Join the chat at https://gitter.im/vngrs/PomoPomoAndroid](https://img.shields.io/badge/GITTER-join%20chat-green.svg)](https://gitter.im/vngrs/PomoPomoAndroid?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Installation
 ------------
