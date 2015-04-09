@@ -6,8 +6,8 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Ui Module for VNGRS product flavor.
- * It is used to show different UI components related to VNGRS Pomodoro API.
+ * Ui Module for standalone product flavor.
+ * Does the default behavior of BaseUi.
  *
  * Created by Said Tahsin Dane on 17/03/15.
  */
