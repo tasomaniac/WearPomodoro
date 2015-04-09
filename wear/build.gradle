@@ -9,6 +9,7 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
+    publishNonDefault true
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
@@ -32,6 +33,15 @@ android {
             keyAlias(local_properties.release_keystore_alias ?: "androiddebugkey")
             storePassword(local_properties.release_keystore_pwd ?: "android")
             keyPassword(local_properties.release_keystore_pwd2 ?: "android")
+        }
+    }
+
+    productFlavors {
+        standalone {
+            applicationId "com.vngrs.android.pomodoro"
+        }
+        vngrs {
+            applicationId "com.vngrs.android.pomodoro.internal"
         }
     }
 

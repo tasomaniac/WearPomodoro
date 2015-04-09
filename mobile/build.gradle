@@ -71,6 +71,8 @@ android {
 
     lintOptions {
         abortOnError true
+
+        warning 'InvalidPackage'
     }
 
     compileOptions {
@@ -96,10 +98,8 @@ dependencies {
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 
-    wearApp project(':wear')
-//    debugWearApp project(path: ':wear', configuration: 'debugApk')
-//    earApp project(path: ':wear', configuration: 'releaseApk')
-//    wearApp files('../wear/build/outputs/apk/wear-release.apk')
+    standaloneWearApp project(path: ':wear', configuration: 'standaloneRelease')
+    vngrsWearApp project(path: ':wear', configuration: 'vngrsRelease')
 
     compile 'com.android.support:appcompat-v7:22.0.0'
 

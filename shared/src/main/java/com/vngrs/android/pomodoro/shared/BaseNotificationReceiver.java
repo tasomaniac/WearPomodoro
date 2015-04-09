@@ -1,5 +1,6 @@
 package com.vngrs.android.pomodoro.shared;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -131,6 +132,7 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
         return PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_NO_CREATE) != null;
     }
 
+    @TargetApi(19)
     private void setAlarm(Context context, int requestCode, Intent intent, DateTime time) {
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -1,8 +1,7 @@
 <resources>
 
   <string name="start">Start</string>
-  <string name="idle">Idle</string>
-  <string name="take_break">Break</string>
+  <!--<string name="idle">Idle</string>-->
   <string name="stop">Stop</string>
   <string name="reset">Reset</string>
 
