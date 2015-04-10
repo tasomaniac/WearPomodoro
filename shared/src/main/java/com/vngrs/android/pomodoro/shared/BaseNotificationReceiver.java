@@ -125,7 +125,7 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + MINUTE_MILLIS, MINUTE_MILLIS, pendingIntent);
+                System.currentTimeMillis() + MINUTE_MILLIS + 2000, MINUTE_MILLIS, pendingIntent);
     }
 
     private boolean isAlarmSet(Context context, int requestCode, Intent intent) {
