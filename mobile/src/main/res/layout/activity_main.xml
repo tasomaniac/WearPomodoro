@@ -16,6 +16,7 @@
     android:layout_height="192dp"
     android:layout_centerInParent="true"
     style="?android:attr/borderlessButtonStyle"
+    android:background="?attr/selectableItemBackgroundBorderless"
     android:scaleType="centerCrop"
     android:contentDescription="@string/cd_start_stop_button"
     android:layout_marginTop="-48dp"
