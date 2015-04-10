@@ -56,7 +56,7 @@ public class NotificationBuilder {
 
     @NonNull
     public Notification buildNotificationWear(@NonNull Intent displayIntent) {
-            final NotificationCompat.Action action;
+        final NotificationCompat.Action action;
         if (pomodoroMaster.isOngoing()) {
             action = buildStopAction(context, R.drawable.ic_action_stop_wear);
         } else {
@@ -74,11 +74,9 @@ public class NotificationBuilder {
                 .setBackground(getBackground())
                 .setHintHideIcon(true);
         if (pomodoroMaster.isOngoing()) {
-                final PendingIntent displayPendingIntent = PendingIntent.getActivity(context,
-                        ID_ACTIVITY, displayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                extender.setDisplayIntent(displayPendingIntent);
-//                        .setCustomContentHeight(Utils.dpToPx(context.getResources(), 64));
-//                        .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_SMALL);
+            final PendingIntent displayPendingIntent = PendingIntent.getActivity(context,
+                    ID_ACTIVITY, displayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            extender.setDisplayIntent(displayPendingIntent);
         } else {
             extender.setContentIcon(R.drawable.ic_action_start_grey);
         }
@@ -123,8 +121,8 @@ public class NotificationBuilder {
     }
 
     public NotificationCompat.Action buildStartAction(@NonNull Context context,
-                                                             @DrawableRes int actionIcon,
-                                                             @NonNull ActivityType activityType) {
+                                                      @DrawableRes int actionIcon,
+                                                      @NonNull ActivityType activityType) {
         final Intent startActionIntent = BaseNotificationReceiver.START_INTENT;
         startActionIntent.putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE, activityType.value());
         final PendingIntent startActionPendingIntent =
@@ -136,7 +134,7 @@ public class NotificationBuilder {
     public static NotificationCompat.Action buildStopAction(@NonNull Context context, @DrawableRes int actionIcon) {
         final Intent stopActionIntent = BaseNotificationReceiver.STOP_INTENT;
         final PendingIntent stopActionPendingIntent =
-                    PendingIntent.getBroadcast(context, ID_STOP, stopActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.getBroadcast(context, ID_STOP, stopActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         return new NotificationCompat.Action.Builder(actionIcon,
                 context.getString(R.string.stop), stopActionPendingIntent).build();
     }

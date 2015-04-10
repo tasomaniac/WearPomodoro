@@ -42,6 +42,7 @@ public class PomodoroMaster {
         this.pomodorosDoneStorage = pomodorosDoneStorage;
         this.activityTypeStorage = activityTypeStorage;
         this.app = app;
+        this.isOngoing = false;
     }
 
     /**

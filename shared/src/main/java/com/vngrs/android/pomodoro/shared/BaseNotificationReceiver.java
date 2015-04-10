@@ -2,12 +2,14 @@ package com.vngrs.android.pomodoro.shared;
 
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
@@ -41,7 +43,8 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
     private static final int REQUEST_UPDATE = 1;
     private static final int REQUEST_FINISH = 2;
 
-    protected static final int NOTIFICATION_ID = 1;
+    private static final int NOTIFICATION_ID_ONGOING = 101;
+    private static final int NOTIFICATION_ID_NORMAL = 102;
 
     @Inject PomodoroMaster pomodoroMaster;
 
@@ -85,9 +88,22 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
      * @param context Context object.
      * @param pomodoroMaster PomodoroMaster singletion object.
      */
-    public abstract void updateNotification(Context context, PomodoroMaster pomodoroMaster);
+    @Nullable
+    public abstract Notification buildNotification(Context context, PomodoroMaster pomodoroMaster);
+
+    private void updateNotification(Context context, PomodoroMaster pomodoroMaster) {
+
+        final Notification notification = buildNotification(context, pomodoroMaster);
+        if (notification != null) {
+            notificationManager.notify(pomodoroMaster.isOngoing()
+                    ? NOTIFICATION_ID_ONGOING
+                    : NOTIFICATION_ID_NORMAL,
+                    notification);
+        }
+    }
 
     private void start(Context context, ActivityType activityType) {
+        notificationManager.cancel(NOTIFICATION_ID_NORMAL);
         if (activityType != ActivityType.NONE
                 && !pomodoroMaster.isOngoing()) {
             pomodoroMaster.start(activityType);
@@ -99,7 +115,9 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
     }
 
     private ActivityType stop(Context context) {
-        notificationManager.cancel(NOTIFICATION_ID);
+        notificationManager.cancel(pomodoroMaster.isOngoing()
+                ? NOTIFICATION_ID_ONGOING
+                : NOTIFICATION_ID_NORMAL);
 
         cancelAlarm(context, REQUEST_FINISH, FINISH_ALARM_INTENT);
         cancelAlarm(context, REQUEST_UPDATE, UPDATE_INTENT);

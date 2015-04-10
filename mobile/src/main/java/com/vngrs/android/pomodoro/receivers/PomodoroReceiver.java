@@ -4,7 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationManagerCompat;
+import android.support.annotation.Nullable;
 
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
@@ -27,17 +27,16 @@ public class PomodoroReceiver extends BaseNotificationReceiver {
         super.onReceive(context, intent);
     }
 
+    @Nullable
     @Override
-    public void updateNotification(Context context, PomodoroMaster pomodoroMaster) {
+    public Notification buildNotification(Context context, PomodoroMaster pomodoroMaster) {
         if (pomodoroMaster.getActivityType() != ActivityType.NONE) {
             NotificationBuilder builder = new NotificationBuilder(context, pomodoroMaster);
-
             final Intent contentIntent = new Intent(context, MainActivity.class);
-
-            Notification notification = builder
+            return builder
                     .buildNotificationPhone(PendingIntent.getActivity(context, 0, contentIntent, 0));
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(NOTIFICATION_ID, notification);
+        } else {
+            return null;
         }
     }
 }

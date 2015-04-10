@@ -3,7 +3,7 @@ package com.vngrs.android.pomodoro.wear;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationManagerCompat;
+import android.support.annotation.Nullable;
 
 import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
 import com.vngrs.android.pomodoro.shared.NotificationBuilder;
@@ -21,13 +21,13 @@ public class PomodoroNotificationReceiver extends BaseNotificationReceiver {
         super.onReceive(context, intent);
     }
 
-    public void updateNotification(Context context, PomodoroMaster pomodoroMaster) {
+    @Nullable
+    @Override
+    public Notification buildNotification(Context context, PomodoroMaster pomodoroMaster) {
 
         final Intent displayIntent = new Intent(context, PomodoroNotificationActivity.class);
 
         NotificationBuilder builder = new NotificationBuilder(context, pomodoroMaster);
-        Notification notification = builder.buildNotificationWear(displayIntent);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        return builder.buildNotificationWear(displayIntent);
     }
 }

@@ -127,7 +127,6 @@ public class MainActivity extends ActionBarActivity implements
         super.onResume();
 
         update();
-        sendBroadcast(BaseNotificationReceiver.UPDATE_INTENT);
 
         registerReceiver(pomodoroReceiver, FILTER_START);
         registerReceiver(pomodoroReceiver, FILTER_STOP);
@@ -153,7 +152,7 @@ public class MainActivity extends ActionBarActivity implements
         nextTimer();
     }
 
-    public void updateWithoutTimer() {
+    private void updateWithoutTimer() {
 
         if (pomodoroMaster.isOngoing()) {
             mStartStopButton.setImageResource(R.drawable.ic_action_stop_wear);
@@ -188,11 +187,13 @@ public class MainActivity extends ActionBarActivity implements
         if (pomodoroMaster.isOngoing()) {
             sendOrderedBroadcast(BaseNotificationReceiver.STOP_INTENT, null);
         } else {
-            sendOrderedBroadcast(
-                    BaseNotificationReceiver.START_INTENT
-                            .putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE,
-                                    ActivityType.POMODORO.value()),
-                    null);
+            ActivityType activityType = pomodoroMaster.getActivityType();
+            if (activityType == ActivityType.NONE) {
+                activityType = ActivityType.POMODORO;
+            }
+            final Intent startIntent = BaseNotificationReceiver.START_INTENT;
+            startIntent.putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE, activityType.value());
+            sendOrderedBroadcast(startIntent, null);
         }
         update();
     }
