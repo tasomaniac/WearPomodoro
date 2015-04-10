@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -153,6 +155,11 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     private void updateWithoutTimer() {
+
+        getWindow().setBackgroundDrawable(new ColorDrawable(Utils.getNotificationColor(this, pomodoroMaster)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(Utils.getNotificationColorDark(this, pomodoroMaster));
+        }
 
         if (pomodoroMaster.isOngoing()) {
             mStartStopButton.setImageResource(R.drawable.ic_action_stop_96dp);
