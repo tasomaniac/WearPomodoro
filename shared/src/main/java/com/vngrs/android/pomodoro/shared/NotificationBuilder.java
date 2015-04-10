@@ -21,17 +21,34 @@ public class NotificationBuilder {
 
     private final Context context;
     private final PomodoroMaster pomodoroMaster;
+    private int notificationIcon;
+    private int actionStartIcon;
+    private int actionStopIcon;
+    private int actionResetIcon;
 
-    public NotificationBuilder(Context context, PomodoroMaster pomodoroMaster) {
+    public NotificationBuilder(Context context, PomodoroMaster pomodoroMaster,
+                               @DrawableRes int notificationIcon,
+                               @DrawableRes int actionStartIcon,
+                               @DrawableRes int actionStopIcon,
+                               @DrawableRes int actionResetIcon) {
         this.context = context;
         this.pomodoroMaster = pomodoroMaster;
+        this.notificationIcon = notificationIcon;
+        this.actionStartIcon = actionStartIcon;
+        this.actionStopIcon = actionStopIcon;
+        this.actionResetIcon = actionResetIcon;
     }
 
     @NonNull
     private NotificationCompat.Builder buildBaseNotification() {
 
+        final NotificationCompat.Action action = getNotificationAction();
+
+        final String title = titleForActivityType(context);
+        final String message = messageForActivityType(context);
+
         return new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(notificationIcon)
                 .setDefaults(pomodoroMaster.isOngoing() ? 0 : Notification.DEFAULT_ALL)
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -40,35 +57,34 @@ public class NotificationBuilder {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setLocalOnly(true)
 //                .setStyle(new NotificationCompat.BigTextStyle())
-                .setColor(getNotificationColor());
-    }
-
-    private int getNotificationColor() {
-        return context.getResources().getColor(pomodoroMaster.isOngoing() && pomodoroMaster.getActivityType() == ActivityType.POMODORO
-                ? R.color.ongoing_red : R.color.finished_green);
+                .setColor(Utils.getNotificationColor(context, pomodoroMaster))
+                .setContentTitle(title)
+                .setContentText(message)
+                .addAction(action);
     }
 
     private Bitmap getBackground() {
         Bitmap background = Bitmap.createBitmap(600, 600, Bitmap.Config.RGB_565);
-        background.eraseColor(getNotificationColor());
+        background.eraseColor(Utils.getNotificationColor(context, pomodoroMaster));
         return background;
     }
 
-    @NonNull
-    public Notification buildNotificationWear(@NonNull Intent displayIntent) {
+    private NotificationCompat.Action getNotificationAction() {
         final NotificationCompat.Action action;
         if (pomodoroMaster.isOngoing()) {
-            action = buildStopAction(context, R.drawable.ic_action_stop_wear);
+            action = buildStopAction(context);
         } else {
             ActivityType activityType = pomodoroMaster.getActivityType();
             if (activityType == ActivityType.NONE) {
                 activityType = ActivityType.POMODORO;
             }
-            action = buildStartAction(context, R.drawable.ic_action_start_wear, activityType);
+            action = buildStartAction(context, activityType);
         }
+        return action;
+    }
 
-        final String message = messageForActivityType(context);
-        final String title = titleForActivityType(context);
+    @NonNull
+    public Notification buildNotificationWear(@NonNull Intent displayIntent) {
 
         final NotificationCompat.WearableExtender extender = new NotificationCompat.WearableExtender()
                 .setBackground(getBackground())
@@ -82,68 +98,46 @@ public class NotificationBuilder {
         }
 
         NotificationCompat.Builder builder = buildBaseNotification()
-                .setContentTitle(title)
-                .setContentText(message)
-                .addAction(action)
-                .addAction(buildResetAction(context, R.drawable.ic_action_reset_wear))
+                .addAction(buildResetAction(context))
                 .extend(extender);
 
         return builder.build();
     }
 
-
     @NonNull
     public Notification buildNotificationPhone(@NonNull PendingIntent contentIntent) {
-
-        final NotificationCompat.Action action;
-        if (pomodoroMaster.isOngoing()) {
-            action = buildStopAction(context, R.drawable.ic_action_stop_phone);
-        } else {
-            ActivityType activityType = pomodoroMaster.getActivityType();
-            if (activityType == ActivityType.NONE) {
-                activityType = ActivityType.POMODORO;
-            }
-            action = buildStartAction(context, R.drawable.ic_action_start_phone, activityType);
-        }
-
-        final String message = messageForActivityType(context);
-        final String title = titleForActivityType(context);
 
         final DateTime nextPomodoro = pomodoroMaster.getNextPomodoro();
         NotificationCompat.Builder builder = buildBaseNotification()
                 .setWhen(nextPomodoro != null ? nextPomodoro.getMillis() : System.currentTimeMillis())
-                .setContentIntent(contentIntent)
-                .setContentTitle(title)
-                .setContentText(message)
-                .addAction(action);
+                .setContentIntent(contentIntent);
 
         return builder.build();
     }
 
     public NotificationCompat.Action buildStartAction(@NonNull Context context,
-                                                      @DrawableRes int actionIcon,
                                                       @NonNull ActivityType activityType) {
         final Intent startActionIntent = BaseNotificationReceiver.START_INTENT;
         startActionIntent.putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE, activityType.value());
         final PendingIntent startActionPendingIntent =
                 PendingIntent.getBroadcast(context, ID_START, startActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        return new NotificationCompat.Action.Builder(actionIcon,
+        return new NotificationCompat.Action.Builder(actionStartIcon,
                 context.getString(R.string.start), startActionPendingIntent).build();
     }
 
-    public static NotificationCompat.Action buildStopAction(@NonNull Context context, @DrawableRes int actionIcon) {
+    public NotificationCompat.Action buildStopAction(@NonNull Context context) {
         final Intent stopActionIntent = BaseNotificationReceiver.STOP_INTENT;
         final PendingIntent stopActionPendingIntent =
                 PendingIntent.getBroadcast(context, ID_STOP, stopActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        return new NotificationCompat.Action.Builder(actionIcon,
+        return new NotificationCompat.Action.Builder(actionStopIcon,
                 context.getString(R.string.stop), stopActionPendingIntent).build();
     }
 
-    public static NotificationCompat.Action buildResetAction(@NonNull Context context, @DrawableRes int actionIcon) {
+    public NotificationCompat.Action buildResetAction(@NonNull Context context) {
         final Intent resetActionIntent = BaseNotificationReceiver.RESET_INTENT;
         final PendingIntent resetActionPendingIntent =
                 PendingIntent.getBroadcast(context, ID_RESET, resetActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        return new NotificationCompat.Action.Builder(actionIcon,
+        return new NotificationCompat.Action.Builder(actionResetIcon,
                 context.getString(R.string.reset), resetActionPendingIntent).build();
     }
 

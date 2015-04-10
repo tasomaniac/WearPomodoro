@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.TypedValue;
 
+import com.vngrs.android.pomodoro.shared.model.ActivityType;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -79,6 +81,18 @@ public class Utils {
         final DateTimeFormatter fmt = shorten && remaining < MINUTE_MILLIS
                 ? DateTimeFormat.forPattern("ss") : DateTimeFormat.forPattern("mm:ss");
         return fmt.print(remaining);
+    }
+
+    public static int getNotificationColor(@NonNull Context context,
+                                           @NonNull PomodoroMaster pomodoroMaster) {
+        return context.getResources().getColor(pomodoroMaster.isOngoing() && pomodoroMaster.getActivityType() == ActivityType.POMODORO
+                ? R.color.ongoing_red : R.color.finished_green);
+    }
+
+    public static int getNotificationColorDark(@NonNull Context context,
+                                           @NonNull PomodoroMaster pomodoroMaster) {
+        return context.getResources().getColor(pomodoroMaster.isOngoing() && pomodoroMaster.getActivityType() == ActivityType.POMODORO
+                ? R.color.ongoing_red_dark : R.color.finished_green_dark);
     }
 
     @NonNull

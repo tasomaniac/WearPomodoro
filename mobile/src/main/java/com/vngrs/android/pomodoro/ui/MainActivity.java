@@ -155,11 +155,11 @@ public class MainActivity extends ActionBarActivity implements
     private void updateWithoutTimer() {
 
         if (pomodoroMaster.isOngoing()) {
-            mStartStopButton.setImageResource(R.drawable.ic_action_stop_wear);
+            mStartStopButton.setImageResource(R.drawable.ic_action_stop_96dp);
             mTime.setText(Utils.getRemainingTime(pomodoroMaster, /* shorten */ false));
             mDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
         } else {
-            mStartStopButton.setImageResource(R.drawable.ic_action_start_wear);
+            mStartStopButton.setImageResource(R.drawable.ic_action_start_96dp);
             mTime.setText("00:00");
             mDescription.setText(Utils.getActivityTypeMessage(this, pomodoroMaster));
         }
