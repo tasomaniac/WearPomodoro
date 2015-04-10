@@ -21,7 +21,6 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
-import com.vngrs.android.pomodoro.service.PomodoroService;
 import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
 import com.vngrs.android.pomodoro.shared.Constants;
 import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
@@ -51,15 +50,6 @@ public class MainActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_main);
         App.get(this).component().inject(this);
 
-        final Intent intent = new Intent(this, PomodoroService.class);
-        startService(intent);
-
-        sendBroadcast(
-                BaseNotificationReceiver.START_INTENT
-                        .putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE,
-                                ActivityType.POMODORO.value())
-        );
-
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 
@@ -68,9 +58,16 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        sendBroadcast(BaseNotificationReceiver.UPDATE_INTENT);
+    }
+
+    @Override
     protected void onStart() {
 
-        if (!mResolvingError) {  // more about this later
+        if (!mResolvingError) {
             mGoogleApiClient.connect();
         }
         super.onStart();

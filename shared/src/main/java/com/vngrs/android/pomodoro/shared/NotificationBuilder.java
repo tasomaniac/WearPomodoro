@@ -53,6 +53,7 @@ public class NotificationBuilder {
         return background;
     }
 
+    @NonNull
     public Notification buildNotificationWear(@NonNull Intent displayIntent) {
             final NotificationCompat.Action action;
         if (pomodoroMaster.isOngoing()) {

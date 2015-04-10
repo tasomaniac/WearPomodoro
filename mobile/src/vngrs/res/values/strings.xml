@@ -3,6 +3,7 @@
 
   <string name="settings">Settings</string>
 
+  <!-- Strings related to the Settings in the VNGRS Flavor.-->
   <string name="key_notifications_vibrate" translatable="false">notifications_vibrate</string>
   <string name="key_notifications_enabled" translatable="false">notifications_enabled</string>
   <string name="key_remote_api" translatable="false">remote_api</string>
@@ -20,6 +21,5 @@
 
   <!--<string name="pref_title_ringtone">Ringtone</string>-->
   <string name="pref_ringtone_silent">Silent</string>
-
   <string name="pref_title_vibrate">Vibrate</string>
 </resources>
