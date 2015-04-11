@@ -18,6 +18,10 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        JodaTimeAndroid.init(this);
+
+        buildComponentAndInject();
+
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         } else {
@@ -25,9 +29,6 @@ public class App extends Application {
             // TODO Timber.plant(new CrashlyticsTree());
         }
 
-        JodaTimeAndroid.init(this);
-
-        buildComponentAndInject();
     }
 
 

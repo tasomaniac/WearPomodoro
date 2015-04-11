@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 
@@ -48,7 +47,6 @@ public abstract class BaseNotificationReceiver extends BroadcastReceiver {
 
     @Inject PomodoroMaster pomodoroMaster;
 
-    @Inject PowerManager powerManager;
     @Inject NotificationManagerCompat notificationManager;
     @Inject AlarmManager alarmManager;
 

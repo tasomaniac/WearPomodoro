@@ -10,7 +10,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import timber.log.Timber;
 
 /**
- * Created by taso on 20/03/15.
+ * Created by Said Tahsin Dane on 20/03/15.
  */
 public class App extends Application {
 

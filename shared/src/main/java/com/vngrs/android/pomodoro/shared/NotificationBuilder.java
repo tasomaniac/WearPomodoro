@@ -26,7 +26,8 @@ public class NotificationBuilder {
     private int actionStopIcon;
     private int actionResetIcon;
 
-    public NotificationBuilder(Context context, PomodoroMaster pomodoroMaster,
+    public NotificationBuilder(@NonNull Context context,
+                               @NonNull PomodoroMaster pomodoroMaster,
                                @DrawableRes int notificationIcon,
                                @DrawableRes int actionStartIcon,
                                @DrawableRes int actionStopIcon,
