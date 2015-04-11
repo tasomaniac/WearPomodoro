@@ -31,8 +31,8 @@ public class PomodoroNotificationReceiver extends BaseNotificationReceiver {
         NotificationBuilder builder = new NotificationBuilder(context,
                 pomodoroMaster,
                 R.mipmap.ic_launcher,
-                R.drawable.ic_action_stop_96dp,
                 R.drawable.ic_action_start_96dp,
+                R.drawable.ic_action_stop_96dp,
                 R.drawable.ic_action_reset_96dp);
         return builder.buildNotificationWear(displayIntent);
     }
