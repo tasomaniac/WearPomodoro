@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.vngrs.android.pomodoro">
 
+  <uses-permission android:name="ANDROID.PERMISSION.WAKE_LOCK" />
   <uses-feature android:name="android.hardware.type.watch" />
 
   <application
@@ -43,6 +44,7 @@
       </intent-filter>
     </receiver>
 
+    <service android:name=".wear.PomodoroNotificationService" />
   </application>
 
 </manifest>

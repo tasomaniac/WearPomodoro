@@ -16,7 +16,7 @@ import dagger.Component;
 public interface PomodoroComponent {
 
     void inject(App app);
-    void inject(PomodoroNotificationReceiver receiver);
+    void inject(PomodoroNotificationService receiver);
     void inject(OngoingNotificationListenerService service);
     void inject(PomodoroNotificationActivity activity);
 

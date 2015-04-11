@@ -118,8 +118,8 @@ public class NotificationBuilder {
 
     public NotificationCompat.Action buildStartAction(@NonNull Context context,
                                                       @NonNull ActivityType activityType) {
-        final Intent startActionIntent = BaseNotificationReceiver.START_INTENT;
-        startActionIntent.putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE, activityType.value());
+        final Intent startActionIntent = BaseNotificationService.START_INTENT;
+        startActionIntent.putExtra(BaseNotificationService.EXTRA_ACTIVITY_TYPE, activityType.value());
         final PendingIntent startActionPendingIntent =
                 PendingIntent.getBroadcast(context, ID_START, startActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         return new NotificationCompat.Action.Builder(actionStartIcon,
@@ -127,7 +127,7 @@ public class NotificationBuilder {
     }
 
     public NotificationCompat.Action buildStopAction(@NonNull Context context) {
-        final Intent stopActionIntent = BaseNotificationReceiver.STOP_INTENT;
+        final Intent stopActionIntent = BaseNotificationService.STOP_INTENT;
         final PendingIntent stopActionPendingIntent =
                 PendingIntent.getBroadcast(context, ID_STOP, stopActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         return new NotificationCompat.Action.Builder(actionStopIcon,
@@ -135,7 +135,7 @@ public class NotificationBuilder {
     }
 
     public NotificationCompat.Action buildResetAction(@NonNull Context context) {
-        final Intent resetActionIntent = BaseNotificationReceiver.RESET_INTENT;
+        final Intent resetActionIntent = BaseNotificationService.RESET_INTENT;
         final PendingIntent resetActionPendingIntent =
                 PendingIntent.getBroadcast(context, ID_RESET, resetActionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         return new NotificationCompat.Action.Builder(actionResetIcon,

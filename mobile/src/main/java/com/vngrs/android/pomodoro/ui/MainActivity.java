@@ -29,7 +29,7 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
-import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
+import com.vngrs.android.pomodoro.shared.BaseNotificationService;
 import com.vngrs.android.pomodoro.shared.Constants;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.Utils;
@@ -78,13 +78,13 @@ public class MainActivity extends ActionBarActivity implements
                     @Override
                     public void run() {
                         switch (intent.getAction()) {
-                            case BaseNotificationReceiver.ACTION_STOP:
-                            case BaseNotificationReceiver.ACTION_RESET:
-                            case BaseNotificationReceiver.ACTION_FINISH_ALARM:
+                            case BaseNotificationService.ACTION_STOP:
+                            case BaseNotificationService.ACTION_RESET:
+                            case BaseNotificationService.ACTION_FINISH_ALARM:
                                 handler.removeCallbacks(updateRunnable);
                                 updateWithoutTimer();
                                 break;
-                            case BaseNotificationReceiver.ACTION_START:
+                            case BaseNotificationService.ACTION_START:
                                 update();
                                 break;
                             default:
@@ -98,15 +98,15 @@ public class MainActivity extends ActionBarActivity implements
     };
 
     private static final IntentFilter FILTER_START =
-            new IntentFilter(BaseNotificationReceiver.ACTION_START);
+            new IntentFilter(BaseNotificationService.ACTION_START);
     private static final IntentFilter FILTER_STOP =
-            new IntentFilter(BaseNotificationReceiver.ACTION_STOP);
+            new IntentFilter(BaseNotificationService.ACTION_STOP);
     private static final IntentFilter FILTER_RESET =
-            new IntentFilter(BaseNotificationReceiver.ACTION_RESET);
+            new IntentFilter(BaseNotificationService.ACTION_RESET);
     private static final IntentFilter FILTER_UPDATE =
-            new IntentFilter(BaseNotificationReceiver.ACTION_UPDATE);
+            new IntentFilter(BaseNotificationService.ACTION_UPDATE);
     private static final IntentFilter FILTER_FINISH_ALARM =
-            new IntentFilter(BaseNotificationReceiver.ACTION_FINISH_ALARM);
+            new IntentFilter(BaseNotificationService.ACTION_FINISH_ALARM);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,14 +192,14 @@ public class MainActivity extends ActionBarActivity implements
     public void start() {
 
         if (pomodoroMaster.isOngoing()) {
-            sendOrderedBroadcast(BaseNotificationReceiver.STOP_INTENT, null);
+            sendOrderedBroadcast(BaseNotificationService.STOP_INTENT, null);
         } else {
             ActivityType activityType = pomodoroMaster.getActivityType();
             if (activityType == ActivityType.NONE) {
                 activityType = ActivityType.POMODORO;
             }
-            final Intent startIntent = BaseNotificationReceiver.START_INTENT;
-            startIntent.putExtra(BaseNotificationReceiver.EXTRA_ACTIVITY_TYPE, activityType.value());
+            final Intent startIntent = BaseNotificationService.START_INTENT;
+            startIntent.putExtra(BaseNotificationService.EXTRA_ACTIVITY_TYPE, activityType.value());
             sendOrderedBroadcast(startIntent, null);
         }
         update();
