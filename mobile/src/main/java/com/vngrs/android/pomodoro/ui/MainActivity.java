@@ -41,6 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import hugo.weaving.DebugLog;
+import timber.log.Timber;
 
 
 public class MainActivity extends ActionBarActivity implements
@@ -49,8 +50,10 @@ public class MainActivity extends ActionBarActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
+    private static final String STATE_ERROR_ALREADY_SHOWN = "error_shown";
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private boolean mResolvingError = false;
+    private boolean mErrorAlreadyShown = false;
 
     @Inject BaseUi baseUi;
     @Inject GoogleApiClient mGoogleApiClient;
@@ -119,6 +122,8 @@ public class MainActivity extends ActionBarActivity implements
 
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+        mErrorAlreadyShown = savedInstanceState != null
+                && savedInstanceState.getBoolean(STATE_ERROR_ALREADY_SHOWN, false);
 
         mGoogleApiClient.registerConnectionCallbacks(this);
         mGoogleApiClient.registerConnectionFailedListener(this);
@@ -220,6 +225,7 @@ public class MainActivity extends ActionBarActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
+        outState.putBoolean(STATE_ERROR_ALREADY_SHOWN, mErrorAlreadyShown);
     }
 
     @Override
@@ -256,7 +262,14 @@ public class MainActivity extends ActionBarActivity implements
                     mResolvingError = false;
                 }
             });
-            errorDialog.show();
+            if (!mErrorAlreadyShown) {
+                try {
+                    errorDialog.show();
+                    mErrorAlreadyShown = true;
+                } catch (RuntimeException e) {
+                    Timber.e("Failed to show Google Play Services Dialog.");
+                }
+            }
             mResolvingError = true;
         }
     }
