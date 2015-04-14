@@ -5,6 +5,15 @@
     <item name="android:windowBackground">?attr/colorPrimary</item>
   </style>
 
+  <style name="Animation" />
+  <style name="Theme.Pomodoro.Translucent" parent="Base.Theme.Pomodoro">
+
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">false</item>
+    <item name="android:windowAnimationStyle">@style/Animation</item>
+  </style>
+
   <style name="Theme.Pomodoro.Finished" parent="Base.Theme.Pomodoro">
     <item name="colorPrimary">@color/finished_green</item>
     <item name="colorPrimaryDark">@color/finished_green_dark</item>
