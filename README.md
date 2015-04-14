@@ -9,9 +9,9 @@ Pomodoro for Android Wear
 Installation
 ------------
 
-Download the application with the following [link](https://play.google.com/store/apps/details?id=com.vngrs.android.pomodoro)
+Currently, the application is not yet released. You can join this [community](https://plus.google.com/communities/118326136232651159420) to download the app and be a BETA tester.
 
-You can also join this [community](https://plus.google.com/communities/118326136232651159420) to be a BETA tester to our app. 
+Download the application with the following. [link](https://play.google.com/store/apps/details?id=com.vngrs.android.pomodoro) after you become a tester. 
 
 What
 ----
