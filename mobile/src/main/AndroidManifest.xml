@@ -22,7 +22,7 @@
     </activity>
 
     <receiver
-      android:name=".receivers.PomodoroReceiver"
+      android:name=".receiver.PomodoroNotificationReceiver"
       android:enabled="true"
       android:exported="false">
       <intent-filter
