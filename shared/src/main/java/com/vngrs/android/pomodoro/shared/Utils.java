@@ -83,8 +83,8 @@ public class Utils {
         return fmt.print(remaining);
     }
 
-    public static int getNotificationColor(@NonNull Context context,
-                                           @NonNull PomodoroMaster pomodoroMaster) {
+    public static int getPrimaryColor(@NonNull Context context,
+                                      @NonNull PomodoroMaster pomodoroMaster) {
         return context.getResources().getColor(pomodoroMaster.isOngoing() && pomodoroMaster.getActivityType() == ActivityType.POMODORO
                 ? R.color.ongoing_red : R.color.finished_green);
     }

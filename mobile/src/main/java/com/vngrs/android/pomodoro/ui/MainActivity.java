@@ -34,6 +34,7 @@ import com.vngrs.android.pomodoro.shared.Constants;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.Utils;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
+import com.vngrs.android.pomodoro.util.RecentTasksStyler;
 
 import javax.inject.Inject;
 
@@ -94,6 +95,7 @@ public class MainActivity extends ActionBarActivity implements
                                 updateWithoutTimer();
                                 break;
                         }
+                        updateOnStateChange();
                     }
                 }, 100);
             }
@@ -113,9 +115,13 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         App.get(this).component().inject(this);
+        setPomodoroTheme();
+
+        super.onCreate(savedInstanceState);
+        updateOnStateChange();
+
+        setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
         handler = new Handler();
@@ -127,6 +133,11 @@ public class MainActivity extends ActionBarActivity implements
 
         mGoogleApiClient.registerConnectionCallbacks(this);
         mGoogleApiClient.registerConnectionFailedListener(this);
+    }
+
+    private void setPomodoroTheme() {
+        setTheme(pomodoroMaster.isOngoing() && pomodoroMaster.getActivityType() == ActivityType.POMODORO
+                ? R.style.Theme_Pomodoro_Ongoing : R.style.Theme_Pomodoro_Finished);
     }
 
     @Override
@@ -159,12 +170,19 @@ public class MainActivity extends ActionBarActivity implements
         nextTimer();
     }
 
-    private void updateWithoutTimer() {
+    private void updateOnStateChange() {
+        final int colorPrimary = Utils.getPrimaryColor(this, pomodoroMaster);
+        final int colorPrimaryDark = Utils.getNotificationColorDark(this, pomodoroMaster);
 
-        getWindow().setBackgroundDrawable(new ColorDrawable(Utils.getNotificationColor(this, pomodoroMaster)));
+        setPomodoroTheme();
+        getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(Utils.getNotificationColorDark(this, pomodoroMaster));
+            getWindow().setStatusBarColor(colorPrimaryDark);
         }
+        RecentTasksStyler.styleRecentTasksEntry(this, colorPrimaryDark);
+    }
+
+    private void updateWithoutTimer() {
 
         if (pomodoroMaster.isOngoing()) {
             mStartStopButton.setImageResource(R.drawable.ic_action_stop_96dp);

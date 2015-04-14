@@ -58,7 +58,7 @@ public class NotificationBuilder {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setLocalOnly(true)
 //                .setStyle(new NotificationCompat.BigTextStyle())
-                .setColor(Utils.getNotificationColor(context, pomodoroMaster))
+                .setColor(Utils.getPrimaryColor(context, pomodoroMaster))
                 .setContentTitle(title)
                 .setContentText(message)
                 .addAction(action);
@@ -66,7 +66,7 @@ public class NotificationBuilder {
 
     private Bitmap getBackground() {
         Bitmap background = Bitmap.createBitmap(600, 600, Bitmap.Config.RGB_565);
-        background.eraseColor(Utils.getNotificationColor(context, pomodoroMaster));
+        background.eraseColor(Utils.getPrimaryColor(context, pomodoroMaster));
         return background;
     }
 

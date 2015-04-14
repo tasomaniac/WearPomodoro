@@ -1,10 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-  <!-- Base application theme. -->
-  <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-    <!-- Customize your theme here. -->
+
+  <style name="Base.Theme.Pomodoro" parent="Theme.AppCompat.NoActionBar">
+    <item name="android:windowBackground">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Theme.Pomodoro.Finished" parent="Base.Theme.Pomodoro">
     <item name="colorPrimary">@color/finished_green</item>
     <item name="colorPrimaryDark">@color/finished_green_dark</item>
+  </style>
+
+  <style name="Theme.Pomodoro.Ongoing" parent="Base.Theme.Pomodoro">
+    <item name="colorPrimary">@color/ongoing_red</item>
+    <item name="colorPrimaryDark">@color/ongoing_red_dark</item>
   </style>
 
 </resources>
