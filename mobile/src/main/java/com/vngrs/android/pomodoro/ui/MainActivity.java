@@ -27,6 +27,7 @@ import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
+import com.pnikosis.materialishprogress.ProgressWheel;
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
 import com.vngrs.android.pomodoro.shared.BaseNotificationService;
@@ -35,6 +36,8 @@ import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.Utils;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
 import com.vngrs.android.pomodoro.util.RecentTasksStyler;
+
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
@@ -60,6 +63,7 @@ public class MainActivity extends ActionBarActivity implements
     @Inject GoogleApiClient mGoogleApiClient;
     @Inject PomodoroMaster pomodoroMaster;
 
+    @InjectView(R.id.pomodoro_progress) ProgressWheel mProgress;
     @InjectView(R.id.pomodoro_time) TextView mTime;
     @InjectView(R.id.pomodoro_description) TextView mDescription;
     @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
@@ -119,10 +123,11 @@ public class MainActivity extends ActionBarActivity implements
         setPomodoroTheme();
 
         super.onCreate(savedInstanceState);
-        updateOnStateChange();
 
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
+        updateOnStateChange();
 
         handler = new Handler();
 
@@ -180,16 +185,22 @@ public class MainActivity extends ActionBarActivity implements
             getWindow().setStatusBarColor(colorPrimaryDark);
         }
         RecentTasksStyler.styleRecentTasksEntry(this, colorPrimaryDark);
+
+        if (mProgress != null) {
+            mProgress.setRimColor(colorPrimaryDark);
+        }
     }
 
     private void updateWithoutTimer() {
 
         if (pomodoroMaster.isOngoing()) {
             mStartStopButton.setImageResource(R.drawable.ic_action_stop_96dp);
+            mProgress.setProgress(1 - (float) (pomodoroMaster.getNextPomodoro().getMillis() - DateTime.now().getMillis()) / pomodoroMaster.getActivityType().getLengthInMillis());
             mTime.setText(Utils.getRemainingTime(pomodoroMaster, /* shorten */ false));
             mDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
         } else {
             mStartStopButton.setImageResource(R.drawable.ic_action_start_96dp);
+            mProgress.setProgress(0);
             mTime.setText("00:00");
             mDescription.setText(Utils.getActivityTypeMessage(this, pomodoroMaster));
         }

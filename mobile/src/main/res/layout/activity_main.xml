@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  xmlns:wheel="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -12,6 +13,17 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
+    <com.pnikosis.materialishprogress.ProgressWheel
+      android:id="@+id/pomodoro_progress"
+      android:layout_width="192dp"
+      android:layout_height="192dp"
+      android:layout_centerHorizontal="true"
+      wheel:matProg_barColor="@android:color/white"
+      wheel:matProg_barWidth="4dp"
+      wheel:matProg_fillRadius="true"
+      wheel:matProg_linearProgress="true"
+      wheel:matProg_progressIndeterminate="false" />
+    
     <ImageButton
       android:id="@+id/pomodoro_start_stop_button"
       tools:src="@drawable/ic_action_start_96dp"
@@ -22,7 +34,7 @@
       android:background="?attr/selectableItemBackgroundBorderless"
       android:scaleType="center"
       android:contentDescription="@string/cd_start_stop_button"
-      android:layout_marginBottom="24dp" />
+      android:layout_margin="48dp" />
 
     <TextView
       android:id="@+id/pomodoro_time"
@@ -31,8 +43,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
-      android:layout_below="@id/pomodoro_start_stop_button"
+      android:layout_below="@id/pomodoro_progress"
       style="@style/TextAppearance.AppCompat.Display1"
+      android:layout_marginTop="24dp"
       android:layout_marginBottom="16dp" />
 
     <TextView
