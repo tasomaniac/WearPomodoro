@@ -1,6 +1,9 @@
 package com.vngrs.android.pomodoro.wear;
 
 import com.vngrs.android.pomodoro.shared.PomodoroModule;
+import com.vngrs.android.pomodoro.wear.service.PomodoroWearableListenerService;
+import com.vngrs.android.pomodoro.wear.service.PomodoroNotificationService;
+import com.vngrs.android.pomodoro.wear.ui.PomodoroNotificationActivity;
 
 import javax.inject.Singleton;
 
@@ -17,7 +20,7 @@ public interface PomodoroComponent {
 
     void inject(App app);
     void inject(PomodoroNotificationService receiver);
-    void inject(OngoingNotificationListenerService service);
+    void inject(PomodoroWearableListenerService service);
     void inject(PomodoroNotificationActivity activity);
 
     /**

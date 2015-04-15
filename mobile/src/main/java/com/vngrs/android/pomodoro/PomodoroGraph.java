@@ -1,6 +1,6 @@
 package com.vngrs.android.pomodoro;
 
-import com.vngrs.android.pomodoro.service.DataLayerListenerService;
+import com.vngrs.android.pomodoro.service.PomodoroWearableListenerService;
 import com.vngrs.android.pomodoro.service.PomodoroNotificationService;
 import com.vngrs.android.pomodoro.ui.MainActivity;
 
@@ -13,5 +13,5 @@ public interface PomodoroGraph {
     void inject(App app);
     void inject(MainActivity activity);
     void inject(PomodoroNotificationService receiver);
-    void inject(DataLayerListenerService service);
+    void inject(PomodoroWearableListenerService service);
 }

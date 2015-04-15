@@ -1,4 +1,4 @@
-package com.vngrs.android.pomodoro.wear;
+package com.vngrs.android.pomodoro.wear.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.vngrs.android.pomodoro.R;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.Utils;
+import com.vngrs.android.pomodoro.wear.App;
 
 import javax.inject.Inject;
 

@@ -21,23 +21,24 @@ import dagger.Provides;
 @Module(includes = DataModule.class)
 public class PomodoroModule {
 
+
     @Provides @Singleton
     EnumPreference<ActivityType> provideActivityType(SharedPreferences preferences) {
-        return new EnumPreference<>(preferences, ActivityType.class, "activity_type", ActivityType.NONE);
+        return new EnumPreference<>(preferences, ActivityType.class, Constants.KEY_ACTIVITY_TYPE, ActivityType.NONE);
     }
 
     @Provides @Singleton @NextPomodoro
     DateTimePreference provideNextPomodoro(SharedPreferences preferences) {
-        return new DateTimePreference(preferences, "next_pomodoro");
+        return new DateTimePreference(preferences, Constants.KEY_NEXT_POMODORO);
     }
 
     @Provides @Singleton @LastPomodoro
     DateTimePreference provideLastPomodoroTimeStamp(SharedPreferences preferences) {
-        return new DateTimePreference(preferences, "last_pomodoro");
+        return new DateTimePreference(preferences, Constants.KEY_LAST_POMODORO);
     }
 
     @Provides @Singleton
     IntPreference providePomodorosDone(SharedPreferences preferences) {
-        return new IntPreference(preferences, "pomodoros_done");
+        return new IntPreference(preferences, Constants.KEY_POMODOROS_DONE);
     }
 }

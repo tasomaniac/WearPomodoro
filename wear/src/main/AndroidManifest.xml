@@ -13,7 +13,7 @@
     android:theme="@style/Theme.Pomodoro">
 
     <activity
-      android:name=".wear.PomodoroWearBroadcastActivity"
+      android:name=".wear.ui.PomodoroWearBroadcastActivity"
       android:label="@string/start_working">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -23,14 +23,14 @@
     </activity>
 
     <activity
-      android:name=".wear.PomodoroNotificationActivity"
+      android:name=".wear.ui.PomodoroNotificationActivity"
       android:allowEmbedded="true"
       android:exported="true"
       android:taskAffinity=""
       android:theme="@android:style/Theme.DeviceDefault.Light" />
 
     <receiver
-      android:name=".wear.PomodoroNotificationReceiver"
+      android:name=".wear.receiver.PomodoroNotificationReceiver"
       android:enabled="true"
       android:exported="false">
       <intent-filter>
@@ -44,7 +44,13 @@
       </intent-filter>
     </receiver>
 
-    <service android:name=".wear.PomodoroNotificationService" />
+    <service android:name=".wear.service.PomodoroWearableListenerService">
+      <intent-filter>
+        <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+      </intent-filter>
+    </service>
+
+    <service android:name=".wear.service.PomodoroNotificationService" />
   </application>
 
 </manifest>

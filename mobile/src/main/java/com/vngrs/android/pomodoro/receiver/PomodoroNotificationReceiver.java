@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.vngrs.android.pomodoro.service.PomodoroNotificationService;
-import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
+import com.vngrs.android.pomodoro.shared.receiver.BaseNotificationReceiver;
 
 /**
  * Created by Said Tahsin Dane on 02/04/15.

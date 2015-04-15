@@ -6,6 +6,9 @@ import android.content.Context;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Wearable;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -38,5 +41,11 @@ final class AppModule {
 
     @Provides @Singleton PowerManager providePowerManager() {
         return (PowerManager) app.getSystemService(Context.POWER_SERVICE);
+    }
+
+    @Provides @Singleton public GoogleApiClient provideGoogleApiClient() {
+        return new GoogleApiClient.Builder(app)
+                .addApi(Wearable.API)
+                .build();
     }
 }

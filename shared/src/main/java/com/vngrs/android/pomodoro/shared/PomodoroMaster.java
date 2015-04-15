@@ -2,6 +2,7 @@ package com.vngrs.android.pomodoro.shared;
 
 import android.app.Application;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.vngrs.android.pomodoro.shared.data.prefs.DateTimePreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
@@ -46,15 +47,16 @@ public class PomodoroMaster {
     }
 
     /**
-     * Starts a pomodoro session.
+     * Starts a pomodoro session with a given finish time.
+     *
+     * @param nextActivityType ActivityType to start.
+     * @param nextPomodoro next pomodoro time.
      */
     @DebugLog
-    public void start(final ActivityType nextActivityType) {
-        DateTime now = DateTime.now();
-        DateTime nextPomodoro = now.plus(nextActivityType.getLengthInMillis());
+    public void start(@NonNull final ActivityType nextActivityType,
+                      @NonNull DateTime nextPomodoro) {
         nextPomodoroStorage.set(nextPomodoro);
         activityTypeStorage.set(nextActivityType);
-
         isOngoing = true;
     }
 
@@ -87,15 +89,19 @@ public class PomodoroMaster {
         return stoppingForType;
     }
 
-    public void setNextPomodoro(DateTime nextPomodoro) {
+    public void setNextPomodoro(@Nullable DateTime nextPomodoro) {
         nextPomodoroStorage.set(nextPomodoro);
     }
 
-    public DateTime getNextPomodoro() {
+    @Nullable public DateTime getNextPomodoro() {
         return nextPomodoroStorage.get();
     }
 
-    public DateTime getLastPomodoro() {
+    public void setLastPomodoro(@Nullable DateTime lastPomodoro) {
+        lastPomodoroStorage.set(lastPomodoro);
+    }
+
+    @Nullable public DateTime getLastPomodoro() {
         return lastPomodoroStorage.get();
     }
 
@@ -107,11 +113,11 @@ public class PomodoroMaster {
         return pomodorosDoneStorage.get();
     }
 
-    public void setActivityType(ActivityType activityType) {
+    public void setActivityType(@Nullable ActivityType activityType) {
         activityTypeStorage.set(activityType);
     }
 
-    public ActivityType getActivityType() {
+    @NonNull public ActivityType getActivityType() {
         return activityTypeStorage.get();
     }
 

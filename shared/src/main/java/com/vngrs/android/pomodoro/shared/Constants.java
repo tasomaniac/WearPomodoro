@@ -7,7 +7,12 @@ public class Constants {
     public static final int POMODORO_NUMBER_FOR_LONG_BREAK = 4;
 
     public static final String PATH_POMODORO = "/pomodoro";
-    public static final String PATH_NOTIFICATION = "/ongoingnotification";
-    public static final String KEY_TITLE = "title";
-    public static final String KEY_IMAGE = "image";
+
+    public static final String EXTRA_SYNC_NOTIFICATION = "sync_notification";
+    public static final String KEY_ACTIVITY_TYPE = "activity_type";
+    public static final String KEY_NEXT_POMODORO = "next_pomodoro";
+    public static final String KEY_LAST_POMODORO = "last_pomodoro";
+    public static final String KEY_POMODOROS_DONE = "pomodoros_done";
+
+    public static final String SYNC_ACTION = "sync_action";
 }

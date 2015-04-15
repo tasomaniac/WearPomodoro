@@ -1,9 +1,10 @@
-package com.vngrs.android.pomodoro.wear;
+package com.vngrs.android.pomodoro.wear.receiver;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.vngrs.android.pomodoro.shared.BaseNotificationReceiver;
+import com.vngrs.android.pomodoro.shared.receiver.BaseNotificationReceiver;
+import com.vngrs.android.pomodoro.wear.service.PomodoroNotificationService;
 
 public class PomodoroNotificationReceiver extends BaseNotificationReceiver {
 

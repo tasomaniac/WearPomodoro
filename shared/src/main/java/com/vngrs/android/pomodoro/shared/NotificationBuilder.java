@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
+import com.vngrs.android.pomodoro.shared.service.BaseNotificationService;
 
 import org.joda.time.DateTime;
 
