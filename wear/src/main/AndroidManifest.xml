@@ -39,6 +39,7 @@
         <action android:name="com.vngrs.android.pomodoro.action.PAUSE" />
         <action android:name="com.vngrs.android.pomodoro.action.RESUME" />
         <action android:name="com.vngrs.android.pomodoro.action.RESET" />
+        <action android:name="com.vngrs.android.pomodoro.action.DISMISS" />
         <action android:name="com.vngrs.android.pomodoro.action.UPDATE" />
         <action android:name="com.vngrs.android.pomodoro.action.ALARM" />
       </intent-filter>

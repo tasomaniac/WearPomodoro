@@ -101,8 +101,6 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        updateOnStateChange();
-
         handler = new Handler();
     }
 
@@ -115,6 +113,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
+        updateOnStateChange();
         update();
 
         registerReceiver(pomodoroReceiver, FILTER_START);

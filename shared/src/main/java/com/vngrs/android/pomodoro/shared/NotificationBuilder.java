@@ -19,6 +19,7 @@ public class NotificationBuilder {
     private static final int ID_START = 2;
     private static final int ID_STOP = 3;
     private static final int ID_RESET = 6;
+    private static final int ID_DISMISS = 7;
 
     private final Context context;
     private final PomodoroMaster pomodoroMaster;
@@ -49,7 +50,7 @@ public class NotificationBuilder {
         final String title = titleForActivityType(context);
         final String message = messageForActivityType(context);
 
-        return new NotificationCompat.Builder(context)
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(notificationIcon)
                 .setDefaults(pomodoroMaster.isOngoing() ? 0 : Notification.DEFAULT_ALL)
                 .setOnlyAlertOnce(true)
@@ -63,6 +64,11 @@ public class NotificationBuilder {
                 .setContentTitle(title)
                 .setContentText(message)
                 .addAction(action);
+        if (!pomodoroMaster.isOngoing()) {
+            builder.setDeleteIntent(PendingIntent.getBroadcast(context, ID_DISMISS,
+                    new Intent(BaseNotificationService.ACTION_DISMISS), PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+        return builder;
     }
 
     private Bitmap getBackground() {
@@ -145,6 +151,9 @@ public class NotificationBuilder {
 
     public String titleForActivityType(@NonNull Context context) {
         if (pomodoroMaster.isOngoing()) {
+            if (pomodoroMaster.getNextPomodoro() == null) {
+                return null;
+            }
             final String minutesLeft = Utils.convertDiffToPrettyMinutesLeft(context,
                     pomodoroMaster.getNextPomodoro().minus(DateTime.now().getMillis()));
             return minutesLeft + " | " + Utils.getActivityTitle(context, pomodoroMaster, /* shorten */ true);

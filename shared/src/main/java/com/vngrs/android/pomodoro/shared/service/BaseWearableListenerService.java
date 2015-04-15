@@ -87,7 +87,9 @@ public class BaseWearableListenerService extends WearableListenerService impleme
                 }
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
                 Timber.d(event.getDataItem().toString());
-                sendOrderedBroadcast(BaseNotificationService.STOP_INTENT, null);
+                final Intent intent = new Intent(BaseNotificationService.ACTION_DISMISS);
+                intent.putExtra(Constants.EXTRA_SYNC_NOTIFICATION, true);
+                sendOrderedBroadcast(intent, null);
             }
         }
     }
