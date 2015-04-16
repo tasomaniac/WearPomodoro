@@ -117,8 +117,8 @@ public class Utils {
     }
 
     @NonNull
-    public static String getActivityTypeMessage(@NonNull Context context,
-                                                @NonNull PomodoroMaster pomodoroMaster) {
+    public static String getActivityFinishMessage(@NonNull Context context,
+                                                  @NonNull PomodoroMaster pomodoroMaster) {
         final int pomodorosDone = pomodoroMaster.getPomodorosDone();
         switch (pomodoroMaster.getActivityType()) {
             case LONG_BREAK:

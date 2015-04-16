@@ -167,7 +167,7 @@ public class MainActivity extends ActionBarActivity {
             mStartStopButton.setImageResource(R.drawable.ic_action_start_96dp);
             mProgress.setProgress(0);
             mTime.setText("00:00");
-            mDescription.setText(Utils.getActivityTypeMessage(this, pomodoroMaster));
+            mDescription.setText(Utils.getActivityFinishMessage(this, pomodoroMaster));
         }
     }
 

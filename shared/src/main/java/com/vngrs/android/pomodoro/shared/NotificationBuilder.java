@@ -106,6 +106,7 @@ public class NotificationBuilder {
         }
 
         NotificationCompat.Builder builder = buildBaseNotification()
+                .setContentText(null)
                 .addAction(buildResetAction(context))
                 .extend(extender);
 
@@ -168,9 +169,9 @@ public class NotificationBuilder {
 
     public String messageForActivityType(@NonNull Context context) {
         if (pomodoroMaster.isOngoing()) {
-            return null;
+            return Utils.getActivityTitle(context, pomodoroMaster, /* shorten */ false);
         } else {
-            return Utils.getActivityTypeMessage(context, pomodoroMaster);
+            return Utils.getActivityFinishMessage(context, pomodoroMaster);
         }
     }
 
