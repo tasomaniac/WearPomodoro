@@ -15,8 +15,8 @@
 
     <com.pnikosis.materialishprogress.ProgressWheel
       android:id="@+id/pomodoro_progress"
-      android:layout_width="192dp"
-      android:layout_height="192dp"
+      android:layout_width="@dimen/width_progress_bar"
+      android:layout_height="@dimen/width_progress_bar"
       android:layout_centerHorizontal="true"
       wheel:matProg_barColor="@android:color/white"
       wheel:matProg_barWidth="4dp"
@@ -27,14 +27,14 @@
     <ImageButton
       android:id="@+id/pomodoro_start_stop_button"
       tools:src="@drawable/ic_action_start_96dp"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="@dimen/width_progress_bar"
+      android:layout_height="@dimen/width_progress_bar"
       android:layout_centerHorizontal="true"
       style="?android:attr/borderlessButtonStyle"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:scaleType="center"
-      android:contentDescription="@string/cd_start_stop_button"
-      android:layout_margin="48dp" />
+      android:padding="24dp"
+      android:contentDescription="@string/cd_start_stop_button" />
 
     <TextView
       android:id="@+id/pomodoro_time"
