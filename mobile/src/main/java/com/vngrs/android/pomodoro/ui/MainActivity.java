@@ -9,8 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -102,6 +104,10 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
+        if ("chromium".equals(Build.BRAND) && "chromium".equals(Build.MANUFACTURER)) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+
         handler = new Handler();
     }
 
@@ -155,7 +161,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (mProgress != null) {
             mProgress.setRimColor(colorPrimaryDark);
-            mProgress.setSpinSpeed(1 /  ((float) pomodoroMaster.getActivityType().getLengthInMillis() / 1000));
+            mProgress.setSpinSpeed(1 / ((float) pomodoroMaster.getActivityType().getLengthInMillis() / 1000));
         }
     }
 
@@ -189,6 +195,26 @@ public class MainActivity extends ActionBarActivity {
             mProgress.setProgress(progress);
         } else {
             mProgress.setInstantProgress(progress);
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_MEDIA_PAUSE:
+            case KeyEvent.KEYCODE_SPACE:
+            case KeyEvent.KEYCODE_ENTER:
+            case KeyEvent.KEYCODE_NUMPAD_ENTER:
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                start();
+                return true;
+            case KeyEvent.KEYCODE_MEDIA_STOP:
+                sendOrderedBroadcast(BaseNotificationService.STOP_INTENT, null);
+                return true;
+            default:
+                return super.onKeyUp(keyCode, event);
         }
     }
 
