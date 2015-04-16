@@ -17,10 +17,10 @@ import android.widget.TextView;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
-import com.vngrs.android.pomodoro.shared.service.BaseNotificationService;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.Utils;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
+import com.vngrs.android.pomodoro.shared.service.BaseNotificationService;
 import com.vngrs.android.pomodoro.util.RecentTasksStyler;
 
 import org.joda.time.DateTime;
@@ -59,21 +59,22 @@ public class MainActivity extends ActionBarActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        updateOnStateChange();
+
                         switch (intent.getAction()) {
                             case BaseNotificationService.ACTION_STOP:
                             case BaseNotificationService.ACTION_RESET:
                             case BaseNotificationService.ACTION_FINISH_ALARM:
                                 handler.removeCallbacks(updateRunnable);
-                                updateWithoutTimer();
+                                updateWithoutTimer(false);
                                 break;
                             case BaseNotificationService.ACTION_START:
                                 update();
                                 break;
                             default:
-                                updateWithoutTimer();
+                                updateWithoutTimer(false);
                                 break;
                         }
-                        updateOnStateChange();
                     }
                 }, 100);
             }
@@ -114,6 +115,7 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
 
         updateOnStateChange();
+        updateWithoutTimer(false);
         update();
 
         registerReceiver(pomodoroReceiver, FILTER_START);
@@ -136,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void update() {
-        updateWithoutTimer();
+        updateWithoutTimer(true);
         nextTimer();
     }
 
@@ -153,21 +155,40 @@ public class MainActivity extends ActionBarActivity {
 
         if (mProgress != null) {
             mProgress.setRimColor(colorPrimaryDark);
+            mProgress.setSpinSpeed(1 /  ((float) pomodoroMaster.getActivityType().getLengthInMillis() / 1000));
         }
     }
 
-    private void updateWithoutTimer() {
+    private void updateWithoutTimer(final boolean animate) {
 
         if (pomodoroMaster.isOngoing()) {
             mStartStopButton.setImageResource(R.drawable.ic_action_stop_96dp);
-            mProgress.setProgress(1 - (float) (pomodoroMaster.getNextPomodoro().getMillis() - DateTime.now().getMillis()) / pomodoroMaster.getActivityType().getLengthInMillis());
+            final DateTime nextPomodoro = pomodoroMaster.getNextPomodoro();
+            if (nextPomodoro != null) {
+                setPomodoroProgress(1 - (float) (nextPomodoro.getMillis() - DateTime.now().getMillis()) / pomodoroMaster.getActivityType().getLengthInMillis(),
+                        animate);
+            } else {
+                setPomodoroProgress(0f);
+            }
             mTime.setText(Utils.getRemainingTime(pomodoroMaster, /* shorten */ false));
             mDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
         } else {
             mStartStopButton.setImageResource(R.drawable.ic_action_start_96dp);
-            mProgress.setProgress(0);
+            setPomodoroProgress(0f);
             mTime.setText("00:00");
             mDescription.setText(Utils.getActivityFinishMessage(this, pomodoroMaster));
+        }
+    }
+
+    private void setPomodoroProgress(float progress) {
+        setPomodoroProgress(progress, true);
+    }
+
+    private void setPomodoroProgress(float progress, boolean animate) {
+        if (animate) {
+            mProgress.setProgress(progress);
+        } else {
+            mProgress.setInstantProgress(progress);
         }
     }
 
@@ -185,7 +206,6 @@ public class MainActivity extends ActionBarActivity {
             startIntent.putExtra(BaseNotificationService.EXTRA_ACTIVITY_TYPE, activityType.value());
             sendOrderedBroadcast(startIntent, null);
         }
-        update();
     }
 
     @Override
