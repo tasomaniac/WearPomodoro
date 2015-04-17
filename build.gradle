@@ -31,7 +31,7 @@ ext {
 
     versionMajor = 0
     versionMinor = 1
-    versionPatch = 6
+    versionPatch = 7
     versionBuild = 0
 
     compileSdkVersion = 22
