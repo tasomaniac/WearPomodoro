@@ -15,17 +15,17 @@
     android:layout_gravity="center">
 
     <include layout="@layout/start_stop_button"
-      android:id="@+id/pomodoro_start_stop_container"
+      android:id="@id/pomodoro_start_stop_container"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true" />
+      android:layout_centerVertical="true"/>
 
     <include layout="@layout/time_desc_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
-      android:layout_marginTop="24dp"
-      android:layout_below="@id/pomodoro_start_stop_container"/>
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="48dp"
+      android:layout_toRightOf="@id/pomodoro_start_stop_container"/>
 
   </RelativeLayout>
 </FrameLayout>

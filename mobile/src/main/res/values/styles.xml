@@ -24,4 +24,6 @@
     <item name="colorPrimaryDark">@color/ongoing_red_dark</item>
   </style>
 
+  <style name="TextAppearance.Pomodoro.TimeDisplay" parent="TextAppearance.AppCompat.Display4" />
+
 </resources>
