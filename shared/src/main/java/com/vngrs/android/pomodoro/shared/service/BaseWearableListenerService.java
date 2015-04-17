@@ -1,6 +1,7 @@
 package com.vngrs.android.pomodoro.shared.service;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -10,6 +11,8 @@ import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.vngrs.android.pomodoro.shared.Constants;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
@@ -63,10 +66,18 @@ public class BaseWearableListenerService extends WearableListenerService impleme
                 return;
             }
         }
+        NodeApi.GetLocalNodeResult nodes = Wearable.NodeApi.getLocalNode(mGoogleApiClient).await();
+        final String localNodeId = nodes.getNode().getId();
 
         // Loop through the events.
         for (DataEvent event : events) {
-            String path = event.getDataItem().getUri().getPath();
+            final Uri uri = event.getDataItem().getUri();
+            String path = uri.getPath();
+            String nodeId = uri.getHost();
+
+            if (nodeId != null && nodeId.equals(localNodeId)) {
+                continue;
+            }
 
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 if (Constants.PATH_POMODORO.equals(path)) {
