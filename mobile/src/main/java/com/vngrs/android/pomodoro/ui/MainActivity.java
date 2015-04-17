@@ -1,10 +1,17 @@
 package com.vngrs.android.pomodoro.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +20,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -33,7 +42,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 import hugo.weaving.DebugLog;
 
 
@@ -48,9 +56,6 @@ public class MainActivity extends ActionBarActivity {
     @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
     @InjectView(R.id.pomodoro_time) TextView mTime;
     @InjectView(R.id.pomodoro_description) TextView mDescription;
-
-    private int touchPointX = -1;
-    private int touchPointY = -1;
 
     private Handler handler = null;
 
@@ -69,7 +74,7 @@ public class MainActivity extends ActionBarActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        updateOnStateChange();
+                        updateOnStateChange(/* animate */ true);
 
                         switch (intent.getAction()) {
                             case BaseNotificationService.ACTION_STOP:
@@ -101,6 +106,8 @@ public class MainActivity extends ActionBarActivity {
             new IntentFilter(BaseNotificationService.ACTION_UPDATE);
     private static final IntentFilter FILTER_FINISH_ALARM =
             new IntentFilter(BaseNotificationService.ACTION_FINISH_ALARM);
+    private int colorPrimary;
+    private int colorPrimaryDark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,8 +135,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
-        updateOnStateChange();
-        updateWithoutTimer(false);
+        updateOnStateChange(/* animate */ false);
+        updateWithoutTimer(/* animate */ false);
         update();
 
         registerReceiver(pomodoroReceiver, FILTER_START);
@@ -156,20 +163,76 @@ public class MainActivity extends ActionBarActivity {
         nextTimer();
     }
 
-    private void updateOnStateChange() {
-        final int colorPrimary = Utils.getPrimaryColor(this, pomodoroMaster);
-        final int colorPrimaryDark = Utils.getNotificationColorDark(this, pomodoroMaster);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void updateOnStateChange(boolean animate) {
+        int newColorPrimary = Utils.getPrimaryColor(this, pomodoroMaster);
+        animate = animate && newColorPrimary != colorPrimary;
+        colorPrimary = newColorPrimary;
+        colorPrimaryDark = Utils.getNotificationColorDark(this, pomodoroMaster);
+        final boolean reveal = colorPrimary == getResources().getColor(R.color.ongoing_red);
 
+        RecentTasksStyler.styleRecentTasksEntry(this, colorPrimaryDark);
+
+        if (animate && mRevealBackground.isAttachedToWindow()
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            final ObjectAnimator firstAnimator = ObjectAnimator.ofFloat(mProgress, "alpha", 0)
+                    .setDuration(100);
+            firstAnimator.addListener(new AnimatorListenerAdapter() {
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+
+                    if (mProgress != null) {
+                        mProgress.setRimColor(colorPrimaryDark);
+                        mProgress.setSpinSpeed(1 / ((float) pomodoroMaster.getActivityType().getLengthInMillis() / 1000));
+                    }
+
+                    int[] startStopLocation = new int[2];
+                    mStartStopButton.getLocationInWindow(startStopLocation);
+                    int touchPointX = startStopLocation[0] + mStartStopButton.getWidth() / 2;
+                    int touchPointY = startStopLocation[1] + mStartStopButton.getHeight() / 2;
+
+                    final int initialRadius = reveal ? 0 : mRevealBackground.getWidth();
+                    final int finalRadius = reveal ? Math.max(mRevealBackground.getWidth(), mRevealBackground.getHeight()) : 0;
+                    final Animator revealAnimator =
+                            ViewAnimationUtils.createCircularReveal(mRevealBackground,
+                                    touchPointX, touchPointY,
+                                    initialRadius, finalRadius);
+                    mRevealBackground.setVisibility(View.VISIBLE);
+                    if (!reveal) {
+                        getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
+                    }
+
+                    AnimatorSet as = new AnimatorSet();
+                    final ObjectAnimator lastAnimator = ObjectAnimator.ofFloat(mProgress, "alpha", 1);
+                    as.playTogether(revealAnimator, lastAnimator);
+                    lastAnimator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            updateOnStateChangeInstant();
+                        }
+                    });
+                    as.start();
+                }
+            });
+            firstAnimator.start();
+        } else {
+            if (mProgress != null) {
+                mProgress.setRimColor(colorPrimaryDark);
+                mProgress.setSpinSpeed(1 / ((float) pomodoroMaster.getActivityType().getLengthInMillis() / 1000));
+            }
+            updateOnStateChangeInstant();
+        }
+    }
+
+    @DebugLog
+    private void updateOnStateChangeInstant() {
+        mRevealBackground.setVisibility(View.INVISIBLE);
         setPomodoroTheme();
         getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(colorPrimaryDark);
-        }
-        RecentTasksStyler.styleRecentTasksEntry(this, colorPrimaryDark);
-
-        if (mProgress != null) {
-            mProgress.setRimColor(colorPrimaryDark);
-            mProgress.setSpinSpeed(1 / ((float) pomodoroMaster.getActivityType().getLengthInMillis() / 1000));
         }
     }
 
@@ -224,15 +287,6 @@ public class MainActivity extends ActionBarActivity {
             default:
                 return super.onKeyUp(keyCode, event);
         }
-    }
-
-    @OnTouch(R.id.pomodoro_start_stop_button)
-    public boolean onTouchStartStop(MotionEvent event) {
-        int[] location = new int[2];
-        mStartStopButton.getLocationInWindow(location);
-        touchPointX = (int) event.getX() + location[0];
-        touchPointY = (int) event.getY() + location[1];
-        return false;
     }
 
     @OnClick(R.id.pomodoro_start_stop_button)
