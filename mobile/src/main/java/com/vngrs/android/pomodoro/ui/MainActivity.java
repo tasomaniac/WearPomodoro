@@ -33,6 +33,8 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
+import hugo.weaving.DebugLog;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -40,10 +42,15 @@ public class MainActivity extends ActionBarActivity {
     @Inject BaseUi baseUi;
     @Inject PomodoroMaster pomodoroMaster;
 
+    @InjectView(R.id.background_reveal) View mRevealBackground;
+    @InjectView(R.id.pomodoro_start_stop_container) View mStartStopContainer;
     @InjectView(R.id.pomodoro_progress) ProgressWheel mProgress;
+    @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
     @InjectView(R.id.pomodoro_time) TextView mTime;
     @InjectView(R.id.pomodoro_description) TextView mDescription;
-    @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
+
+    private int touchPointX = -1;
+    private int touchPointY = -1;
 
     private Handler handler = null;
 
@@ -217,6 +224,15 @@ public class MainActivity extends ActionBarActivity {
             default:
                 return super.onKeyUp(keyCode, event);
         }
+    }
+
+    @OnTouch(R.id.pomodoro_start_stop_button)
+    public boolean onTouchStartStop(MotionEvent event) {
+        int[] location = new int[2];
+        mStartStopButton.getLocationInWindow(location);
+        touchPointX = (int) event.getX() + location[0];
+        touchPointY = (int) event.getY() + location[1];
+        return false;
     }
 
     @OnClick(R.id.pomodoro_start_stop_button)
