@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -171,8 +169,6 @@ public class MainActivity extends ActionBarActivity {
         colorPrimaryDark = Utils.getNotificationColorDark(this, pomodoroMaster);
         final boolean reveal = colorPrimary == getResources().getColor(R.color.ongoing_red);
 
-        RecentTasksStyler.styleRecentTasksEntry(this, colorPrimaryDark);
-
         if (animate && mRevealBackground.isAttachedToWindow()
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -228,6 +224,13 @@ public class MainActivity extends ActionBarActivity {
 
     @DebugLog
     private void updateOnStateChangeInstant() {
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                RecentTasksStyler.styleRecentTasksEntry(MainActivity.this, colorPrimaryDark);
+            }
+        });
         mRevealBackground.setVisibility(View.INVISIBLE);
         setPomodoroTheme();
         getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
