@@ -165,12 +165,13 @@ public class MainActivity extends ActionBarActivity {
     private void updateOnStateChange(boolean animate) {
         int newColorPrimary = Utils.getPrimaryColor(this, pomodoroMaster);
         animate = animate && newColorPrimary != colorPrimary;
+        animate = animate && mRevealBackground.isAttachedToWindow();
+
         colorPrimary = newColorPrimary;
         colorPrimaryDark = Utils.getNotificationColorDark(this, pomodoroMaster);
         final boolean reveal = colorPrimary == getResources().getColor(R.color.ongoing_red);
 
-        if (animate && mRevealBackground.isAttachedToWindow()
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (animate) {
 
             final ObjectAnimator firstAnimator = ObjectAnimator.ofFloat(mProgress, "alpha", 0)
                     .setDuration(100);
@@ -184,21 +185,28 @@ public class MainActivity extends ActionBarActivity {
                         mProgress.setSpinSpeed(1 / ((float) pomodoroMaster.getActivityType().getLengthInMillis() / 1000));
                     }
 
-                    int[] startStopLocation = new int[2];
-                    mStartStopButton.getLocationInWindow(startStopLocation);
-                    int touchPointX = startStopLocation[0] + mStartStopButton.getWidth() / 2;
-                    int touchPointY = startStopLocation[1] + mStartStopButton.getHeight() / 2;
+                    final Animator revealAnimator;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        int[] startStopLocation = new int[2];
+                        mStartStopButton.getLocationInWindow(startStopLocation);
+                        int touchPointX = startStopLocation[0] + mStartStopButton.getWidth() / 2;
+                        int touchPointY = startStopLocation[1] + mStartStopButton.getHeight() / 2;
 
-                    final int initialRadius = reveal ? 0 : mRevealBackground.getWidth();
-                    final int finalRadius = reveal ? Math.max(mRevealBackground.getWidth(), mRevealBackground.getHeight()) : 0;
-                    final Animator revealAnimator =
-                            ViewAnimationUtils.createCircularReveal(mRevealBackground,
-                                    touchPointX, touchPointY,
-                                    initialRadius, finalRadius);
-                    mRevealBackground.setVisibility(View.VISIBLE);
-                    if (!reveal) {
-                        getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
+                        final int initialRadius = reveal ? 0 : mRevealBackground.getWidth();
+                        final int finalRadius = reveal ? Math.max(mRevealBackground.getWidth(), mRevealBackground.getHeight()) : 0;
+                        revealAnimator =
+                                ViewAnimationUtils.createCircularReveal(mRevealBackground,
+                                        touchPointX, touchPointY,
+                                        initialRadius, finalRadius);
+                        if (!reveal) {
+                            getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
+                        }
+                    } else {
+                        mRevealBackground.setAlpha(0f);
+                        mRevealBackground.setBackgroundColor(colorPrimary);
+                        revealAnimator = ObjectAnimator.ofFloat(mRevealBackground, "alpha", 1);
                     }
+                    mRevealBackground.setVisibility(View.VISIBLE);
 
                     final ObjectAnimator lastAnimator = ObjectAnimator.ofFloat(mProgress, "alpha", 1)
                             .setDuration(150);
