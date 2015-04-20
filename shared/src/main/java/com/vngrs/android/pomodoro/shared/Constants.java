@@ -13,6 +13,7 @@ public class Constants {
     public static final String KEY_NEXT_POMODORO = "next_pomodoro";
     public static final String KEY_LAST_POMODORO = "last_pomodoro";
     public static final String KEY_POMODOROS_DONE = "pomodoros_done";
+    public static final String KEY_POMODORO_ONGOING = "is_ongoing";
 
     public static final String SYNC_ACTION = "sync_action";
 }

@@ -3,6 +3,7 @@ package com.vngrs.android.pomodoro.shared;
 import android.content.SharedPreferences;
 
 import com.vngrs.android.pomodoro.shared.data.DataModule;
+import com.vngrs.android.pomodoro.shared.data.prefs.BooleanPreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.DateTimePreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.IntPreference;
@@ -40,5 +41,10 @@ public class PomodoroModule {
     @Provides @Singleton
     IntPreference providePomodorosDone(SharedPreferences preferences) {
         return new IntPreference(preferences, Constants.KEY_POMODOROS_DONE);
+    }
+
+    @Provides @Singleton
+    BooleanPreference providePomodoroOngoing(SharedPreferences preferences) {
+        return new BooleanPreference(preferences, Constants.KEY_POMODORO_ONGOING);
     }
 }

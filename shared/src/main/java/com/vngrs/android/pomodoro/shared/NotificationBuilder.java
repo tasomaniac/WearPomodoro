@@ -43,12 +43,12 @@ public class NotificationBuilder {
     }
 
     @NonNull
-    private NotificationCompat.Builder buildBaseNotification() {
+    private NotificationCompat.Builder buildBaseNotification(boolean isPhone) {
 
         final NotificationCompat.Action action = getNotificationAction();
 
         final String title = titleForActivityType(context);
-        final String message = messageForActivityType(context);
+        final String message = messageForActivityType(context, isPhone);
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(notificationIcon)
@@ -59,7 +59,6 @@ public class NotificationBuilder {
                 .setOngoing(pomodoroMaster.isOngoing())
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setLocalOnly(true)
-//                .setStyle(new NotificationCompat.BigTextStyle())
                 .setColor(Utils.getPrimaryColor(context, pomodoroMaster))
                 .setContentTitle(title)
                 .setContentText(message)
@@ -105,8 +104,7 @@ public class NotificationBuilder {
             extender.setContentIcon(R.drawable.ic_action_start_grey);
         }
 
-        NotificationCompat.Builder builder = buildBaseNotification()
-                .setContentText(null)
+        NotificationCompat.Builder builder = buildBaseNotification(/* isPhone */ false)
                 .addAction(buildResetAction(context))
                 .extend(extender);
 
@@ -117,7 +115,7 @@ public class NotificationBuilder {
     public Notification buildNotificationPhone(@NonNull PendingIntent contentIntent) {
 
         final DateTime nextPomodoro = pomodoroMaster.getNextPomodoro();
-        NotificationCompat.Builder builder = buildBaseNotification()
+        NotificationCompat.Builder builder = buildBaseNotification(/* isPhone */ true)
                 .setWhen(nextPomodoro != null ? nextPomodoro.getMillis() : System.currentTimeMillis())
                 .setContentIntent(contentIntent);
 
@@ -167,9 +165,13 @@ public class NotificationBuilder {
         }
     }
 
-    public String messageForActivityType(@NonNull Context context) {
+    public String messageForActivityType(@NonNull Context context, boolean isPhone) {
         if (pomodoroMaster.isOngoing()) {
-            return Utils.getActivityTitle(context, pomodoroMaster, /* shorten */ false);
+            if (isPhone) {
+                return Utils.getActivityTitle(context, pomodoroMaster, /* shorten */ false);
+            } else {
+                return null;
+            }
         } else {
             return Utils.getActivityFinishMessage(context, pomodoroMaster);
         }

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.vngrs.android.pomodoro.shared.data.prefs.BooleanPreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.DateTimePreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.EnumPreference;
 import com.vngrs.android.pomodoro.shared.data.prefs.IntPreference;
@@ -27,23 +28,23 @@ public class PomodoroMaster {
     private final DateTimePreference nextPomodoroStorage;
     private final DateTimePreference lastPomodoroStorage;
     private final IntPreference pomodorosDoneStorage;
+    private final BooleanPreference isOngoingStorage;
     private final EnumPreference<ActivityType> activityTypeStorage;
 
     private final Application app;
-
-    private boolean isOngoing;
 
     @Inject public PomodoroMaster(@NextPomodoro DateTimePreference nextPomodoroStorage,
                                   @LastPomodoro DateTimePreference lastPomodoroStorage,
                                   IntPreference pomodorosDoneStorage,
                                   EnumPreference<ActivityType> activityTypeStorage,
+                                  BooleanPreference isOngoingStorage,
                                   Application app) {
         this.nextPomodoroStorage = nextPomodoroStorage;
         this.lastPomodoroStorage = lastPomodoroStorage;
         this.pomodorosDoneStorage = pomodorosDoneStorage;
         this.activityTypeStorage = activityTypeStorage;
+        this.isOngoingStorage = isOngoingStorage;
         this.app = app;
-        this.isOngoing = false;
     }
 
     /**
@@ -57,7 +58,7 @@ public class PomodoroMaster {
                       @NonNull DateTime nextPomodoro) {
         nextPomodoroStorage.set(nextPomodoro);
         activityTypeStorage.set(nextActivityType);
-        isOngoing = true;
+        isOngoingStorage.set(true);
     }
 
     /**
@@ -84,8 +85,7 @@ public class PomodoroMaster {
             lastPomodoroStorage.set(DateTime.now());
         }
         activityTypeStorage.set(ActivityType.NONE);
-
-        isOngoing = false;
+        isOngoingStorage.set(false);
         return stoppingForType;
     }
 
@@ -127,6 +127,6 @@ public class PomodoroMaster {
      * @return true if the count down is active.
      */
     public boolean isOngoing() {
-        return isOngoing;
+        return isOngoingStorage.get();
     }
 }
