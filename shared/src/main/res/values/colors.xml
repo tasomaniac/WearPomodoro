@@ -2,7 +2,9 @@
 <resources>
   <color name="ongoing_red">#e74c3c</color>
   <color name="ongoing_red_dark">#c92918</color>
+  <color name="ongoing_red_status">#cce74c3c</color>
 
   <color name="finished_green">#27ae60</color>
   <color name="finished_green_dark">#0b9149</color>
+  <color name="finished_green_status">#cc27ae60</color>
 </resources>

@@ -234,9 +234,6 @@ public class MainActivity extends ActionBarActivity {
         mRevealBackground.setVisibility(View.INVISIBLE);
         setPomodoroTheme();
         getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(colorPrimaryDark);
-        }
     }
 
     private void updateWithoutTimer(final boolean animate) {

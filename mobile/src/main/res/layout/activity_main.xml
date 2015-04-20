@@ -1,7 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.vngrs.android.pomodoro.ui.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/capture_insets_frame_layout"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:fitsSystemWindows="true"
   tools:context=".ui.MainActivity">
 
   <View
@@ -9,6 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ongoing_red"
+    android:fitsSystemWindows="true"
     android:visibility="invisible"/>
 
   <RelativeLayout
@@ -31,4 +34,4 @@
       android:layout_below="@id/pomodoro_start_stop_container"/>
 
   </RelativeLayout>
-</FrameLayout>
+</com.vngrs.android.pomodoro.ui.ScrimInsetsFrameLayout>
