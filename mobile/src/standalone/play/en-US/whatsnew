@@ -1,12 +1,9 @@
-0.1.7
-- Animations, animations animations.
+0.1.8
+- Animations are better now.
+- Bug fix.
+
+Older changes:
 - Can be installed on TV.
-
-0.1.6
-- Initial sync support between devices.
-
-0.1.5
-- Phone UI improvements.
-- Wear performance improvements. 
+- Sync support between devices.
 
 Please send bugs via tahsin@vngrs.com or using the Google+ community.
