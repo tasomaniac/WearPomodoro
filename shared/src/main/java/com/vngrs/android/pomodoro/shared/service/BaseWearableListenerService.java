@@ -94,13 +94,13 @@ public class BaseWearableListenerService extends WearableListenerService impleme
                     intent.putExtra(Constants.KEY_NEXT_POMODORO,
                             dataMap.getLong(Constants.KEY_NEXT_POMODORO, -1));
 
-                    sendOrderedBroadcast(intent, null);
+                    sendBroadcast(intent);
                 }
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
                 Timber.d(event.getDataItem().toString());
                 final Intent intent = new Intent(BaseNotificationService.ACTION_DISMISS);
                 intent.putExtra(Constants.EXTRA_SYNC_NOTIFICATION, true);
-                sendOrderedBroadcast(intent, null);
+                sendBroadcast(intent);
             }
         }
     }

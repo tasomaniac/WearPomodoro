@@ -293,7 +293,7 @@ public class MainActivity extends ActionBarActivity {
                 start();
                 return true;
             case KeyEvent.KEYCODE_MEDIA_STOP:
-                sendOrderedBroadcast(BaseNotificationService.STOP_INTENT, null);
+                sendBroadcast(BaseNotificationService.STOP_INTENT);
                 return true;
             default:
                 return super.onKeyUp(keyCode, event);
@@ -304,7 +304,7 @@ public class MainActivity extends ActionBarActivity {
     public void start() {
 
         if (pomodoroMaster.isOngoing()) {
-            sendOrderedBroadcast(BaseNotificationService.STOP_INTENT, null);
+            sendBroadcast(BaseNotificationService.STOP_INTENT);
         } else {
             ActivityType activityType = pomodoroMaster.getActivityType();
             if (activityType == ActivityType.NONE) {
@@ -312,7 +312,7 @@ public class MainActivity extends ActionBarActivity {
             }
             final Intent startIntent = BaseNotificationService.START_INTENT;
             startIntent.putExtra(BaseNotificationService.EXTRA_ACTIVITY_TYPE, activityType.value());
-            sendOrderedBroadcast(startIntent, null);
+            sendBroadcast(startIntent);
         }
     }
 
