@@ -5,4 +5,48 @@
 
   </style>
 
+  <style name="TextAppearance.Wearable.Large" parent="android:TextAppearance.Medium">
+    <item name="android:textSize">24sp</item>
+    <item name="android:textColor">@color/primary_text_light</item>
+  </style>
+
+  <style name="TextAppearance.Wearable.Medium" parent="android:TextAppearance.Medium">
+    <item name="android:textSize">20sp</item>
+    <item name="android:textColor">@color/primary_text_light</item>
+  </style>
+
+  <style name="TextAppearance.Wearable.Small" parent="android:TextAppearance.Medium">
+    <item name="android:textSize">16sp</item>
+    <item name="android:textColor">@color/primary_text_light</item>
+  </style>
+
+  <style name="TextView.Large" parent="@android:style/Widget.Holo.Light">
+    <item name="android:fontFamily">sans-serif-condensed</item>
+    <item name="android:textAppearance">@style/TextAppearance.Wearable.Large</item>
+  </style>
+
+  <style name="TextView.Large.Light">
+    <item name="android:fontFamily">sans-serif-condensed-light</item>
+    <item name="android:textAppearance">@style/TextAppearance.Wearable.Large</item>
+  </style>
+
+  <style name="TextView.Medium" parent="@android:style/Widget.Holo.Light">
+    <item name="android:fontFamily">sans-serif-condensed</item>
+    <item name="android:textAppearance">@style/TextAppearance.Wearable.Medium</item>
+  </style>
+
+  <style name="TextView.Medium.Light">
+    <item name="android:fontFamily">sans-serif-condensed-light</item>
+    <item name="android:textAppearance">@style/TextAppearance.Wearable.Medium</item>
+  </style>
+
+  <style name="TextView.Small" parent="@android:style/Widget.Holo.Light">
+    <item name="android:fontFamily">sans-serif-condensed</item>
+    <item name="android:textAppearance">@style/TextAppearance.Wearable.Small</item>
+  </style>
+
+  <style name="TextView.Small.Light">
+    <item name="android:fontFamily">sans-serif-condensed-light</item>
+    <item name="android:textAppearance">@style/TextAppearance.Wearable.Small</item>
+  </style>
 </resources>

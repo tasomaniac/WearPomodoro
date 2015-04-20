@@ -2,4 +2,6 @@
 <resources>
   <color name="notification_primary">#a2a3a3</color>
   <color name="notification_secondary">#434343</color>
+
+  <color name="primary_text_light">#424242</color>
 </resources>

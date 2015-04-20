@@ -4,6 +4,7 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.0-beta3'
@@ -12,8 +13,9 @@ buildscript {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.8'
         classpath 'com.github.triplet.gradle:play-publisher:1.0.4'
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        // The Fabric Gradle plugin uses an open ended version to react
+        // quickly to Android tooling updates
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
@@ -22,6 +24,7 @@ apply plugin: 'com.github.ben-manes.versions'
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://maven.fabric.io/public' }
     }
 }
 

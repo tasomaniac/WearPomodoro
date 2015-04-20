@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'play'
+apply plugin: 'io.fabric'
 
 Properties local_properties = new Properties()
 File localPropertiesFile = project.rootProject.file('local.properties')
@@ -110,6 +111,11 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0'
     apt 'com.google.dagger:dagger-compiler:2.0'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    // Crashlytics Kit
+    compile('com.crashlytics.sdk.android:crashlytics:2.2.3@aar') {
+        transitive = true
+    }
 
     vngrsCompile 'com.squareup.okhttp:okhttp:2.3.0'
     vngrsCompile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'

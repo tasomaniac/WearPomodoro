@@ -75,7 +75,6 @@ dependencies {
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 
-    compile 'com.google.android.support:wearable:1.1.0'
     compile 'com.google.android.gms:play-services-wearable:7.0.0'
 
     compile 'com.jakewharton:butterknife:6.1.0'
