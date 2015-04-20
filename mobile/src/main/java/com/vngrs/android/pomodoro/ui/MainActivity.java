@@ -200,15 +200,18 @@ public class MainActivity extends ActionBarActivity {
                         getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
                     }
 
-                    AnimatorSet as = new AnimatorSet();
-                    final ObjectAnimator lastAnimator = ObjectAnimator.ofFloat(mProgress, "alpha", 1);
-                    as.playTogether(revealAnimator, lastAnimator);
+                    final ObjectAnimator lastAnimator = ObjectAnimator.ofFloat(mProgress, "alpha", 1)
+                            .setDuration(150);
+                    lastAnimator.setStartDelay(150);
                     lastAnimator.addListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             updateOnStateChangeInstant();
                         }
                     });
+
+                    AnimatorSet as = new AnimatorSet();
+                    as.playTogether(revealAnimator, lastAnimator);
                     as.start();
                 }
             });

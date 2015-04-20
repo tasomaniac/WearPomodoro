@@ -1,5 +1,0 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-  <style name="TextAppearance.Pomodoro.TimeDisplay" parent="TextAppearance.AppCompat.Display3" />
-
-</resources>

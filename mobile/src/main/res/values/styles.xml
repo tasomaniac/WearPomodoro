@@ -29,6 +29,8 @@
     <item name="colorPrimaryDark">@color/ongoing_red_dark</item>
   </style>
 
-  <style name="TextAppearance.Pomodoro.TimeDisplay" parent="TextAppearance.AppCompat.Display4" />
+  <style name="TextAppearance.Pomodoro.TimeDisplay" parent="TextAppearance.AppCompat.Display4" >
+    <item name="android:textSize">72sp</item>
+  </style>
 
 </resources>
