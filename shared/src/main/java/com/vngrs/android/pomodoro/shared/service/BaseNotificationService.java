@@ -68,7 +68,7 @@ public abstract class BaseNotificationService extends IntentService implements
 
     private boolean mConnected = false;
 
-    @Inject PomodoroMaster pomodoroMaster;
+    @Inject protected PomodoroMaster pomodoroMaster;
     @Inject NotificationManagerCompat notificationManager;
     @Inject AlarmManager alarmManager;
     @Inject GoogleApiClient mGoogleApiClient;

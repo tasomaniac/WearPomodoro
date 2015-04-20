@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 
@@ -47,5 +49,10 @@ final class AppModule {
         return new GoogleApiClient.Builder(app)
                 .addApi(Wearable.API)
                 .build();
+    }
+
+    @Provides @Singleton public Tracker provideTracker() {
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(app);
+        return analytics.newTracker(BuildConfig.DEBUG ? R.xml.debug_tracker : R.xml.global_tracker);
     }
 }

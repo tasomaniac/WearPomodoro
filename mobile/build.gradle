@@ -104,6 +104,7 @@ dependencies {
     vngrsWearApp project(path: ':wear', configuration: 'vngrsRelease')
 
     compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.google.android.gms:play-services-analytics:7.0.0'
 
     compile 'com.pnikosis:materialish-progress:1.5'
     compile 'com.jakewharton:butterknife:6.1.0'
