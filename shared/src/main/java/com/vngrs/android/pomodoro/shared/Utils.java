@@ -135,4 +135,30 @@ public class Utils {
                 throw new IllegalStateException("unsupported activityType " + pomodoroMaster.getActivityType());
         }
     }
+
+
+
+    /**
+     * Calculate the amount by which the radius of a CircleTimerView should be offset by the any
+     * of the extra painted objects.
+     */
+    public static float calculateRadiusOffset(
+            float strokeSize, float dotStrokeSize, float markerStrokeSize) {
+        return Math.max(strokeSize, Math.max(dotStrokeSize, markerStrokeSize));
+    }
+
+    /**
+     * Uses {@link Utils#calculateRadiusOffset(float, float, float)} after fetching the values
+     * from the resources just as CircleTimerView#init(android.content.Context) does.
+     */
+    public static float calculateRadiusOffset(Resources resources) {
+        if (resources != null) {
+            float strokeSize = resources.getDimension(R.dimen.circletimer_circle_size);
+            float dotStrokeSize = resources.getDimension(R.dimen.circletimer_dot_size);
+            float markerStrokeSize = resources.getDimension(R.dimen.circletimer_marker_size);
+            return calculateRadiusOffset(strokeSize, dotStrokeSize, markerStrokeSize);
+        } else {
+            return 0f;
+        }
+    }
 }
