@@ -2,12 +2,15 @@ package com.vngrs.android.pomodoro.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
+import com.vngrs.android.pomodoro.data.PomodoroDatabase;
+import com.vngrs.android.pomodoro.data.PomodoroProvider.Pomodoros;
 import com.vngrs.android.pomodoro.shared.NotificationBuilder;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
@@ -36,35 +39,27 @@ public class PomodoroNotificationService extends BaseNotificationService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        super.onHandleIntent(intent);
 
         if (intent != null) {
             handleAnalytics(intent);
         }
+
+        super.onHandleIntent(intent);
     }
 
     private void handleAnalytics(Intent intent) {
         String action = null, label = "";
         switch (intent.getAction()) {
-            case ACTION_STOP:
-                action = "Stop";
-                label = pomodoroMaster.getActivityType().toString();
-                break;
-            case ACTION_FINISH_ALARM:
-                action = "Pomodoro Finish";
-                label = pomodoroMaster.getActivityType().toString();
-                break;
             case ACTION_START:
-                final ActivityType activityType =
-                        ActivityType.fromValue(intent.getIntExtra(EXTRA_ACTIVITY_TYPE, 0));
-                action = "Start";
-                label = activityType.toString();
-                break;
-            case ACTION_DISMISS:
-                action = "Dismiss";
-                break;
+            case ACTION_STOP:
+            case ACTION_FINISH_ALARM:
             case ACTION_RESET:
-                action = "Reset";
+                action = intent.getAction().replace("com.vngrs.android.pomodoro.action.", "");
+                if (intent.getAction().equals(ACTION_START)) {
+                    label = ActivityType.fromValue(intent.getIntExtra(EXTRA_ACTIVITY_TYPE, 0)).toString();
+                } else {
+                    label = pomodoroMaster.getActivityType().toString();
+                }
                 break;
             default:
                 break;
@@ -79,6 +74,11 @@ public class PomodoroNotificationService extends BaseNotificationService {
              * [/ANALYTICS]
              */
             analytics.get().sendEvent("Pomodoro", action, label);
+
+            ContentValues values = new ContentValues();
+            values.put(PomodoroDatabase.PomodoroColumns.ACTION, action);
+            values.put(PomodoroDatabase.PomodoroColumns.ACTIVITY_TYPE, label);
+            getContentResolver().insert(Pomodoros.CONTENT_URI, values);
         }
     }
 
