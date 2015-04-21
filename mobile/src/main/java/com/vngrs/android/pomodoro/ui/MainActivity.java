@@ -4,11 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -27,6 +25,7 @@ import android.widget.TextView;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.vngrs.android.pomodoro.App;
 import com.vngrs.android.pomodoro.R;
+import com.vngrs.android.pomodoro.shared.Constants;
 import com.vngrs.android.pomodoro.shared.PomodoroMaster;
 import com.vngrs.android.pomodoro.shared.Utils;
 import com.vngrs.android.pomodoro.shared.model.ActivityType;
@@ -43,10 +42,12 @@ import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject BaseUi baseUi;
     @Inject PomodoroMaster pomodoroMaster;
+    @Inject SharedPreferences pomodoroPreferences;
 
     @InjectView(R.id.background_reveal) View mRevealBackground;
     @InjectView(R.id.pomodoro_start_stop_container) View mStartStopContainer;
@@ -64,48 +65,9 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    private BroadcastReceiver pomodoroReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, final Intent intent) {
-
-            if (intent != null) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateOnStateChange(/* animate */ true);
-
-                        switch (intent.getAction()) {
-                            case BaseNotificationService.ACTION_STOP:
-                            case BaseNotificationService.ACTION_RESET:
-                            case BaseNotificationService.ACTION_FINISH_ALARM:
-                                handler.removeCallbacks(updateRunnable);
-                                updateWithoutTimer(false);
-                                break;
-                            case BaseNotificationService.ACTION_START:
-                                update();
-                                break;
-                            default:
-                                updateWithoutTimer(false);
-                                break;
-                        }
-                    }
-                }, 100);
-            }
-        }
-    };
-
-    private static final IntentFilter FILTER_START =
-            new IntentFilter(BaseNotificationService.ACTION_START);
-    private static final IntentFilter FILTER_STOP =
-            new IntentFilter(BaseNotificationService.ACTION_STOP);
-    private static final IntentFilter FILTER_RESET =
-            new IntentFilter(BaseNotificationService.ACTION_RESET);
-    private static final IntentFilter FILTER_UPDATE =
-            new IntentFilter(BaseNotificationService.ACTION_UPDATE);
-    private static final IntentFilter FILTER_FINISH_ALARM =
-            new IntentFilter(BaseNotificationService.ACTION_FINISH_ALARM);
     private int colorPrimary;
     private int colorPrimaryDark;
+    private boolean isAttached = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +84,13 @@ public class MainActivity extends ActionBarActivity {
         }
 
         handler = new Handler();
+        mRevealBackground.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mRevealBackground.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                isAttached = true;
+            }
+        });
     }
 
     private void setPomodoroTheme() {
@@ -130,27 +99,43 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (key.equals(Constants.KEY_POMODORO_ONGOING)) {
+            updateOnStateChange(/* animate */ true);
+
+            if (pomodoroMaster.isOngoing()) {
+                update();
+            } else {
+                handler.removeCallbacks(updateRunnable);
+                updateWithoutTimer(false);
+            }
+        }
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
         updateOnStateChange(/* animate */ false);
         updateWithoutTimer(/* animate */ false);
-        update();
+        if (pomodoroMaster.isOngoing()) {
+            nextTimer();
+        }
 
-        registerReceiver(pomodoroReceiver, FILTER_START);
-        registerReceiver(pomodoroReceiver, FILTER_STOP);
-        registerReceiver(pomodoroReceiver, FILTER_RESET);
-        registerReceiver(pomodoroReceiver, FILTER_UPDATE);
-        registerReceiver(pomodoroReceiver, FILTER_FINISH_ALARM);
+        pomodoroPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(updateRunnable);
-        unregisterReceiver(pomodoroReceiver);
+
+        pomodoroPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    @DebugLog
     private void nextTimer() {
         handler.removeCallbacks(updateRunnable);
         handler.postDelayed(updateRunnable, Utils.SECOND_MILLIS);
@@ -161,11 +146,9 @@ public class MainActivity extends ActionBarActivity {
         nextTimer();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void updateOnStateChange(boolean animate) {
         int newColorPrimary = Utils.getPrimaryColor(this, pomodoroMaster);
-        animate = animate && newColorPrimary != colorPrimary;
-        animate = animate && mRevealBackground.isAttachedToWindow();
+        animate = animate && newColorPrimary != colorPrimary && isAttached;
 
         colorPrimary = newColorPrimary;
         colorPrimaryDark = Utils.getNotificationColorDark(this, pomodoroMaster);
@@ -236,7 +219,7 @@ public class MainActivity extends ActionBarActivity {
     @DebugLog
     private void updateOnStateChangeInstant() {
 
-        handler.post(new Runnable() {
+        mStartStopButton.post(new Runnable() {
             @Override
             public void run() {
                 RecentTasksStyler.styleRecentTasksEntry(MainActivity.this, colorPrimaryDark);

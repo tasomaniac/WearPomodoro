@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 /**
@@ -229,7 +228,6 @@ public abstract class BaseNotificationService extends IntentService implements
     }
 
     //General method to sync data in the Data Layer
-    @DebugLog
     public void syncDataItem(final PutDataMapRequest putDataMapRequest) {
         new Thread(new Runnable() {
             @Override
