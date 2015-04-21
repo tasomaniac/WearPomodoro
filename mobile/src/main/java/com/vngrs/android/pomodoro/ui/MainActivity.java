@@ -50,7 +50,6 @@ public class MainActivity extends ActionBarActivity implements
     @Inject SharedPreferences pomodoroPreferences;
 
     @InjectView(R.id.background_reveal) View mRevealBackground;
-    @InjectView(R.id.pomodoro_start_stop_container) View mStartStopContainer;
     @InjectView(R.id.pomodoro_progress) ProgressWheel mProgress;
     @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
     @InjectView(R.id.pomodoro_time) TextView mTime;
