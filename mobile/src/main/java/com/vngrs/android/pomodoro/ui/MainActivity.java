@@ -100,6 +100,8 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
+        //When the ongoing state changes,
+        //Animate and update the UI and start timer.
         if (key.equals(Constants.KEY_POMODORO_ONGOING)) {
             updateOnStateChange(/* animate */ true);
 
@@ -117,6 +119,8 @@ public class MainActivity extends ActionBarActivity implements
     protected void onResume() {
         super.onResume();
 
+        //Update the UI state without animation.
+        //Start timer again, if it is ongoing.
         updateOnStateChange(/* animate */ false);
         updateWithoutTimer(/* animate */ false);
         if (pomodoroMaster.isOngoing()) {
@@ -129,9 +133,25 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacks(updateRunnable);
 
+        handler.removeCallbacks(updateRunnable);
         pomodoroPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @OnClick(R.id.pomodoro_start_stop_button)
+    public void start() {
+
+        if (pomodoroMaster.isOngoing()) {
+            sendBroadcast(BaseNotificationService.STOP_INTENT);
+        } else {
+            ActivityType activityType = pomodoroMaster.getActivityType();
+            if (activityType == ActivityType.NONE) {
+                activityType = ActivityType.POMODORO;
+            }
+            final Intent startIntent = BaseNotificationService.START_INTENT;
+            startIntent.putExtra(BaseNotificationService.EXTRA_ACTIVITY_TYPE, activityType.value());
+            sendBroadcast(startIntent);
+        }
     }
 
     @DebugLog
@@ -140,9 +160,39 @@ public class MainActivity extends ActionBarActivity implements
         handler.postDelayed(updateRunnable, Utils.SECOND_MILLIS);
     }
 
+    /**
+     * Updates the UI and starts a timer.
+     */
     private void update() {
         updateWithoutTimer(true);
         nextTimer();
+    }
+
+    /**
+     * Update the UI with an optional animation.
+     * @param animate true to animate progressbar.
+     */
+    private void updateWithoutTimer(final boolean animate) {
+
+        if (pomodoroMaster.isOngoing()) {
+            mStartStopButton.setImageResource(R.drawable.ic_action_stop_96dp);
+            final DateTime nextPomodoro = pomodoroMaster.getNextPomodoro();
+            if (nextPomodoro != null) {
+                final float progress = 1 -
+                        (float) (nextPomodoro.getMillis() - DateTime.now().getMillis())
+                                / pomodoroMaster.getActivityType().getLengthInMillis();
+                setPomodoroProgress(progress, animate);
+            } else {
+                setPomodoroProgress(0f);
+            }
+            mTime.setText(Utils.getRemainingTime(pomodoroMaster, /* shorten */ false));
+            mDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
+        } else {
+            mStartStopButton.setImageResource(R.drawable.ic_action_start_96dp);
+            setPomodoroProgress(0f);
+            mTime.setText("00:00");
+            mDescription.setText(Utils.getActivityFinishMessage(this, pomodoroMaster));
+        }
     }
 
     private void updateOnStateChange(boolean animate) {
@@ -229,27 +279,6 @@ public class MainActivity extends ActionBarActivity implements
         getWindow().setBackgroundDrawable(new ColorDrawable(colorPrimary));
     }
 
-    private void updateWithoutTimer(final boolean animate) {
-
-        if (pomodoroMaster.isOngoing()) {
-            mStartStopButton.setImageResource(R.drawable.ic_action_stop_96dp);
-            final DateTime nextPomodoro = pomodoroMaster.getNextPomodoro();
-            if (nextPomodoro != null) {
-                setPomodoroProgress(1 - (float) (nextPomodoro.getMillis() - DateTime.now().getMillis()) / pomodoroMaster.getActivityType().getLengthInMillis(),
-                        animate);
-            } else {
-                setPomodoroProgress(0f);
-            }
-            mTime.setText(Utils.getRemainingTime(pomodoroMaster, /* shorten */ false));
-            mDescription.setText(Utils.getActivityTitle(this, pomodoroMaster, /* shorten */ false));
-        } else {
-            mStartStopButton.setImageResource(R.drawable.ic_action_start_96dp);
-            setPomodoroProgress(0f);
-            mTime.setText("00:00");
-            mDescription.setText(Utils.getActivityFinishMessage(this, pomodoroMaster));
-        }
-    }
-
     private void setPomodoroProgress(float progress) {
         setPomodoroProgress(progress, true);
     }
@@ -279,22 +308,6 @@ public class MainActivity extends ActionBarActivity implements
                 return true;
             default:
                 return super.onKeyUp(keyCode, event);
-        }
-    }
-
-    @OnClick(R.id.pomodoro_start_stop_button)
-    public void start() {
-
-        if (pomodoroMaster.isOngoing()) {
-            sendBroadcast(BaseNotificationService.STOP_INTENT);
-        } else {
-            ActivityType activityType = pomodoroMaster.getActivityType();
-            if (activityType == ActivityType.NONE) {
-                activityType = ActivityType.POMODORO;
-            }
-            final Intent startIntent = BaseNotificationService.START_INTENT;
-            startIntent.putExtra(BaseNotificationService.EXTRA_ACTIVITY_TYPE, activityType.value());
-            sendBroadcast(startIntent);
         }
     }
 
