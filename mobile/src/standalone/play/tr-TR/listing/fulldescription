@@ -1,0 +1,31 @@
+Android Wear saatlerle süper çalışan bir Pomodoro takip uygulamasıdır. 
+
+Android saatinizde <strong>"OK Google, start working"</strong> deyin ve uygulama açılsın.
+
+<strong>Pomodoro nedir?</strong>
+Pomodoro tekniği ile basitçe ve sistematik bir şekilde çalışırsınız. Yapmanız gereken sadece aşağıdakileri takip etmek.
+<strong>1.</strong>  Yapılacak işi belirleyin.
+<strong>2.</strong>  Pomodoro saatini başlatın.
+<strong>3.</strong>  İş üzerinde 25 dakika çalışsın. Sonunda alarm çalacaktır.
+<strong>4.</strong>  5 dakikalık kısa bir ara verin.
+<strong>5.</strong>  4 adet Pomodoro yaptıktan sonra 15 dakikalık uzun ara verin.
+
+Material Design ve harika animasyonlar ile bu uygulama daha efektif çalışmanızı sağlayabilir.
+
+Ayrıca
+* Reklam yoktur.
+* Harika bir arayüze sahip
+* Basit kullanımı var.
+
+Telefonlarda, tabletlerde, saatlerde ve hatta Android TV'lerde çalışabilir.
+Telefona bağımlılığı yoktur. Telefona bağlı değilken saat üzerinde tek başına çalışabilir. Fakat telefon bağlantı kurulduğunda saatte yada telefonda çalışan bir pomodoro bulursa anında eşitleyerek yoluna devam eder. 
+
+Ve son olarak da açık kaynak kodludur. Buyrunuz kodları:
+https://github.com/vngrs/PomoPomoAndroid
+
+Sorun yada öneri bildirimleriniz olduğunda kötü yorum yapmadan önce lütfen email atınız yada aşağıdaki Trello listesini kullanınız. Teşekkür ederiz.
+https://trello.com/b/lU9UHl2B
+
+VNGRS'de özenle kodlanmıştır.
+
+Pomodoro™ and Pomodoro Technique® Francesco Cirillo'nin tescilli markasıdır. Bu uygulamanın Francesco Cirillo ile bir bağlantısı bulunmamaktadır.

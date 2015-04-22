@@ -1,11 +1,30 @@
-Pomodoro app for Android Wear.
+Pomodoro Tracking application that seemlesly work with Android Wear.
 
-Say "OK Google, start working" to start the application. 
+Say <strong>"OK Google, start working"</strong> on your watch to start the application. 
 
-It runs on the watch itself, so you don't need your phone to be connected. 
+<strong>What is Pomodoro?</strong>
+With this technique, you basically and systematically work like the following simple flow:
+<strong>1.</strong>  Decide on the task to be done
+<strong>2.</strong>  Start the pomodoro timer.
+<strong>3.</strong>  Work for 25 minutes on the task until the timer rings.
+<strong>4.</strong>  Take a short break (5 minutes)
+<strong>5.</strong>  After four pomodori, take a longer break (15 minutes)
 
-Configuration and phone sync support is coming soon.
+With its beautiful Material Design with cool animations, it can help you work effectively. 
 
-Note: There won't be any application in your phone to see. For now, it is only in your watch. 
+* No ads
+* Beautiful design
+* Simplicity
+
+It can run on <strong>phones, tablets, watches and even Android TVs</strong>.
+It can run on the watch itself offline, so you don't need your phone to be connected. However, when the phone app detects the app running on the watch, it syncs automagically. 
+
+And guess what, it is open source:
+https://github.com/vngrs/PomoPomoAndroid
+
+Please send you requests, bugs and complaints through email or using the below Trello board before giving a bad rating. Thank you. 
+https://trello.com/b/lU9UHl2B
+
+Beautifully crafted in Istanbul, Turkey. 
 
 Pomodoro™ and Pomodoro Technique® are registered trademarks of Francesco Cirillo. This app is not affiliated with Francesco Cirillo.
