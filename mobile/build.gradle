@@ -102,7 +102,7 @@ dependencies {
     standaloneWearApp project(path: ':wear', configuration: 'standaloneRelease')
     vngrsWearApp project(path: ':wear', configuration: 'vngrsRelease')
 
-    compile 'com.android.support:appcompat-v7:22.1.0'
+    compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.google.android.gms:play-services-analytics:7.0.0'
 
     compile 'com.pnikosis:materialish-progress:1.5'
