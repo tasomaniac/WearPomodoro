@@ -56,7 +56,7 @@ android {
             minifyEnabled true
             shrinkResources true
             debuggable false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../proguard-rules.pro'
             signingConfig signingConfigs.release
         }
     }
@@ -74,7 +74,7 @@ dependencies {
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 
-    compile 'com.google.android.gms:play-services-wearable:7.0.0'
+    compile 'com.google.android.gms:play-services-wearable:7.3.0'
 
     compile 'com.jakewharton:butterknife:6.1.0'
 
