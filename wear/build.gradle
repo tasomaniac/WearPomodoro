@@ -74,11 +74,11 @@ dependencies {
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 
-    compile 'com.google.android.gms:play-services-wearable:7.3.0'
+    compile "com.google.android.gms:play-services-wearable:$rootProject.ext.playServicesVersion"
 
     compile 'com.jakewharton:butterknife:6.1.0'
 
-    compile 'com.google.dagger:dagger:2.0'
-    apt 'com.google.dagger:dagger-compiler:2.0'
+    compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
+    apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 }

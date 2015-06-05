@@ -30,12 +30,12 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.google.android.gms:play-services:7.3.0'
+    compile "com.google.android.gms:play-services:$rootProject.ext.playServicesVersion"
 
-    compile 'net.danlew:android.joda:2.7.2'
-    compile 'com.jakewharton.timber:timber:3.0.2'
+    compile 'net.danlew:android.joda:2.8.0'
+    compile 'com.jakewharton.timber:timber:3.1.0'
 
-    compile 'com.google.dagger:dagger:2.0'
-    apt 'com.google.dagger:dagger-compiler:2.0'
+    compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
+    apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 }
