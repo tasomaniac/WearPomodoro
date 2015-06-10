@@ -87,6 +87,7 @@ public class BaseWearableListenerService extends WearableListenerService impleme
                     final ActivityType activityType = ActivityType.fromValue(dataMap.getInt(Constants.KEY_ACTIVITY_TYPE));
                     pomodoroMaster.setActivityType(activityType);
                     pomodoroMaster.setPomodorosDone(dataMap.getInt(Constants.KEY_POMODOROS_DONE));
+                    pomodoroMaster.setOngoing(dataMap.getBoolean(Constants.KEY_POMODORO_ONGOING));
 
                     final Intent intent = new Intent(dataMap.getString(Constants.SYNC_ACTION));
                     intent.putExtra(BaseNotificationService.EXTRA_ACTIVITY_TYPE, activityType.value());

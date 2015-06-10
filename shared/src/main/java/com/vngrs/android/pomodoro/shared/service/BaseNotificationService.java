@@ -152,6 +152,7 @@ public abstract class BaseNotificationService extends IntentService implements
             dataMap.putLong(Constants.KEY_NEXT_POMODORO, pomodoroMaster.getNextPomodoro().getMillis());
         }
         dataMap.putInt(Constants.KEY_POMODOROS_DONE, pomodoroMaster.getPomodorosDone());
+        dataMap.putBoolean(Constants.KEY_POMODORO_ONGOING, pomodoroMaster.isOngoing());
         dataMap.putString(Constants.SYNC_ACTION, intent.getAction());
         syncDataItem(dataMapRequest);
     }

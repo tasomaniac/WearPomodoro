@@ -129,4 +129,8 @@ public class PomodoroMaster {
     public boolean isOngoing() {
         return isOngoingStorage.get();
     }
+
+    public void setOngoing(boolean isOngoing) {
+        isOngoingStorage.set(isOngoing);
+    }
 }
