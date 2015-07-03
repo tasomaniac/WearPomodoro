@@ -74,7 +74,7 @@ dependencies {
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 
-    compile 'com.jakewharton:butterknife:6.1.0'
+    compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
 
     compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"

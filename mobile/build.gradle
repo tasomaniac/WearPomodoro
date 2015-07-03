@@ -107,7 +107,7 @@ dependencies {
     compile "com.google.android.gms:play-services-analytics:$rootProject.ext.playServicesVersion"
 
     compile 'com.pnikosis:materialish-progress:1.5'
-    compile 'com.jakewharton:butterknife:6.1.0'
+    compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
 
     compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
@@ -117,12 +117,12 @@ dependencies {
     compile 'net.simonvt.schematic:schematic:0.6.1'
 
     // Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.3.2@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
         transitive = true
     }
 
     vngrsCompile 'com.squareup.okhttp:okhttp:2.4.0'
     vngrsCompile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
-    vngrsCompile 'com.squareup.okio:okio:1.4.0'
+    vngrsCompile 'com.squareup.okio:okio:1.5.0'
     vngrsCompile 'com.squareup.retrofit:retrofit:1.9.0'
 }

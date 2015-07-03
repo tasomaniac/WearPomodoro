@@ -12,17 +12,17 @@ import com.vngrs.android.pomodoro.wear.App;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import hugo.weaving.DebugLog;
 
 public class PomodoroNotificationActivity extends Activity {
 
     private Handler handler = null;
 
-    @InjectView(R.id.pomodoro_time) TextView mTime;
-    @InjectView(R.id.pomodoro_description) TextView mDescription;
-//    @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
+    @Bind(R.id.pomodoro_time) TextView mTime;
+    @Bind(R.id.pomodoro_description) TextView mDescription;
+//    @Bind(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
 
     @Inject PomodoroMaster pomodoroMaster;
 
@@ -39,7 +39,7 @@ public class PomodoroNotificationActivity extends Activity {
         overridePendingTransition(0, 0);
         setContentView(R.layout.activity_pomodoro_notification);
         App.get(this).component().inject(this);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         handler = new Handler();
 

@@ -36,8 +36,8 @@ import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import hugo.weaving.DebugLog;
 
@@ -49,11 +49,11 @@ public class MainActivity extends AppCompatActivity implements
     @Inject PomodoroMaster pomodoroMaster;
     @Inject SharedPreferences pomodoroPreferences;
 
-    @InjectView(R.id.background_reveal) View mRevealBackground;
-    @InjectView(R.id.pomodoro_progress) ProgressWheel mProgress;
-    @InjectView(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
-    @InjectView(R.id.pomodoro_time) TextView mTime;
-    @InjectView(R.id.pomodoro_description) TextView mDescription;
+    @Bind(R.id.background_reveal) View mRevealBackground;
+    @Bind(R.id.pomodoro_progress) ProgressWheel mProgress;
+    @Bind(R.id.pomodoro_start_stop_button) ImageButton mStartStopButton;
+    @Bind(R.id.pomodoro_time) TextView mTime;
+    @Bind(R.id.pomodoro_description) TextView mDescription;
 
     private Handler handler = null;
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         if ("chromium".equals(Build.BRAND) && "chromium".equals(Build.MANUFACTURER)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
