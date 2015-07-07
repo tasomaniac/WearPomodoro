@@ -3,6 +3,7 @@
   package="com.vngrs.android.pomodoro">
 
   <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="ANDROID.PERMISSION.VIBRATE" />
   <uses-feature android:name="android.hardware.type.watch" />
 
   <application
