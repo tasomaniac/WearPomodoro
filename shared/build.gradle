@@ -10,7 +10,6 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion rootProject.ext.targetSdkVersion
     }
 
     buildTypes {
@@ -30,12 +29,12 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile "com.google.android.gms:play-services-wearable:$rootProject.ext.playServicesVersion"
+    compile rootProject.ext.playServicesWearable
 
     compile 'net.danlew:android.joda:2.8.1'
     compile 'com.jakewharton.timber:timber:3.1.0'
 
-    compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
-    apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile rootProject.ext.dagger
+    apt rootProject.ext.daggerCompiler
+    provided rootProject.ext.javaxAnnotation
 }

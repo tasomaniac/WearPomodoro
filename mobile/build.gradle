@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId "com.vngrs.android.pomodoro"
         minSdkVersion 16
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion rootProject.ext.compileSdkVersion
         versionCode rootProject.ext.versionMajor * 10000 + rootProject.ext.versionMinor * 1000 + rootProject.ext.versionPatch * 100 + rootProject.ext.versionBuild
         versionName "${rootProject.ext.versionMajor}.${rootProject.ext.versionMinor}" + ((rootProject.ext.versionPatch != 0) ? ".${rootProject.ext.versionPatch}" : "")
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
@@ -71,7 +71,10 @@ android {
 
     lintOptions {
         abortOnError true
+        textReport true
+        textOutput 'stdout'
 
+        fatal 'UnusedResources'
         warning 'InvalidPackage'
     }
 
@@ -102,16 +105,16 @@ dependencies {
     standaloneWearApp project(path: ':wear', configuration: 'standaloneRelease')
     vngrsWearApp project(path: ':wear', configuration: 'vngrsRelease')
 
-    compile "com.android.support:support-v4:$rootProject.ext.supportLibVersion"
-    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibVersion"
-    compile "com.google.android.gms:play-services-analytics:$rootProject.ext.playServicesVersion"
+    compile rootProject.ext.supportLib
+    compile rootProject.ext.supportLibAppCompat
+    compile rootProject.ext.playServicesAnalytics
 
     compile 'com.pnikosis:materialish-progress:1.5'
-    compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
+    compile rootProject.ext.butterKnife
 
-    compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
-    apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile rootProject.ext.dagger
+    apt rootProject.ext.daggerCompiler
+    provided rootProject.ext.javaxAnnotation
 
     apt 'net.simonvt.schematic:schematic-compiler:0.6.1'
     compile 'net.simonvt.schematic:schematic:0.6.1'
