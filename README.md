@@ -9,8 +9,6 @@ Pomodoro for Android Wear
 Installation
 ------------
 
-Currently, the application is not yet released. You can join this [community](https://plus.google.com/communities/118326136232651159420) to download the app and be a BETA tester.
-
 Download the application with the following. [link](https://play.google.com/store/apps/details?id=com.vngrs.android.pomodoro) after you become a tester. 
 
 What
@@ -36,8 +34,8 @@ Things TODO
 You can contribute and see the TODO list with the following Trello board.
 https://trello.com/b/lU9UHl2B/pomodoro-android
 
-* [ ] Phone app support.
-* [ ] Phone app notification sync with Wear app.
+* [X] Phone app support.
+* [X] Phone app notification sync with Wear app.
 * [ ] Pomodoro WatchFace.
 * [ ] Step detection.
 * [ ] Logging what to do and what's done with voice.
