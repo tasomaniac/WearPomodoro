@@ -1,6 +1,8 @@
 Pomodoro for Android Wear
 =========================
 
+[![Join the chat at https://gitter.im/pomopomo/WearPomodoro](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pomopomo/WearPomodoro?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/pomopomo/WearPomodoro.png?branch=develop)](https://travis-ci.org/pomopomo/WearPomodoro)
 [![Join the chat at https://gitter.im/pomopomo/WearPomodoro](https://img.shields.io/badge/GITTER-join%20chat-green.svg)](https://gitter.im/pomopomo/WearPomodoro?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
