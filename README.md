@@ -1,15 +1,15 @@
 Pomodoro for Android Wear
 =========================
 
-[![Build Status](https://travis-ci.org/vngrs/PomoPomoAndroid.png?branch=develop)](https://travis-ci.org/vngrs/PomoPomoAndroid)
-[![Join the chat at https://gitter.im/vngrs/PomoPomoAndroid](https://img.shields.io/badge/GITTER-join%20chat-green.svg)](https://gitter.im/vngrs/PomoPomoAndroid?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/pomopomo/WearPomodoro.png?branch=develop)](https://travis-ci.org/pomopomo/WearPomodoro)
+[![Join the chat at https://gitter.im/pomopomo/WearPomodoro](https://img.shields.io/badge/GITTER-join%20chat-green.svg)](https://gitter.im/pomopomo/WearPomodoro?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 ![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)
 
 Installation
 ------------
 
-Download the application with the following. [link](https://play.google.com/store/apps/details?id=com.vngrs.android.pomodoro) after you become a tester. 
+https://play.google.com/store/apps/details?id=com.vngrs.android.pomodoro
 
 What
 ----
@@ -39,24 +39,3 @@ https://trello.com/b/lU9UHl2B/pomodoro-android
 * [ ] Pomodoro WatchFace.
 * [ ] Step detection.
 * [ ] Logging what to do and what's done with voice.
-
-License
---------
-
-    © 2015 VNGRS
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-    
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/vngrs/pomopomoandroid/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
