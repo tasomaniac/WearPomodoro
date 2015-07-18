@@ -1,6 +1,9 @@
 Pomodoro for Android Wear
 =========================
 
+[![Get it on Google Play](art/banner.png)][1]
+
+
 [![Build Status](https://travis-ci.org/pomopomo/WearPomodoro.png?branch=develop)](https://travis-ci.org/pomopomo/WearPomodoro)
 [![Join the chat at https://gitter.im/pomopomo/WearPomodoro](https://img.shields.io/badge/GITTER-join%20chat-green.svg)](https://gitter.im/pomopomo/WearPomodoro?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
@@ -9,10 +12,11 @@ Pomodoro for Android Wear
 Installation
 ------------
 
-https://play.google.com/store/apps/details?id=com.vngrs.android.pomodoro
+[![Get it on Google Play](art/en_generic_rgb_wo_60.png)][1]
 
 What
 ----
+
 Yet Another Android Pomodoro Client
 
 Why
@@ -39,3 +43,5 @@ https://trello.com/b/lU9UHl2B/pomodoro-android
 * [ ] Pomodoro WatchFace.
 * [ ] Step detection.
 * [ ] Logging what to do and what's done with voice.
+
+[1]: https://play.google.com/store/apps/details?id=com.vngrs.android.pomodoro
