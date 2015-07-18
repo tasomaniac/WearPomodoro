@@ -115,8 +115,8 @@ dependencies {
     apt rootProject.ext.daggerCompiler
     provided rootProject.ext.javaxAnnotation
 
-    apt 'net.simonvt.schematic:schematic-compiler:0.6.1'
-    compile 'net.simonvt.schematic:schematic:0.6.1'
+    apt 'net.simonvt.schematic:schematic-compiler:0.6.2'
+    compile 'net.simonvt.schematic:schematic:0.6.2'
 
     // Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
