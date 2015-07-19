@@ -25,3 +25,7 @@ branches:
     - gh-pages
 
 sudo: false
+
+cache:
+  directories:
+    - $HOME/.gradle
