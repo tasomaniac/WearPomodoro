@@ -1,4 +1,4 @@
-<com.vngrs.android.pomodoro.ui.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tasomaniac.android.pomodoro.ui.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/capture_insets_frame_layout"
   android:layout_width="match_parent"
@@ -34,4 +34,4 @@
       android:layout_toRightOf="@id/pomodoro_start_stop_container"/>
 
   </RelativeLayout>
-</com.vngrs.android.pomodoro.ui.ScrimInsetsFrameLayout>
+</com.tasomaniac.android.pomodoro.ui.ScrimInsetsFrameLayout>

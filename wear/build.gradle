@@ -14,7 +14,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.vngrs.android.pomodoro"
+        applicationId "com.tasomaniac.android.pomodoro"
         minSdkVersion 21
         targetSdkVersion rootProject.ext.compileSdkVersion
         versionCode rootProject.ext.versionMajor * 10000 + rootProject.ext.versionMinor * 1000 + rootProject.ext.versionPatch * 100 + rootProject.ext.versionBuild
@@ -33,15 +33,6 @@ android {
             keyAlias(local_properties.release_keystore_alias ?: "androiddebugkey")
             storePassword(local_properties.release_keystore_pwd ?: "android")
             keyPassword(local_properties.release_keystore_pwd2 ?: "android")
-        }
-    }
-
-    productFlavors {
-        standalone {
-            applicationId "com.vngrs.android.pomodoro"
-        }
-        vngrs {
-            applicationId "com.vngrs.android.pomodoro.internal"
         }
     }
 

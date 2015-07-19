@@ -40,5 +40,4 @@ proguard/
 
 .idea
 *.iml
-vngrs.jks
 play_dist.p12

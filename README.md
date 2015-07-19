@@ -44,4 +44,4 @@ https://trello.com/b/lU9UHl2B/pomodoro-android
 * [ ] Step detection.
 * [ ] Logging what to do and what's done with voice.
 
-[1]: https://play.google.com/store/apps/details?id=com.vngrs.android.pomodoro
+[1]: https://play.google.com/store/apps/details?id=tasomaniac.android.pomodoro
