@@ -27,7 +27,7 @@ android {
         buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
 
-        resConfigs "en"
+        resConfigs "en", "tr"
     }
 
     signingConfigs {
