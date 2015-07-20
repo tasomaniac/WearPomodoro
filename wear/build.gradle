@@ -60,8 +60,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 

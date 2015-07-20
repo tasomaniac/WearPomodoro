@@ -52,7 +52,6 @@ android {
 
         release {
             minifyEnabled true
-            zipAlignEnabled true
             shrinkResources true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../proguard-rules.pro'
@@ -87,8 +86,6 @@ play {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
     debugCompile project(path: ':shared', configuration: 'debug')
     releaseCompile project(path: ':shared', configuration: 'release')
 
