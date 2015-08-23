@@ -41,3 +41,4 @@ proguard/
 .idea
 *.iml
 play_dist.p12
+fabric.properties
