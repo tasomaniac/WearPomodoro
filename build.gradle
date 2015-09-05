@@ -38,9 +38,9 @@ ext {
     versionBuild = 0
 
     compileSdkVersion = 23
-    buildToolsVersion = "23.0.0"
+    buildToolsVersion = "23.0.1"
 
-    supportLibVersion = "23.0.0"
+    supportLibVersion = "23.0.1"
     daggerVersion = "2.0.1"
     playServicesVersion = "7.8.0"
 
