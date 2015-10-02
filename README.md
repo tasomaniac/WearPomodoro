@@ -18,7 +18,7 @@ What
 ----
 
 Yet Another Android Pomodoro Client
-This project is forked frtom its original written by [me](https://github.com/tasomaniac/). The original [application][1] and its source-code can be found [here](https://github.com/vngrs/PomoPomoAndroid). 
+This project is forked from its original written by [me](https://github.com/tasomaniac/). The original [application][1] and its source-code can be found [here](https://github.com/vngrs/PomoPomoAndroid). 
 
 Why
 ---
