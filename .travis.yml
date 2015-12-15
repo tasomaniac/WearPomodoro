@@ -1,13 +1,11 @@
 language: android
 
-jdk:
- - oraclejdk7
- - oraclejdk8
-
 android:
   components:
+    - platform-tools
+    - tools
     - android-23
-    - build-tools-23.0.1
+    - build-tools-23.0.2
     - extra-google-m2repository
     - extra-android-m2repository
 
@@ -15,10 +13,14 @@ android:
     # if you need to run emulator(s) during your tests
     # - sys-img-x86-android-22
 
+jdk:
+ - oraclejdk7
+ - oraclejdk8
+
 before_script:
     - GRADLE_OPTS="-Xms1g -Xmx3g -XX:MaxPermSize=3g"
 
-script: "./gradlew clean check -Dpre-dex=false"
+script: "./gradlew clean check"
 
 branches:
   except:

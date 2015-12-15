@@ -15,7 +15,7 @@ android {
 
     dexOptions {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
-        preDexLibraries = rootProject.ext.preDexEnabled && !rootProject.ext.isTravis
+        preDexLibraries = rootProject.ext.preDexEnabled && !rootProject.ext.ci
         javaMaxHeapSize "3g"
     }
 }
@@ -23,8 +23,8 @@ android {
 dependencies {
     compile rootProject.ext.playServicesWearable
 
-    compile 'net.danlew:android.joda:2.8.2'
-    compile 'com.jakewharton.timber:timber:3.1.0'
+    compile 'net.danlew:android.joda:2.9.1'
+    compile 'com.jakewharton.timber:timber:4.1.0'
 
     compile rootProject.ext.dagger
     apt rootProject.ext.daggerCompiler
