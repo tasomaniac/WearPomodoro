@@ -42,3 +42,5 @@ proguard/
 *.iml
 play_dist.p12
 fabric.properties
+distribution/my-release-key.keystore
+distribution/tasomaniac.p12
