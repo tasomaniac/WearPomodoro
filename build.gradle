@@ -7,10 +7,10 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-alpha3'
+        classpath 'com.android.tools.build:gradle:2.0.0-alpha7'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
 
         classpath 'io.fabric.tools:gradle:1.21.2'
@@ -36,11 +36,11 @@ ext {
     versionBuild = 0
 
     compileSdkVersion = 23
-    buildToolsVersion = "23.0.2"
+    buildToolsVersion = '23.0.2'
 
-    supportLibVersion = "23.1.1"
-    daggerVersion = "2.0.2"
-    playServicesVersion = "8.3.0"
+    supportLibVersion = '23.1.1'
+    daggerVersion = '2.0.2'
+    playServicesVersion = '8.4.0'
 
     supportLib = "com.android.support:support-v4:$supportLibVersion"
     supportLibAppCompat = "com.android.support:appcompat-v7:$supportLibVersion"
